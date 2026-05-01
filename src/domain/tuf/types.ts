@@ -137,6 +137,7 @@ export interface LevelPageData {
   levelUrl: string;
   metadata?: TufRecord | null;
   passes: LevelPass[];
+  ratingDifficulty?: LevelDifficulty;
   ratings?: TufRecord | null;
   rerateHistory: unknown[];
   stats: LevelStats;
