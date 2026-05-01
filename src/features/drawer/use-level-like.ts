@@ -7,8 +7,6 @@ import {
 } from "@platform/chrome/runtime-message";
 import type { AuthStatus, AuthUser } from "@domain/tuf/types";
 
-let hasOpenedLoginTabForMissingSession = false;
-
 interface UseLevelLikeParams {
   initialLikes: number;
   levelId: string;
@@ -72,17 +70,6 @@ export function useLevelLike({
       isCancelled = true;
     };
   }, [initialLikes, levelId]);
-
-  useEffect(() => {
-    if (authStatus !== "unauthenticated" || hasOpenedLoginTabForMissingSession) {
-      return;
-    }
-
-    hasOpenedLoginTabForMissingSession = true;
-    void sendRuntimeMessage<OpenTufLoginResult>({
-      type: "OPEN_TUF_LOGIN"
-    });
-  }, [authStatus]);
 
   return useMemo(
     () => ({
