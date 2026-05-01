@@ -60,7 +60,17 @@ chore: update extension manifest metadata
 
 ## Release Flow
 
-`package.json` is the source of truth for the extension version. `manifest.config.ts` reads that version when CRXJS generates `dist/manifest.json`.
+`package.json` is the source of truth for the release version. `manifest.config.ts` reads that version when CRXJS generates `dist/manifest.json`.
+
+Chrome requires `manifest.version` to be one to four dot-separated integers, so prerelease labels are stripped from `manifest.version` and preserved in `manifest.version_name`.
+
+Example:
+
+```txt
+package.json version: 0.1.1-beta.1
+manifest.version: 0.1.1
+manifest.version_name: 0.1.1-beta.1
+```
 
 To create a GitHub Release:
 
@@ -79,3 +89,5 @@ v0.1.0
 ```
 
 Pushing the tag runs GitHub Actions. The workflow verifies that the tag matches `package.json`, builds the extension, packages the contents of `dist/`, and uploads `tufe-v<version>.zip` to the GitHub Release.
+
+Versions containing a prerelease suffix, such as `0.1.1-beta.1`, are marked as GitHub pre-releases automatically.

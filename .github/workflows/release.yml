@@ -28,6 +28,7 @@ jobs:
         run: |
           PACKAGE_VERSION="$(bun -e "console.log(require('./package.json').version)")"
           EXPECTED_TAG="v${PACKAGE_VERSION}"
+          PRERELEASE="false"
 
           if [ "${GITHUB_REF_NAME}" != "${EXPECTED_TAG}" ]; then
             echo "Tag ${GITHUB_REF_NAME} does not match package.json version ${PACKAGE_VERSION}."
@@ -35,9 +36,14 @@ jobs:
             exit 1
           fi
 
+          if [[ "${PACKAGE_VERSION}" == *-* ]]; then
+            PRERELEASE="true"
+          fi
+
           echo "version=${PACKAGE_VERSION}" >> "${GITHUB_OUTPUT}"
           echo "tag=${EXPECTED_TAG}" >> "${GITHUB_OUTPUT}"
           echo "artifact=tufe-${EXPECTED_TAG}.zip" >> "${GITHUB_OUTPUT}"
+          echo "prerelease=${PRERELEASE}" >> "${GITHUB_OUTPUT}"
 
       - name: Typecheck
         run: bun run typecheck
@@ -55,4 +61,5 @@ jobs:
         with:
           name: "TUFExtension ${{ steps.version.outputs.tag }}"
           generate_release_notes: true
+          prerelease: ${{ steps.version.outputs.prerelease }}
           files: "${{ steps.version.outputs.artifact }}"

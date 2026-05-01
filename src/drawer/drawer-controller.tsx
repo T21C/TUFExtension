@@ -4,7 +4,7 @@ import { ensureShadowHost } from "@platform/content-script/shadow-host";
 import {
   TUF_BUTTON_HOST_ID,
   TUF_BUTTON_ID
-} from "@platform/content-script/youtube-action-bar";
+} from "@platform/content-script/tuf-button-elements";
 import { logDebug, logInfo } from "@platform/content-script/logger";
 import type { ResolvedTufContext } from "@domain/tuf/types";
 

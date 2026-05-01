@@ -1,7 +1,5 @@
 import { logDebug, logInfo, logWarn } from "./logger";
-
-export const TUF_BUTTON_HOST_ID = "tuf-level-helper-button-host";
-export const TUF_BUTTON_ID = "tuf-level-helper-button";
+import { TUF_BUTTON_HOST_ID } from "./tuf-button-elements";
 
 const YOUTUBE_ACTION_BAR_SELECTORS = [
   "ytd-watch-metadata #top-level-buttons-computed",
