@@ -594,6 +594,7 @@ function mapPassPlayer(rawPass: TufRecord): PassPlayer {
   const player = asRecord(rawPass.player);
   const user = asRecord(player?.user);
   const ranks = asRecord(rawPass.ranks);
+  const playerId = readString(player, ["id"]) ?? readString(rawPass, ["playerId"]);
 
   return {
     avatarUrl:
@@ -602,8 +603,9 @@ function mapPassPlayer(rawPass: TufRecord): PassPlayer {
       selectIconSize(readString(player, ["pfp"]), "small"),
     country: readString(player, ["country"]),
     discordUsername: readString(player, ["discordUsername", "discordTag"]),
-    id: readString(player, ["id"]) ?? readString(rawPass, ["playerId"]),
+    id: playerId,
     name: readString(player, ["name"]) ?? "Unknown Player",
+    profileUrl: playerId ? `https://tuforums.com/profile/${playerId}` : undefined,
     rankedScoreRank: readNumber(ranks, ["rankedScoreRank"])
   };
 }

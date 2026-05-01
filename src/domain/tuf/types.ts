@@ -166,6 +166,7 @@ export interface PassPlayer {
   discordUsername?: string;
   id?: string;
   name: string;
+  profileUrl?: string;
   rankedScoreRank?: number;
 }
 
