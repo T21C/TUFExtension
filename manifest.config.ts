@@ -1,11 +1,14 @@
 import { defineManifest } from "@crxjs/vite-plugin";
 import packageJson from "./package.json";
 
+const manifestVersion = packageJson.version.split(/[+-]/)[0];
+
 export default defineManifest({
   manifest_version: 3,
   name: "TUFExtension",
   description: "Chrome Extension for TUF",
-  version: packageJson.version,
+  version: manifestVersion,
+  version_name: packageJson.version,
   icons: {
     16: "icons/icon16.png",
     32: "icons/icon32.png",
