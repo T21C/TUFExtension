@@ -51,7 +51,17 @@ async function resolveCurrentVideo(): Promise<void> {
   }
 
   if (video.canonicalUrl === lastCanonicalUrl) {
-    logDebug("Skipping unchanged video", video);
+    if (activeItems.length > 0) {
+      logDebug("Remounting TUF button for unchanged video", {
+        itemKeys: activeItems.map((item) => item.itemKey),
+        video
+      });
+      injectTufButton(activeItems[0], toggleActiveDrawer);
+      mountOrUpdateDrawer(activeItems);
+      return;
+    }
+
+    logDebug("Skipping unchanged video without active TUF items", video);
     return;
   }
 
