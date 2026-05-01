@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { CloseButton } from "@drawer/components/close-button";
 import { DrawerShell } from "@drawer/drawer-shell";
+import { PinButton } from "@drawer/components/pin-button";
 import { useLevelPage } from "@features/drawer/use-level-page";
 import { usePassPage } from "@features/drawer/use-pass-page";
 import { PassDetailView } from "@drawer/features/pass-page/pass-detail-view";
@@ -14,27 +15,40 @@ import type {
 import { glowDividerStyle } from "@drawer/shared/level-surface";
 
 interface LevelPageProps {
-  activeItemKey: string;
+  activeItemKey: string | null;
+  emptyReason: string | null;
   isOpen: boolean;
+  isPinned: boolean;
+  isResolving: boolean;
   items: ResolvedTufContext[];
   onClose: () => void;
   onSelectItem: (itemKey: string) => void;
+  onTogglePinned: () => void;
 }
 
 export function LevelPage({
   activeItemKey,
+  emptyReason,
   isOpen,
+  isPinned,
+  isResolving,
   items,
   onClose,
   onSelectItem,
+  onTogglePinned,
 }: LevelPageProps) {
   const activeItem = items.find((item) => item.itemKey === activeItemKey) ?? items[0];
 
   return (
     <DrawerShell isOpen={isOpen}>
       <div className="relative h-full min-h-0 overflow-hidden bg-[#090909]">
-        <main className="absolute inset-0 mt-[5.75rem] overflow-y-auto overscroll-contain bg-[radial-gradient(circle_at_top,#2f0565_0%,#0b0820_34%,#050510_72%)] px-3 pb-5 pt-3">
-          {activeItem.kind === "pass" ? (
+        <main className="absolute inset-0 mt-[5.75rem] flex min-h-0 flex-col overflow-y-auto overscroll-contain bg-[radial-gradient(circle_at_top,#2f0565_0%,#0b0820_34%,#050510_72%)] px-3 pb-5 pt-3">
+          {!activeItem ? (
+            <DrawerStatusView
+              description={emptyReason}
+              isResolving={isResolving}
+            />
+          ) : activeItem.kind === "pass" ? (
             <PassDetailContainer item={activeItem} items={items} />
           ) : (
             <LevelDetailContainer item={activeItem} items={items} />
@@ -51,13 +65,22 @@ export function LevelPage({
           />
           <div className="relative mx-auto flex min-h-16 max-w-[80rem] items-center justify-between gap-3 px-3 py-2">
             <div className="min-w-0 flex-1">
-              <LevelTabs
-                activeItemKey={activeItem.itemKey}
-                items={items}
-                onSelectItem={onSelectItem}
-              />
+              {activeItem ? (
+                <LevelTabs
+                  activeItemKey={activeItem.itemKey}
+                  items={items}
+                  onSelectItem={onSelectItem}
+                />
+              ) : (
+                <div className="px-1 text-xs font-black uppercase tracking-[0.24em] text-white/35">
+                  TUF drawer
+                </div>
+              )}
             </div>
-            <CloseButton onClick={onClose} />
+            <div className="flex shrink-0 items-center gap-1">
+              <PinButton isPinned={isPinned} onClick={onTogglePinned} />
+              <CloseButton onClick={onClose} />
+            </div>
           </div>
         </nav>
       </div>
@@ -95,6 +118,33 @@ function PassDetailContainer({
   });
 
   return <PassDetailView onRetry={retryActivePass} state={activeState} />;
+}
+
+function DrawerStatusView({
+  description,
+  isResolving
+}: {
+  description: string | null;
+  isResolving: boolean;
+}) {
+  return (
+    <section className="grid flex-1 place-items-center px-4 py-8 text-center">
+      <div className="flex max-w-sm flex-col items-center justify-center">
+        <p className="text-xs font-black uppercase tracking-[0.24em] text-violet-200/60">
+          {isResolving ? "Refreshing" : "No result"}
+        </p>
+        <h2 className="mt-2 text-xl font-black text-white">
+          {isResolving ? "Looking for TUF data" : "No TUF result"}
+        </h2>
+        <p className="mt-2 text-sm font-semibold text-white/45">
+          {description ??
+            (isResolving
+              ? "The drawer is pinned, so it will update as soon as this video resolves."
+              : "This video does not have a matched TUF level or pass.")}
+        </p>
+      </div>
+    </section>
+  );
 }
 
 function isLevelContext(item: ResolvedTufContext): item is ResolvedLevelContext {
