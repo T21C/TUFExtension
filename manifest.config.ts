@@ -41,5 +41,11 @@ export default defineManifest({
       js: ["src/entrypoints/content/index.ts"],
       run_at: "document_idle"
     }
+  ],
+  web_accessible_resources: [
+    {
+      matches: ["https://www.youtube.com/*", "https://www.bilibili.com/*"],
+      resources: ["fonts/pretendard-variable.woff2"]
+    }
   ]
 });

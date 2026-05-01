@@ -27,13 +27,6 @@ const BUTTON_HOVER_GRADIENT =
   "linear-gradient(90deg, #3B0877 0%, #6148C6 100%)";
 const PRETENDARD_FONT_STACK = '"Pretendard", ui-sans-serif, system-ui, sans-serif';
 const PRETENDARD_FONT_STYLE_ID = "tuf-level-helper-pretendard-font";
-const PRETENDARD_FONT_FACE = `
-@font-face {
-  font-family: "Pretendard";
-  font-display: swap;
-  font-weight: 45 920;
-  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/woff2/PretendardVariable.woff2") format("woff2-variations");
-}`;
 
 export function injectTufButton(
   item: ResolvedTufContext,
@@ -214,6 +207,12 @@ function ensurePretendardFontFace(): void {
 
   const style = document.createElement("style");
   style.id = PRETENDARD_FONT_STYLE_ID;
-  style.textContent = PRETENDARD_FONT_FACE;
+  style.textContent = `
+@font-face {
+  font-family: "Pretendard";
+  font-display: swap;
+  font-weight: 45 920;
+  src: url("${chrome.runtime.getURL("fonts/pretendard-variable.woff2")}") format("woff2-variations");
+}`;
   document.head.append(style);
 }

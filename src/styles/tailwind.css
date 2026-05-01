@@ -4,7 +4,7 @@
   font-family: "Pretendard";
   font-display: swap;
   font-weight: 45 920;
-  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/woff2/PretendardVariable.woff2") format("woff2-variations");
+  src: url("__TUF_PRETENDARD_FONT_URL__") format("woff2-variations");
 }
 
 @theme {
