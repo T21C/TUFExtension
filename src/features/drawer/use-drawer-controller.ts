@@ -1,34 +1,34 @@
 import { useMemo } from "react";
-import type { ResolvedLevelContext } from "@domain/tuf/types";
+import type { ResolvedTufContext } from "@domain/tuf/types";
 
 interface UseDrawerControllerParams {
-  activeLevelId: string;
+  activeItemKey: string;
   isOpen: boolean;
-  levels: ResolvedLevelContext[];
+  items: ResolvedTufContext[];
   onClose: () => void;
-  onSelectLevel: (levelId: string) => void;
+  onSelectItem: (itemKey: string) => void;
 }
 
 export function useDrawerController({
-  activeLevelId,
+  activeItemKey,
   isOpen,
-  levels,
+  items,
   onClose,
-  onSelectLevel
+  onSelectItem
 }: UseDrawerControllerParams): UseDrawerControllerParams {
-  const safeActiveLevelId = useMemo(() => {
-    if (levels.some((level) => level.levelId === activeLevelId)) {
-      return activeLevelId;
+  const safeActiveItemKey = useMemo(() => {
+    if (items.some((item) => item.itemKey === activeItemKey)) {
+      return activeItemKey;
     }
 
-    return levels[0]?.levelId ?? activeLevelId;
-  }, [activeLevelId, levels]);
+    return items[0]?.itemKey ?? activeItemKey;
+  }, [activeItemKey, items]);
 
   return {
-    activeLevelId: safeActiveLevelId,
+    activeItemKey: safeActiveItemKey,
     isOpen,
-    levels,
+    items,
     onClose,
-    onSelectLevel
+    onSelectItem
   };
 }

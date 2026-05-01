@@ -4,7 +4,9 @@ import type { UnknownRecord } from "@shared/object";
 export type TufRecord = UnknownRecord;
 
 export interface ResolvedLevelContext {
+  kind: "level";
   video: VideoReference;
+  itemKey: string;
   levelId: string;
   title: string;
   tabIconAlt?: string;
@@ -12,6 +14,22 @@ export interface ResolvedLevelContext {
   url?: string;
   raw?: unknown;
 }
+
+export interface ResolvedPassContext {
+  kind: "pass";
+  video: VideoReference;
+  itemKey: string;
+  passId: string;
+  levelId?: string;
+  playerName?: string;
+  tabIconAlt?: string;
+  tabIconUrl?: string;
+  title: string;
+  url?: string;
+  raw?: unknown;
+}
+
+export type ResolvedTufContext = ResolvedLevelContext | ResolvedPassContext;
 
 export type LeaderboardSortKey = "TIME" | "ACC" | "SPEED" | "SCR";
 export type SortDirection = "asc" | "desc";
@@ -128,6 +146,75 @@ export interface LevelPageData {
 
 export interface LevelPageLoadState {
   data?: LevelPageData;
+  error?: string;
+  isLoading: boolean;
+}
+
+export interface PassJudgements {
+  earlyDouble: number;
+  earlySingle: number;
+  ePerfect: number;
+  perfect: number;
+  lPerfect: number;
+  lateSingle: number;
+  lateDouble: number;
+}
+
+export interface PassPlayer {
+  avatarUrl?: string;
+  country?: string;
+  discordUsername?: string;
+  id?: string;
+  name: string;
+  rankedScoreRank?: number;
+}
+
+export interface PassLevelSummary {
+  artist?: string;
+  baseScore?: number;
+  charter?: string;
+  difficulty?: LevelDifficulty;
+  id?: string;
+  song: string;
+  team?: string;
+  videoLink?: string;
+  vfxer?: string;
+}
+
+export interface PassScoreInfo {
+  currentRankedScore?: number;
+  impact?: number;
+  previousRankedScore?: number;
+}
+
+export interface PassDetail {
+  accuracy: number;
+  date?: string;
+  feelingRating?: string;
+  id: string;
+  is12K: boolean;
+  is16K: boolean;
+  isDeleted: boolean;
+  isHidden: boolean;
+  isNoHoldTap: boolean;
+  isWorldsFirst: boolean;
+  judgements: PassJudgements;
+  level: PassLevelSummary;
+  player: PassPlayer;
+  score: number;
+  scoreInfo?: PassScoreInfo;
+  speed: number;
+  videoLink?: string;
+}
+
+export interface PassPageData {
+  pass: PassDetail;
+  passUrl: string;
+  thumbnailUrl?: string;
+}
+
+export interface PassPageLoadState {
+  data?: PassPageData;
   error?: string;
   isLoading: boolean;
 }

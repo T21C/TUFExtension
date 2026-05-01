@@ -1,4 +1,4 @@
-import { FlagIcon, YoutubeIcon } from "./level-icons";
+import { FlagIcon, YoutubeIcon } from "@drawer/shared/level-icons";
 import type { LeaderboardSortKey, LevelPass } from "@domain/tuf/types";
 import {
   countryToEmoji,
@@ -6,8 +6,12 @@ import {
   formatDate,
   formatScore,
   formatSpeed,
-} from "./formatters";
+} from "@drawer/shared/formatters";
 import { getPassMetric } from "./leaderboard-sort";
+import {
+  interactiveSurfaceClassName,
+  softGlowBorderStyle,
+} from "@drawer/shared/level-surface";
 
 export function LeaderboardRow({
   index,
@@ -69,7 +73,10 @@ export function LeaderboardRow({
       </div>
 
       <div className="relative mt-3 grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2">
-        <div className="grid min-h-9 grid-cols-7 items-center rounded bg-[#8b4dff] px-1 py-1 text-md font-medium tabular-nums shadow-[0_0_18px_rgba(139,77,255,0.2)]">
+        <div
+          className="grid min-h-9 grid-cols-7 items-center rounded border bg-black/35 px-1 py-1 text-md font-medium tabular-nums backdrop-blur-md"
+          style={softGlowBorderStyle}
+        >
           <JudgementValue
             className="text-red-500"
             value={pass.judgements.earlyDouble}
@@ -101,9 +108,10 @@ export function LeaderboardRow({
         </div>
         <a
           aria-label={`${pass.playerName} pass page`}
-          className="grid h-8 w-8 shrink-0 place-items-center rounded text-white transition hover:bg-white/10"
+          className={["grid h-8 w-8 shrink-0 place-items-center", interactiveSurfaceClassName].join(" ")}
           href={`https://tuforums.com/passes/${pass.id}`}
           rel="noreferrer"
+          style={softGlowBorderStyle}
           target="_blank"
         >
           <FlagIcon size={19} />
@@ -111,9 +119,10 @@ export function LeaderboardRow({
         {pass.videoLink ? (
           <a
             aria-label={`${pass.playerName} clear video`}
-            className="grid h-8 w-8 shrink-0 place-items-center rounded border border-white/10 bg-white/10 text-white shadow-[0_0_12px_rgba(139,0,255,0.14)] backdrop-blur-md transition hover:bg-white/20"
+            className={["grid h-8 w-8 shrink-0 place-items-center", interactiveSurfaceClassName].join(" ")}
             href={pass.videoLink}
             rel="noreferrer"
+            style={softGlowBorderStyle}
             target="_blank"
           >
             <YoutubeIcon size={18} />

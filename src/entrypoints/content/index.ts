@@ -8,12 +8,12 @@ import {
 } from "@platform/chrome/runtime-message";
 import { watchUrlChanges } from "@platform/content-script/url-watcher";
 import { logDebug, logInfo, logWarn } from "@platform/content-script/logger";
-import type { ResolvedLevelContext } from "@domain/tuf/types";
+import type { ResolvedTufContext } from "@domain/tuf/types";
 import type { VideoReference } from "@domain/video/types";
 
 let lastCanonicalUrl: string | null = null;
 let activeVideo: VideoReference | null = null;
-let activeLevels: ResolvedLevelContext[] = [];
+let activeItems: ResolvedTufContext[] = [];
 
 logInfo("Content script loaded", { href: window.location.href });
 scheduleResolveCurrentVideo();
@@ -44,7 +44,7 @@ async function resolveCurrentVideo(): Promise<void> {
 
     lastCanonicalUrl = null;
     activeVideo = null;
-    activeLevels = [];
+    activeItems = [];
     removeTufButton();
     clearDrawer();
     return;
@@ -58,56 +58,61 @@ async function resolveCurrentVideo(): Promise<void> {
   logInfo("Detected supported video", video);
   lastCanonicalUrl = video.canonicalUrl;
   activeVideo = video;
-  activeLevels = [];
+  activeItems = [];
   removeTufButton();
   clearDrawer();
 
-  logInfo("Requesting level resolution", video);
+  logInfo("Requesting TUF video resolution", video);
   const response = await sendRuntimeMessage<ResolveVideoResult>({
     type: "RESOLVE_VIDEO",
     video
   });
 
-  logInfo("Received level resolution response", response);
+  logInfo("Received TUF video resolution response", response);
 
-  const levels = getResolvedLevels(response);
+  const items = getResolvedItems(response);
 
-  if (levels.length > 0 && activeVideo?.canonicalUrl === video.canonicalUrl) {
-    activeLevels = levels;
-    injectTufButton(levels[0], toggleActiveDrawer);
-    mountOrUpdateDrawer(levels);
+  if (items.length > 0 && activeVideo?.canonicalUrl === video.canonicalUrl) {
+    activeItems = items;
+    injectTufButton(items[0], toggleActiveDrawer);
+    mountOrUpdateDrawer(items);
     return;
   }
 
-  if (levels.length === 0) {
-    logInfo("No TUF level matched for current video", video);
-    activeLevels = [];
+  if (items.length === 0) {
+    logInfo("No TUF result matched for current video", video);
+    activeItems = [];
     clearDrawer();
   }
 }
 
 function toggleActiveDrawer(): void {
-  if (activeLevels.length === 0) {
-    logWarn("TUF button clicked without an active level context", activeVideo);
+  if (activeItems.length === 0) {
+    logWarn("TUF button clicked without an active TUF context", activeVideo);
     return;
   }
 
   logInfo("TUF button clicked; toggling injected drawer", {
     video: activeVideo,
-    count: activeLevels.length,
-    levelIds: activeLevels.map((level) => level.levelId)
+    count: activeItems.length,
+    itemKeys: activeItems.map((item) => item.itemKey)
   });
-  toggleDrawer(activeLevels);
+  toggleDrawer(activeItems);
 }
 
-function getResolvedLevels(response: ResolveVideoResult | undefined): ResolvedLevelContext[] {
+function getResolvedItems(response: ResolveVideoResult | undefined): ResolvedTufContext[] {
   if (!response) {
     return [];
   }
 
-  if (Array.isArray(response.levels)) {
-    return response.levels;
+  if (Array.isArray(response.items)) {
+    return response.items;
   }
 
-  return response.level ? [response.level] : [];
+  const passes = Array.isArray(response.passes) ? response.passes : [];
+  if (Array.isArray(response.levels)) {
+    return [...passes, ...response.levels];
+  }
+
+  return response.level ? [...passes, response.level] : passes;
 }

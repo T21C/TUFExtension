@@ -4,9 +4,14 @@ import {
   HeartIcon,
   SteamIcon,
   TufIcon,
-} from "./level-icons";
+} from "@drawer/shared/level-icons";
 import type { LevelPageData } from "@domain/tuf/types";
 import type { LevelLikeController } from "@features/drawer/use-level-like";
+import {
+  interactiveSurfaceClassName,
+  mutedSurfaceClassName,
+  softGlowBorderStyle,
+} from "@drawer/shared/level-surface";
 
 export function LevelActionStrip({
   data,
@@ -41,10 +46,10 @@ export function LevelActionStrip({
       <button
         aria-label={getLikeButtonLabel(likeController)}
         className={[
-          "grid h-12 place-items-center rounded-md border shadow-[0_0_18px_rgba(139,0,255,0.16)] backdrop-blur-md transition",
+          "grid h-12 place-items-center",
           likeController.liked
-            ? "border-[#ff222266] bg-[#ff2222]/15 text-[#ff2222]"
-            : "border-[#8b00ff55] bg-white/10 text-white hover:bg-white/20",
+            ? "rounded-md border bg-black/35 text-[#ff2222] shadow-[0_0_18px_rgba(255,34,34,0.18)] backdrop-blur-md transition"
+            : interactiveSurfaceClassName,
           likeController.isLoading || likeController.isPending
             ? "cursor-wait opacity-70"
             : "cursor-pointer",
@@ -72,9 +77,10 @@ function ActionLink({
   return (
     <a
       aria-label={label}
-      className="grid h-12 place-items-center rounded-md border border-[#8b00ff55] bg-white/10 text-white shadow-[0_0_18px_rgba(139,0,255,0.16)] backdrop-blur-md transition hover:bg-white/20"
+      className={["grid h-12 place-items-center", interactiveSurfaceClassName].join(" ")}
       href={href}
       rel="noreferrer"
+      style={softGlowBorderStyle}
       target="_blank"
       title={label}
     >
@@ -93,7 +99,7 @@ function DisabledAction({
   return (
     <button
       aria-label={label}
-      className="grid h-12 cursor-not-allowed place-items-center rounded-md border border-[#8b00ff33] bg-white/5 text-white/30 backdrop-blur-md"
+      className={["grid h-12 cursor-not-allowed place-items-center", mutedSurfaceClassName].join(" ")}
       disabled
       title={label}
       type="button"

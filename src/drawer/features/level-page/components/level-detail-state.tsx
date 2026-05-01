@@ -1,9 +1,14 @@
+import {
+  glowDividerStyle,
+  panelSurfaceClassName,
+} from "@drawer/shared/level-surface";
+
 export function LevelDetailSkeleton() {
   return (
     <div className="space-y-4 pb-5">
-      <div className="h-[280px] animate-pulse rounded-md bg-white/10" />
-      <div className="h-40 animate-pulse rounded-md bg-white/10" />
-      <div className="h-52 animate-pulse rounded-md bg-white/10" />
+      <div className={["h-[280px] animate-pulse", panelSurfaceClassName].join(" ")} />
+      <div className={["h-40 animate-pulse", panelSurfaceClassName].join(" ")} />
+      <div className={["h-52 animate-pulse", panelSurfaceClassName].join(" ")} />
     </div>
   );
 }
@@ -17,7 +22,8 @@ export function LevelDetailError({
 }) {
   return (
     <div className="grid h-full min-h-[360px] place-items-center px-6 text-center">
-      <div>
+      <div className={["max-w-sm p-5", panelSurfaceClassName].join(" ")}>
+        <div aria-hidden="true" className="mb-4 h-px" style={glowDividerStyle} />
         <h2 className="text-2xl font-extrabold">Could not load level</h2>
         <p className="mt-2 text-sm font-medium text-white/60">
           {message ?? "The TUF API did not return a readable response."}

@@ -15,7 +15,9 @@ export function mapLevel(
   const tabIcon = getTabIcon(candidate, difficultyCatalog);
 
   return {
+    kind: "level",
     video,
+    itemKey: `level:${levelId}`,
     levelId,
     tabIconAlt: tabIcon?.alt,
     tabIconUrl: tabIcon?.url,

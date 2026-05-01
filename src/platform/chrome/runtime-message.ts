@@ -2,7 +2,10 @@ import { logDebug, logWarn } from "@platform/content-script/logger";
 import type {
   LevelAuthState,
   LevelPageData,
-  ResolvedLevelContext
+  PassPageData,
+  ResolvedLevelContext,
+  ResolvedPassContext,
+  ResolvedTufContext
 } from "@domain/tuf/types";
 import type { VideoReference } from "@domain/video/types";
 import {
@@ -17,8 +20,10 @@ export interface ResolveVideoRequest {
 
 export interface ResolveVideoResult {
   type: "RESOLVE_VIDEO_RESULT";
+  items: ResolvedTufContext[];
   level: ResolvedLevelContext | null;
   levels: ResolvedLevelContext[];
+  passes: ResolvedPassContext[];
 }
 
 export interface GetLevelPageDataRequest {
@@ -31,6 +36,18 @@ export interface GetLevelPageDataResult {
   data?: LevelPageData;
   error?: string;
   levelId: string;
+}
+
+export interface GetPassPageDataRequest {
+  type: "GET_PASS_PAGE_DATA";
+  passId: string;
+}
+
+export interface GetPassPageDataResult {
+  type: "GET_PASS_PAGE_DATA_RESULT";
+  data?: PassPageData;
+  error?: string;
+  passId: string;
 }
 
 export interface GetLevelAuthStateRequest {
@@ -71,6 +88,7 @@ export interface OpenTufLoginResult {
 export type ExtensionRequest =
   | GetLevelAuthStateRequest
   | GetLevelPageDataRequest
+  | GetPassPageDataRequest
   | OpenTufLoginRequest
   | ResolveVideoRequest
   | SetLevelLikeRequest;
@@ -78,6 +96,7 @@ export type ExtensionRequest =
 export type ExtensionResponse =
   | GetLevelAuthStateResult
   | GetLevelPageDataResult
+  | GetPassPageDataResult
   | OpenTufLoginResult
   | ResolveVideoResult
   | SetLevelLikeResult;

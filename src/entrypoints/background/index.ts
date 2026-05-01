@@ -2,14 +2,16 @@ import { logDebug, logError, logInfo } from "@shared/logger";
 import {
   getLevelAuthState,
   getLevelPageData,
+  getPassPageData,
   resolveLevelByVideoUrl,
+  resolvePassesByVideoUrl,
   setLevelLiked
 } from "@domain/tuf/tuf-api";
 import type {
   ExtensionRequest,
   ExtensionResponse,
 } from "@platform/chrome/runtime-message";
-import type { ResolvedLevelContext } from "@domain/tuf/types";
+import type { ResolvedLevelContext, ResolvedPassContext } from "@domain/tuf/types";
 import type { VideoReference } from "@domain/video/types";
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -32,19 +34,27 @@ chrome.runtime.onMessage.addListener(
 
     if (message.type === "RESOLVE_VIDEO") {
       void handleResolveVideo(message.video)
-        .then((levels) => {
+        .then(({ levels, passes }) => {
           const level = levels[0] ?? null;
+          const items = [...passes, ...levels];
 
-          logInfo("Sending level resolution result", {
-            matched: levels.length > 0,
-            count: levels.length,
-            levelIds: levels.map((item) => item.levelId)
+          logInfo("Sending TUF video resolution result", {
+            matched: items.length > 0,
+            itemCount: items.length,
+            levelIds: levels.map((item) => item.levelId),
+            passIds: passes.map((item) => item.passId)
           });
-          sendResponse({ type: "RESOLVE_VIDEO_RESULT", level, levels });
+          sendResponse({ type: "RESOLVE_VIDEO_RESULT", items, level, levels, passes });
         })
         .catch((error: unknown) => {
           logError("Failed to resolve video", error);
-          sendResponse({ type: "RESOLVE_VIDEO_RESULT", level: null, levels: [] });
+          sendResponse({
+            type: "RESOLVE_VIDEO_RESULT",
+            items: [],
+            level: null,
+            levels: [],
+            passes: []
+          });
         });
 
       return true;
@@ -69,6 +79,31 @@ chrome.runtime.onMessage.addListener(
             type: "GET_LEVEL_PAGE_DATA_RESULT",
             error: error instanceof Error ? error.message : String(error),
             levelId: message.levelId
+          });
+        });
+
+      return true;
+    }
+
+    if (message.type === "GET_PASS_PAGE_DATA") {
+      void getPassPageData(message.passId)
+        .then((data) => {
+          logInfo("Sending pass page data result", {
+            passId: message.passId,
+            player: data.pass.player.name
+          });
+          sendResponse({
+            type: "GET_PASS_PAGE_DATA_RESULT",
+            data,
+            passId: message.passId
+          });
+        })
+        .catch((error: unknown) => {
+          logError("Failed to load pass page data", error);
+          sendResponse({
+            type: "GET_PASS_PAGE_DATA_RESULT",
+            error: error instanceof Error ? error.message : String(error),
+            passId: message.passId
           });
         });
 
@@ -143,13 +178,18 @@ chrome.runtime.onMessage.addListener(
 
 async function handleResolveVideo(
   video: VideoReference
-): Promise<ResolvedLevelContext[]> {
+): Promise<{ levels: ResolvedLevelContext[]; passes: ResolvedPassContext[] }> {
   logInfo("Resolving video via TUF API", video);
-  const levels = await resolveLevelByVideoUrl(video);
+  const [levels, passes] = await Promise.all([
+    resolveLevelByVideoUrl(video),
+    resolvePassesByVideoUrl(video)
+  ]);
   logInfo("Resolved current video context", {
-    matched: levels.length > 0,
-    count: levels.length,
-    levelIds: levels.map((level) => level.levelId)
+    matched: levels.length + passes.length > 0,
+    levelCount: levels.length,
+    levelIds: levels.map((level) => level.levelId),
+    passCount: passes.length,
+    passIds: passes.map((pass) => pass.passId)
   });
-  return levels;
+  return { levels, passes };
 }

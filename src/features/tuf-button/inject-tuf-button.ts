@@ -8,7 +8,7 @@ import {
   TUF_BUTTON_ID,
   waitForYouTubeActionBar
 } from "@platform/content-script/youtube-action-bar";
-import type { ResolvedLevelContext } from "@domain/tuf/types";
+import type { ResolvedTufContext } from "@domain/tuf/types";
 
 const BUTTON_CLASS_NAME =
   "ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconLeading ytSpecButtonShapeNextEnableBackdropFilterExperiment";
@@ -27,7 +27,7 @@ const PRETENDARD_FONT_FACE = `
 }`;
 
 export function injectTufButton(
-  level: ResolvedLevelContext,
+  item: ResolvedTufContext,
   onClick: () => void
 ): void {
   cancelPendingActionBarMount();
@@ -35,18 +35,18 @@ export function injectTufButton(
   const existingButton = getExistingButton();
 
   if (existingButton) {
-    logDebug("TUF button already exists; updating level id", {
-      levelId: level.levelId
+    logDebug("TUF button already exists; updating active item", {
+      itemKey: item.itemKey
     });
-    existingButton.dataset.levelId = level.levelId;
+    existingButton.dataset.tufItemKey = item.itemKey;
     applyBrandedButtonStyle(existingButton);
     moveHostIntoYouTubeActionBar(existingButton.parentElement ?? existingButton);
     return;
   }
 
   logInfo("Injecting TUF button", {
-    levelId: level.levelId,
-    title: level.title
+    itemKey: item.itemKey,
+    title: item.title
   });
 
   const host = document.createElement("div");
@@ -57,8 +57,8 @@ export function injectTufButton(
   button.id = TUF_BUTTON_ID;
   button.type = "button";
   button.className = BUTTON_CLASS_NAME;
-  button.setAttribute("aria-label", `Open TUF level: ${level.title}`);
-  button.dataset.levelId = level.levelId;
+  button.setAttribute("aria-label", `Open TUF: ${item.title}`);
+  button.dataset.tufItemKey = item.itemKey;
   button.addEventListener("click", onClick);
   applyBrandedButtonStyle(button);
 

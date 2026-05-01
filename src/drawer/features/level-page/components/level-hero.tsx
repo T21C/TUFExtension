@@ -4,7 +4,7 @@ import {
   HeartIcon,
   MetronomeIcon,
   TimeIcon,
-} from "./level-icons";
+} from "@drawer/shared/level-icons";
 import type { LevelPageData } from "@domain/tuf/types";
 import type { LevelLikeController } from "@features/drawer/use-level-like";
 import {
@@ -12,7 +12,12 @@ import {
   formatDuration,
   formatInteger,
   formatNumber,
-} from "./formatters";
+} from "@drawer/shared/formatters";
+import {
+  glowBorderStyle,
+  interactiveSurfaceClassName,
+  softGlowBorderStyle,
+} from "@drawer/shared/level-surface";
 
 export function LevelHero({
   data,
@@ -27,11 +32,12 @@ export function LevelHero({
 
   return (
     <section
-      className="relative isolate overflow-hidden rounded-md border border-[#8b00ff66] bg-[#050510] bg-cover bg-center bg-no-repeat shadow-[0_0_26px_rgba(83,57,178,0.35)] [background-clip:padding-box]"
+      className="relative isolate overflow-hidden rounded-md border bg-[#050510] bg-cover bg-center bg-no-repeat [background-clip:padding-box]"
       style={{
         backgroundImage: data.thumbnailUrl
           ? `url(${data.thumbnailUrl})`
           : undefined,
+        ...glowBorderStyle,
       }}
     >
       <div className="absolute inset-0 bg-[#000d] blur-[8px] brightness-[0.8]" />
@@ -51,7 +57,10 @@ export function LevelHero({
                 {data.difficulty.name ?? "?"}
               </div>
             )}
-              <div className="rounded border border-white/10 bg-white/15 px-2.5 py-1 text-sm font-black leading-none text-white shadow-[0_2px_10px_rgba(0,0,0,0.35)] backdrop-blur-md">
+              <div
+                className="rounded border bg-black/35 px-2.5 py-1 text-sm font-black leading-none text-white backdrop-blur-md"
+                style={softGlowBorderStyle}
+              >
               {formatBaseScore(level.pp ?? data.difficulty.baseScore ?? 0)}PP
             </div>
             <div className="text-sm font-black text-white/45">#{level.id}</div>
@@ -178,7 +187,10 @@ function getHeroCurationIconClassName(count: number): string {
 
 function MetricChip({ icon, value }: { icon: ReactNode; value: string }) {
   return (
-    <div className="flex min-w-[4.6rem] items-center justify-center gap-1.5 rounded border border-white/10 bg-white/15 px-2.5 py-1.5 text-sm font-black text-white shadow-[0_2px_10px_rgba(0,0,0,0.3)] backdrop-blur-md">
+    <div
+      className="flex min-w-[4.6rem] items-center justify-center gap-1.5 rounded border bg-black/35 px-2.5 py-1.5 text-sm font-black text-white backdrop-blur-md"
+      style={softGlowBorderStyle}
+    >
       <span className="text-white/95">{icon}</span>
       <span>{value}</span>
     </div>
@@ -202,7 +214,10 @@ function IconRow({ data }: { data: LevelPageData }) {
     <div className="flex min-w-0 flex-wrap items-center gap-2">
       {icons.map((item) => (
         <div
-          className="grid h-8 w-8 place-items-center rounded-lg border border-white/25 bg-white/15 shadow-[0_2px_10px_rgba(0,0,0,0.45)] backdrop-blur-md"
+          className={[
+            "grid h-8 w-8 place-items-center",
+            interactiveSurfaceClassName,
+          ].join(" ")}
           key={item.id}
           style={{
             borderColor: item.color,

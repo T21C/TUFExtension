@@ -4,9 +4,15 @@ import type {
   LevelPass,
   SortDirection,
 } from "@domain/tuf/types";
-import { formatInteger } from "./formatters";
+import { formatInteger } from "@drawer/shared/formatters";
 import { LeaderboardRow } from "./leaderboard-row";
 import { SORT_OPTIONS } from "./leaderboard-sort";
+import {
+  activeSurfaceClassName,
+  glowDividerStyle,
+  interactiveSurfaceClassName,
+  panelSurfaceClassName,
+} from "@drawer/shared/level-surface";
 
 export function LeaderboardPanel({
   isOpen,
@@ -26,11 +32,11 @@ export function LeaderboardPanel({
   const contentId = "tuf-level-helper-leaderboard";
 
   return (
-    <section className="rounded-md border border-[#8b00ff66] bg-white/10 shadow-[0_0_24px_rgba(47,5,101,0.22)] backdrop-blur-xl">
+    <section className={panelSurfaceClassName}>
       <button
         aria-controls={contentId}
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left transition hover:bg-white/5"
+        className="flex w-full items-center justify-between gap-3 px-3 py-3 text-left transition hover:bg-black/20"
         onClick={onToggle}
         type="button"
       >
@@ -51,7 +57,8 @@ export function LeaderboardPanel({
       </button>
 
       {isOpen ? (
-        <div className="border-t border-white/10 px-3 pb-3 pt-3" id={contentId}>
+        <div className="px-3 pb-3 pt-3" id={contentId}>
+          <div aria-hidden="true" className="mb-3 h-px" style={glowDividerStyle} />
           {passes.length > 0 ? (
             <>
               <div className="flex justify-start gap-2.5">
@@ -66,8 +73,8 @@ export function LeaderboardPanel({
                       className={[
                         "relative grid h-8 w-8 place-items-center rounded border text-white shadow-[0_0_12px_rgba(139,0,255,0.16)] backdrop-blur-md transition",
                         isActive
-                          ? "border-white/20 bg-white/25 shadow-[0_0_16px_rgba(255,255,255,0.14)]"
-                          : "border-[#8b00ff55] bg-white/5 text-white/65 hover:bg-white/15 hover:text-white",
+                          ? activeSurfaceClassName
+                          : `${interactiveSurfaceClassName} text-white/65 hover:text-white`,
                       ].join(" ")}
                       key={option.key}
                       onClick={() => onSort(option.key)}
@@ -97,9 +104,7 @@ export function LeaderboardPanel({
                         <div
                           className="h-full rounded-full"
                           style={{
-                            background:
-                              "linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.7), transparent)",
-                            boxShadow: "0 0 10px rgba(168, 85, 247, 0.45)"
+                            ...glowDividerStyle,
                           }}
                         />
                       </div>
@@ -114,7 +119,7 @@ export function LeaderboardPanel({
               </div>
             </>
           ) : (
-            <p className="rounded-md border border-white/10 bg-white/10 p-3 text-center text-sm font-medium text-white/65 backdrop-blur-md">
+            <p className={["p-3 text-center text-sm font-medium text-white/65", interactiveSurfaceClassName].join(" ")}>
               No clears yet
             </p>
           )}

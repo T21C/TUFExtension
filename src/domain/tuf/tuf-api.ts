@@ -23,9 +23,15 @@ import type {
   LevelPageData,
   LevelPass,
   LevelPassJudgements,
+  PassDetail,
+  PassJudgements,
+  PassLevelSummary,
+  PassPageData,
+  PassPlayer,
   LevelStats,
   LevelTag,
   ResolvedLevelContext,
+  ResolvedPassContext,
   TufRecord
 } from "./types";
 
@@ -110,6 +116,69 @@ export async function resolveLevelByVideoUrl(
   }
 }
 
+export async function resolvePassesByVideoUrl(
+  video: VideoReference
+): Promise<ResolvedPassContext[]> {
+  const query = `video:${video.externalId}`;
+
+  try {
+    logInfo("Calling TUF pass lookup API", {
+      path: "/v2/database/passes",
+      query
+    });
+
+    const lookupResponse = await tufApi.get<unknown>("/v2/database/passes", {
+      params: { query }
+    });
+
+    logDebug("Received TUF pass lookup response", {
+      status: lookupResponse.status,
+      payloadShape: describePayload(lookupResponse.data)
+    });
+
+    const candidates = getPassCandidates(lookupResponse.data);
+
+    if (candidates.length === 0) {
+      logInfo("TUF pass lookup returned no candidates");
+      return [];
+    }
+
+    const difficultyCatalog = await getDifficultyCatalog();
+    const passes = dedupePasses(
+      candidates.map((candidate) =>
+        mapResolvedPass(video, candidate, difficultyCatalog)
+      )
+    );
+
+    logInfo("Mapped TUF pass contexts", {
+      count: passes.length,
+      passIds: passes.map((pass) => pass.passId)
+    });
+
+    return passes;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status;
+      logWarn("TUF pass lookup Axios error", {
+        status,
+        message: error.message,
+        responseData: error.response?.data
+      });
+
+      if (status === 401 || status === 404) {
+        return [];
+      }
+
+      throw new Error(`TUF pass lookup failed with ${status ?? "unknown status"}`, {
+        cause: error
+      });
+    }
+
+    logError("TUF pass lookup failed with non-Axios error", error);
+    throw error;
+  }
+}
+
 export async function getLevelPageData(levelId: string): Promise<LevelPageData> {
   logInfo("Calling TUF level page APIs", { levelId });
 
@@ -179,6 +248,52 @@ export async function getLevelPageData(levelId: string): Promise<LevelPageData> 
     }
 
     logError("TUF level page API failed with non-Axios error", error);
+    throw error;
+  }
+}
+
+export async function getPassPageData(passId: string): Promise<PassPageData> {
+  logInfo("Calling TUF pass page API", { passId });
+
+  try {
+    const response = await tufApi.get<unknown>(`/v2/database/passes/${passId}`);
+    const rawPass = asRecord(response.data);
+
+    if (!rawPass) {
+      throw new Error("TUF pass detail response did not include a pass object");
+    }
+
+    const difficultyCatalog = await getDifficultyCatalog();
+    const pass = mapPassDetail(rawPass, passId, difficultyCatalog);
+    const thumbnailUrl = getYoutubeThumbnailUrl(pass.level.videoLink ?? pass.videoLink);
+    const data: PassPageData = {
+      pass,
+      passUrl: `https://tuforums.com/passes/${pass.id}`,
+      thumbnailUrl
+    };
+
+    logInfo("Mapped TUF pass page data", {
+      passId: data.pass.id,
+      player: data.pass.player.name,
+      title: data.pass.level.song
+    });
+
+    return data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      logWarn("TUF pass page API Axios error", {
+        passId,
+        message: error.message,
+        responseData: error.response?.data,
+        status: error.response?.status
+      });
+      throw new Error(
+        `TUF pass page API failed with ${error.response?.status ?? "unknown status"}`,
+        { cause: error }
+      );
+    }
+
+    logError("TUF pass page API failed with non-Axios error", error);
     throw error;
   }
 }
@@ -414,6 +529,129 @@ function mapLevelDetail(
   };
 }
 
+function mapResolvedPass(
+  video: VideoReference,
+  pass: TufRecord,
+  difficultyCatalog?: Map<string, DifficultyEntry>
+): ResolvedPassContext {
+  const passId =
+    readString(pass, ["id", "passId", "_id", "uuid"]) ?? video.externalId;
+  const player = asRecord(pass.player);
+  const level = asRecord(pass.level);
+  const levelId = readString(level, ["id", "levelId", "_id", "uuid"]);
+  const playerName = readString(player, ["name"]) ?? "Unknown Player";
+  const levelTitle = level
+    ? getSongDisplayName(level, asRecord(level.songObject))
+    : "TUF Pass";
+  const difficulty =
+    level ? mapDifficultyFromCatalog(level, difficultyCatalog) ?? mapDifficulty(asRecord(level.difficulty)) : undefined;
+
+  return {
+    kind: "pass",
+    itemKey: `pass:${passId}`,
+    levelId,
+    passId,
+    playerName,
+    raw: pass,
+    tabIconAlt: difficulty?.name,
+    tabIconUrl: difficulty?.icon,
+    title: `${playerName} clear - ${levelTitle}`,
+    url: `https://tuforums.com/passes/${passId}`,
+    video
+  };
+}
+
+function mapPassDetail(
+  rawPass: TufRecord,
+  fallbackId: string,
+  difficultyCatalog?: Map<string, DifficultyEntry>
+): PassDetail {
+  const player = mapPassPlayer(rawPass);
+  const level = mapPassLevelSummary(rawPass, difficultyCatalog);
+
+  return {
+    accuracy: readNumber(rawPass, ["accuracy"]) ?? 0,
+    date: readString(rawPass, ["vidUploadTime", "date", "createdAt"]),
+    feelingRating: readString(rawPass, ["feelingRating"]),
+    id: readString(rawPass, ["id", "passId", "_id", "uuid"]) ?? fallbackId,
+    is12K: readBoolean(rawPass, ["is12K", "is12k"]),
+    is16K: readBoolean(rawPass, ["is16K", "is16k"]),
+    isDeleted: readBoolean(rawPass, ["isDeleted"]),
+    isHidden: readBoolean(rawPass, ["isHidden"]),
+    isNoHoldTap: readBoolean(rawPass, ["isNoHoldTap", "noHoldTap"]),
+    isWorldsFirst: readBoolean(rawPass, ["isWorldsFirst", "worldsFirst"]),
+    judgements: mapPassJudgements(asRecord(rawPass.judgements)),
+    level,
+    player,
+    score: readNumber(rawPass, ["scoreV2", "score"]) ?? 0,
+    scoreInfo: mapPassScoreInfo(rawPass),
+    speed: readNumber(rawPass, ["speed"]) ?? 1,
+    videoLink: readString(rawPass, ["videoLink"])
+  };
+}
+
+function mapPassPlayer(rawPass: TufRecord): PassPlayer {
+  const player = asRecord(rawPass.player);
+  const user = asRecord(player?.user);
+  const ranks = asRecord(rawPass.ranks);
+
+  return {
+    avatarUrl:
+      readString(player, ["avatarUrl"]) ??
+      readString(user, ["avatarUrl"]) ??
+      selectIconSize(readString(player, ["pfp"]), "small"),
+    country: readString(player, ["country"]),
+    discordUsername: readString(player, ["discordUsername", "discordTag"]),
+    id: readString(player, ["id"]) ?? readString(rawPass, ["playerId"]),
+    name: readString(player, ["name"]) ?? "Unknown Player",
+    rankedScoreRank: readNumber(ranks, ["rankedScoreRank"])
+  };
+}
+
+function mapPassLevelSummary(
+  rawPass: TufRecord,
+  difficultyCatalog?: Map<string, DifficultyEntry>
+): PassLevelSummary {
+  const level = asRecord(rawPass.level);
+
+  if (!level) {
+    return {
+      song: "TUF Level"
+    };
+  }
+
+  const difficulty =
+    mapDifficultyFromCatalog(level, difficultyCatalog) ??
+    mapDifficulty(asRecord(level.difficulty));
+  const baseScore = readNumber(level, ["baseScore"]) ?? difficulty?.baseScore;
+
+  return {
+    artist: readString(level, ["artist"]),
+    baseScore,
+    charter: readString(level, ["charter"]),
+    difficulty,
+    id: readString(level, ["id", "levelId", "_id", "uuid"]),
+    song: getSongDisplayName(level, asRecord(level.songObject)),
+    team: readString(level, ["team"]),
+    videoLink: readString(level, ["videoLink"]),
+    vfxer: readString(level, ["vfxer"])
+  };
+}
+
+function mapPassScoreInfo(rawPass: TufRecord): PassDetail["scoreInfo"] {
+  const scoreInfo = asRecord(rawPass.scoreInfo);
+
+  if (!scoreInfo) {
+    return undefined;
+  }
+
+  return {
+    currentRankedScore: readNumber(scoreInfo, ["currentRankedScore"]),
+    impact: readNumber(scoreInfo, ["impact"]),
+    previousRankedScore: readNumber(scoreInfo, ["previousRankedScore"])
+  };
+}
+
 function mapDifficulty(rawDifficulty: UnknownRecord | null): LevelDifficulty | undefined {
   if (!rawDifficulty) {
     return undefined;
@@ -547,7 +785,51 @@ function mapPasses(payload: unknown): LevelPass[] {
     .sort((a, b) => b.score - a.score);
 }
 
+function getPassCandidates(payload: unknown): TufRecord[] {
+  if (Array.isArray(payload)) {
+    return payload.map(asRecord).filter(isRecord);
+  }
+
+  const record = asRecord(payload);
+  if (!record) {
+    return [];
+  }
+
+  for (const key of ["items", "data", "results", "passes"]) {
+    const value = record[key];
+    if (Array.isArray(value)) {
+      return value.map(asRecord).filter(isRecord);
+    }
+  }
+
+  return [];
+}
+
+function dedupePasses(passes: ResolvedPassContext[]): ResolvedPassContext[] {
+  const seen = new Set<string>();
+  return passes.filter((pass) => {
+    if (seen.has(pass.passId)) {
+      return false;
+    }
+
+    seen.add(pass.passId);
+    return true;
+  });
+}
+
 function mapJudgements(judgements: UnknownRecord | null): LevelPassJudgements {
+  return {
+    earlyDouble: readNumber(judgements, ["earlyDouble"]) ?? 0,
+    earlySingle: readNumber(judgements, ["earlySingle"]) ?? 0,
+    ePerfect: readNumber(judgements, ["ePerfect"]) ?? 0,
+    perfect: readNumber(judgements, ["perfect"]) ?? 0,
+    lPerfect: readNumber(judgements, ["lPerfect"]) ?? 0,
+    lateSingle: readNumber(judgements, ["lateSingle"]) ?? 0,
+    lateDouble: readNumber(judgements, ["lateDouble"]) ?? 0
+  };
+}
+
+function mapPassJudgements(judgements: UnknownRecord | null): PassJudgements {
   return {
     earlyDouble: readNumber(judgements, ["earlyDouble"]) ?? 0,
     earlySingle: readNumber(judgements, ["earlySingle"]) ?? 0,
@@ -675,6 +957,36 @@ function getYoutubeVideoId(value: string | undefined): string | undefined {
   } catch {
     return undefined;
   }
+}
+
+function readBoolean(record: UnknownRecord | null | undefined, keys: string[]): boolean {
+  if (!record) {
+    return false;
+  }
+
+  for (const key of keys) {
+    const value = record[key];
+
+    if (typeof value === "boolean") {
+      return value;
+    }
+
+    if (typeof value === "number") {
+      return value !== 0;
+    }
+
+    if (typeof value === "string") {
+      const normalized = value.trim().toLowerCase();
+      if (["true", "1", "yes"].includes(normalized)) {
+        return true;
+      }
+      if (["false", "0", "no"].includes(normalized)) {
+        return false;
+      }
+    }
+  }
+
+  return false;
 }
 
 function selectIconSize(url: string | undefined, size: "medium" | "small"): string | undefined {

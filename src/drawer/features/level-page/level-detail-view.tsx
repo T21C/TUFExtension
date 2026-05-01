@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import { LevelActionStrip } from "./level-action-strip";
-import { LevelDetailError, LevelDetailSkeleton } from "./level-detail-state";
-import { LevelHero } from "./level-hero";
-import { LevelStatsPanel } from "./level-stats-panel";
-import { LeaderboardPanel } from "./leaderboard-panel";
-import { sortPasses } from "./leaderboard-sort";
+import { LevelActionStrip } from "./components/level-action-strip";
+import { LevelDetailError, LevelDetailSkeleton } from "./components/level-detail-state";
+import { LevelHero } from "./components/level-hero";
+import { LevelStatsPanel } from "./components/level-stats-panel";
+import { LeaderboardPanel } from "./leaderboard/leaderboard-panel";
+import { sortPasses } from "./leaderboard/leaderboard-sort";
 import type {
   LeaderboardSortKey,
   LevelPageData,

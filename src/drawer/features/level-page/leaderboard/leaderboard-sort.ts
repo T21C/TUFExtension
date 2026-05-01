@@ -3,7 +3,7 @@ import {
   PercentIcon,
   ScoreIcon,
   SpeedIcon,
-} from "./level-icons";
+} from "@drawer/shared/level-icons";
 import type {
   LeaderboardSortKey,
   LevelPass,
@@ -14,7 +14,7 @@ import {
   formatDate,
   formatScore,
   formatSpeed,
-} from "./formatters";
+} from "@drawer/shared/formatters";
 
 export const SORT_OPTIONS: Array<{
   icon: typeof CalendarIcon;

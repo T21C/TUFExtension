@@ -6,58 +6,58 @@ import {
   TUF_BUTTON_ID
 } from "@platform/content-script/youtube-action-bar";
 import { logDebug, logInfo } from "@platform/content-script/logger";
-import type { ResolvedLevelContext } from "@domain/tuf/types";
+import type { ResolvedTufContext } from "@domain/tuf/types";
 
 const DRAWER_HOST_ID = "tuf-level-helper-drawer-host";
 const PRETENDARD_FONT_STACK = '"Pretendard", ui-sans-serif, system-ui, sans-serif';
 
 let root: Root | null = null;
 let host: HTMLElement | null = null;
-let currentLevels: ResolvedLevelContext[] = [];
-let activeLevelId: string | null = null;
+let currentItems: ResolvedTufContext[] = [];
+let activeItemKey: string | null = null;
 let isDrawerOpen = false;
 let listenersInstalled = false;
 let drawerScrollListenersInstalled = false;
 
 export function mountOrUpdateDrawer(
-  levels: ResolvedLevelContext[],
-  options: { activeLevelId?: string; open?: boolean } = {}
+  items: ResolvedTufContext[],
+  options: { activeItemKey?: string; open?: boolean } = {}
 ): void {
-  if (levels.length === 0) {
+  if (items.length === 0) {
     clearDrawer();
     return;
   }
 
-  currentLevels = levels;
-  activeLevelId = getNextActiveLevelId(levels, options.activeLevelId);
+  currentItems = items;
+  activeItemKey = getNextActiveItemKey(items, options.activeItemKey);
 
   if (typeof options.open === "boolean") {
     isDrawerOpen = options.open;
   }
 
   logDebug("Preloading TUF drawer context", {
-    activeLevelId,
-    count: levels.length,
-    levelIds: levels.map((level) => level.levelId),
+    activeItemKey,
+    count: items.length,
+    itemKeys: items.map((item) => item.itemKey),
     open: isDrawerOpen
   });
   renderDrawer();
 }
 
-export function toggleDrawer(levels: ResolvedLevelContext[]): void {
-  if (levels.length === 0) {
+export function toggleDrawer(items: ResolvedTufContext[]): void {
+  if (items.length === 0) {
     clearDrawer();
     return;
   }
 
-  currentLevels = levels;
-  activeLevelId = getNextActiveLevelId(levels);
+  currentItems = items;
+  activeItemKey = getNextActiveItemKey(items);
   isDrawerOpen = !isDrawerOpen;
 
   logInfo("Toggling injected TUF drawer", {
-    activeLevelId,
-    count: levels.length,
-    levelIds: levels.map((level) => level.levelId),
+    activeItemKey,
+    count: items.length,
+    itemKeys: items.map((item) => item.itemKey),
     open: isDrawerOpen,
   });
 
@@ -83,8 +83,8 @@ export function closeDrawer(): void {
 export function clearDrawer(): void {
   logInfo("Clearing injected TUF drawer");
   isDrawerOpen = false;
-  currentLevels = [];
-  activeLevelId = null;
+  currentItems = [];
+  activeItemKey = null;
   root?.unmount();
   root = null;
   host?.remove();
@@ -93,46 +93,46 @@ export function clearDrawer(): void {
 }
 
 function renderDrawer(): void {
-  if (currentLevels.length === 0) {
+  if (currentItems.length === 0) {
     clearDrawer();
     return;
   }
 
-  activeLevelId = getNextActiveLevelId(currentLevels);
+  activeItemKey = getNextActiveItemKey(currentItems);
   ensureDrawerRoot();
   installGlobalListeners();
   updateDrawerHostInteraction();
 
   root?.render(
     <DrawerRoot
-      activeLevelId={activeLevelId}
+      activeItemKey={activeItemKey}
       isOpen={isDrawerOpen}
-      levels={currentLevels}
+      items={currentItems}
       onClose={closeDrawer}
-      onSelectLevel={selectDrawerLevel}
+      onSelectItem={selectDrawerItem}
     />
   );
 }
 
-function selectDrawerLevel(nextLevelId: string): void {
-  if (!currentLevels.some((level) => level.levelId === nextLevelId)) {
+function selectDrawerItem(nextItemKey: string): void {
+  if (!currentItems.some((item) => item.itemKey === nextItemKey)) {
     return;
   }
 
-  activeLevelId = nextLevelId;
-  logDebug("Selected TUF drawer level tab", { levelId: nextLevelId });
+  activeItemKey = nextItemKey;
+  logDebug("Selected TUF drawer tab", { itemKey: nextItemKey });
   renderDrawer();
 }
 
-function getNextActiveLevelId(
-  levels: ResolvedLevelContext[],
-  requestedLevelId = activeLevelId
+function getNextActiveItemKey(
+  items: ResolvedTufContext[],
+  requestedItemKey = activeItemKey
 ): string {
-  if (requestedLevelId && levels.some((level) => level.levelId === requestedLevelId)) {
-    return requestedLevelId;
+  if (requestedItemKey && items.some((item) => item.itemKey === requestedItemKey)) {
+    return requestedItemKey;
   }
 
-  return levels[0].levelId;
+  return items[0].itemKey;
 }
 
 function ensureDrawerRoot(): void {
