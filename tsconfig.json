@@ -11,14 +11,13 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "baseUrl": ".",
     "paths": {
-      "@domain/*": ["src/domain/*"],
-      "@drawer/*": ["src/drawer/*"],
-      "@entrypoints/*": ["src/entrypoints/*"],
-      "@features/*": ["src/features/*"],
-      "@platform/*": ["src/platform/*"],
-      "@shared/*": ["src/shared/*"]
+      "@domain/*": ["./src/domain/*"],
+      "@drawer/*": ["./src/drawer/*"],
+      "@entrypoints/*": ["./src/entrypoints/*"],
+      "@features/*": ["./src/features/*"],
+      "@platform/*": ["./src/platform/*"],
+      "@shared/*": ["./src/shared/*"]
     },
     "resolveJsonModule": true,
     "isolatedModules": true,
