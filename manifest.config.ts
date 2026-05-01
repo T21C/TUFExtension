@@ -2,8 +2,8 @@ import { defineManifest } from "@crxjs/vite-plugin";
 
 export default defineManifest({
   manifest_version: 3,
-  name: "TUF Level Helper",
-  description: "Shows TUF level information on supported video pages.",
+  name: "TUFExtension",
+  description: "Chrome Extension for TUF",
   version: "0.1.0",
   permissions: ["storage"],
   host_permissions: [
