@@ -29,6 +29,7 @@ export function LevelHero({
   const { level } = data;
   const title = level.song;
   const creatorLine = [level.creator, level.artist].filter(Boolean).join(" - ");
+  const ratingDifficulty = getOverlayRatingDifficulty(data);
 
   return (
     <section
@@ -45,18 +46,33 @@ export function LevelHero({
       <div className="relative flex min-h-[310px] flex-col p-5">
         <div className="flex items-start gap-4">
           <div className="flex w-[82px] shrink-0 flex-col items-center gap-2.5">
-            {data.difficulty.icon ? (
-              <img
-                alt={data.difficulty.name ?? "Difficulty"}
-                className="h-16 w-16 object-contain drop-shadow-[0_3px_10px_rgba(0,0,0,0.8)]"
-                decoding="async"
-                src={data.difficulty.icon}
-              />
-            ) : (
-              <div className="grid h-16 w-16 place-items-center rounded-full bg-[#d91290] text-2xl font-black">
-                {data.difficulty.name ?? "?"}
-              </div>
-            )}
+            <div className="relative">
+              {data.difficulty.icon ? (
+                <img
+                  alt={data.difficulty.name ?? "Difficulty"}
+                  className="h-16 w-16 object-contain drop-shadow-[0_3px_10px_rgba(0,0,0,0.8)]"
+                  decoding="async"
+                  src={data.difficulty.icon}
+                />
+              ) : (
+                <div className="grid h-16 w-16 place-items-center rounded-full bg-[#d91290] text-2xl font-black">
+                  {data.difficulty.name ?? "?"}
+                </div>
+              )}
+              {ratingDifficulty?.icon ? (
+                <img
+                  alt={ratingDifficulty.name ?? "Estimated difficulty"}
+                  className="absolute h-8 w-8 rounded-full border border-white/35 bg-black/40 object-contain backdrop-blur-md drop-shadow-[0_3px_10px_rgba(0,0,0,0.8)]"
+                  decoding="async"
+                  src={ratingDifficulty.icon}
+                  style={{
+                    left: "-0.5rem",
+                    top: "-0.5rem"
+                  }}
+                  title={ratingDifficulty.name}
+                />
+              ) : null}
+            </div>
               <div
                 className="rounded border bg-black/35 px-2.5 py-1 text-sm font-black leading-none text-white backdrop-blur-md"
                 style={softGlowBorderStyle}
@@ -118,6 +134,18 @@ export function LevelHero({
       </div>
     </section>
   );
+}
+
+function getOverlayRatingDifficulty(data: LevelPageData) {
+  if (
+    data.ratingDifficulty?.icon &&
+    data.ratingDifficulty.type === "PGU" &&
+    data.difficulty.name?.includes("Q")
+  ) {
+    return data.ratingDifficulty;
+  }
+
+  return undefined;
 }
 
 function HeroCurationIcons({ data }: { data: LevelPageData }) {

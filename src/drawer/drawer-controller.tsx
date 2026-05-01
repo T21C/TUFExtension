@@ -16,20 +16,35 @@ let host: HTMLElement | null = null;
 let currentItems: ResolvedTufContext[] = [];
 let activeItemKey: string | null = null;
 let isDrawerOpen = false;
+let isDrawerPinned = false;
+let isDrawerResolving = false;
+let drawerEmptyReason: string | null = null;
 let listenersInstalled = false;
 let drawerScrollListenersInstalled = false;
 
 export function mountOrUpdateDrawer(
   items: ResolvedTufContext[],
-  options: { activeItemKey?: string; open?: boolean } = {}
+  options: {
+    activeItemKey?: string;
+    emptyReason?: string;
+    isResolving?: boolean;
+    open?: boolean;
+  } = {}
 ): void {
-  if (items.length === 0) {
+  const shouldRenderEmptyState =
+    items.length === 0 && (isDrawerPinned || options.open === true);
+
+  if (items.length === 0 && !shouldRenderEmptyState) {
     clearDrawer();
     return;
   }
 
   currentItems = items;
-  activeItemKey = getNextActiveItemKey(items, options.activeItemKey);
+  activeItemKey = items.length > 0
+    ? getNextActiveItemKey(items, options.activeItemKey)
+    : null;
+  isDrawerResolving = options.isResolving ?? false;
+  drawerEmptyReason = options.emptyReason ?? null;
 
   if (typeof options.open === "boolean") {
     isDrawerOpen = options.open;
@@ -39,6 +54,8 @@ export function mountOrUpdateDrawer(
     activeItemKey,
     count: items.length,
     itemKeys: items.map((item) => item.itemKey),
+    pinned: isDrawerPinned,
+    resolving: isDrawerResolving,
     open: isDrawerOpen
   });
   renderDrawer();
@@ -52,6 +69,8 @@ export function toggleDrawer(items: ResolvedTufContext[]): void {
 
   currentItems = items;
   activeItemKey = getNextActiveItemKey(items);
+  isDrawerResolving = false;
+  drawerEmptyReason = null;
   isDrawerOpen = !isDrawerOpen;
 
   logInfo("Toggling injected TUF drawer", {
@@ -80,11 +99,17 @@ export function closeDrawer(): void {
   renderDrawer();
 }
 
+export function isDrawerPinnedOpen(): boolean {
+  return isDrawerOpen && isDrawerPinned;
+}
+
 export function clearDrawer(): void {
   logInfo("Clearing injected TUF drawer");
   isDrawerOpen = false;
   currentItems = [];
   activeItemKey = null;
+  isDrawerResolving = false;
+  drawerEmptyReason = null;
   root?.unmount();
   root = null;
   host?.remove();
@@ -93,12 +118,12 @@ export function clearDrawer(): void {
 }
 
 function renderDrawer(): void {
-  if (currentItems.length === 0) {
+  if (currentItems.length === 0 && !isDrawerResolving && !drawerEmptyReason) {
     clearDrawer();
     return;
   }
 
-  activeItemKey = getNextActiveItemKey(currentItems);
+  activeItemKey = currentItems.length > 0 ? getNextActiveItemKey(currentItems) : null;
   ensureDrawerRoot();
   installGlobalListeners();
   updateDrawerHostInteraction();
@@ -106,10 +131,14 @@ function renderDrawer(): void {
   root?.render(
     <DrawerRoot
       activeItemKey={activeItemKey}
+      emptyReason={drawerEmptyReason}
       isOpen={isDrawerOpen}
+      isPinned={isDrawerPinned}
+      isResolving={isDrawerResolving}
       items={currentItems}
       onClose={closeDrawer}
       onSelectItem={selectDrawerItem}
+      onTogglePinned={togglePinned}
     />
   );
 }
@@ -121,6 +150,15 @@ function selectDrawerItem(nextItemKey: string): void {
 
   activeItemKey = nextItemKey;
   logDebug("Selected TUF drawer tab", { itemKey: nextItemKey });
+  renderDrawer();
+}
+
+function togglePinned(): void {
+  isDrawerPinned = !isDrawerPinned;
+
+  logInfo("Toggled TUF drawer pin", {
+    pinned: isDrawerPinned
+  });
   renderDrawer();
 }
 
@@ -228,6 +266,10 @@ function handleKeyDown(event: KeyboardEvent): void {
     return;
   }
 
+  if (isDrawerPinned) {
+    return;
+  }
+
   closeDrawer();
 }
 
@@ -239,6 +281,10 @@ function handlePointerDown(event: PointerEvent): void {
   const path = event.composedPath();
 
   if (path.includes(host) || path.some(isTufButtonNode)) {
+    return;
+  }
+
+  if (isDrawerPinned) {
     return;
   }
 

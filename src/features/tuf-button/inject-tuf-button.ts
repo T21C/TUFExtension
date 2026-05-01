@@ -27,13 +27,6 @@ const BUTTON_HOVER_GRADIENT =
   "linear-gradient(90deg, #3B0877 0%, #6148C6 100%)";
 const PRETENDARD_FONT_STACK = '"Pretendard", ui-sans-serif, system-ui, sans-serif';
 const PRETENDARD_FONT_STYLE_ID = "tuf-level-helper-pretendard-font";
-const PRETENDARD_FONT_FACE = `
-@font-face {
-  font-family: "Pretendard";
-  font-display: swap;
-  font-weight: 45 920;
-  src: url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/woff2/PretendardVariable.woff2") format("woff2-variations");
-}`;
 
 export function injectTufButton(
   item: ResolvedTufContext,
@@ -107,62 +100,39 @@ function getExistingHost(): HTMLElement | null {
 
 function applyBrandedButtonStyle(button: HTMLButtonElement): void {
   ensurePretendardFontFace();
-  button.style.setProperty("background", BUTTON_GRADIENT);
-  button.style.setProperty("color", "#FFFFFF");
-  button.style.setProperty("font-family", PRETENDARD_FONT_STACK);
-  button.style.setProperty("box-shadow", "inset 0 0 0 1px rgba(255,255,255,0.14)");
-
-  button.addEventListener("mouseenter", () => {
-    button.style.setProperty("background", BUTTON_HOVER_GRADIENT);
-  });
-  button.addEventListener("mouseleave", () => {
-    button.style.setProperty("background", BUTTON_GRADIENT);
-  });
-}
-
-function applyBilibiliButtonStyle(button: HTMLButtonElement): void {
-  ensurePretendardFontFace();
-  button.className = "video-toolbar-left-item tuf-bilibili-action";
   button.style.setProperty("align-items", "center");
   button.style.setProperty("appearance", "none");
-  button.style.setProperty("background", "transparent");
+  button.style.setProperty("background", BUTTON_GRADIENT);
   button.style.setProperty("border", "0");
-  button.style.setProperty("color", "#61666D");
+  button.style.setProperty("border-radius", "999px");
+  button.style.setProperty("color", "#FFFFFF");
   button.style.setProperty("cursor", "pointer");
   button.style.setProperty("display", "flex");
   button.style.setProperty("font-family", PRETENDARD_FONT_STACK);
-  button.style.setProperty("font-size", "13px");
-  button.style.setProperty("font-weight", "500");
-  button.style.setProperty("gap", "5px");
-  button.style.setProperty("height", "28px");
+  button.style.setProperty("font-size", "14px");
+  button.style.setProperty("font-weight", "700");
+  button.style.setProperty("gap", "8px");
+  button.style.setProperty("height", "40px");
   button.style.setProperty("line-height", "1");
-  button.style.setProperty("margin", "0");
-  button.style.setProperty("padding", "0");
-  button.style.setProperty("transition", "color 160ms ease");
+  button.style.setProperty("padding", "0 16px 0 12px");
+  button.style.setProperty("box-shadow", "inset 0 0 0 1px rgba(255,255,255,0.14)");
+  button.style.setProperty("transition", "background 160ms ease, transform 160ms ease");
 
   button.addEventListener("mouseenter", () => {
-    button.style.setProperty("color", "#00AEEC");
+    button.style.setProperty("background", BUTTON_HOVER_GRADIENT);
+    button.style.setProperty("transform", "translateY(-1px)");
   });
   button.addEventListener("mouseleave", () => {
-    button.style.setProperty("color", "#61666D");
+    button.style.setProperty("background", BUTTON_GRADIENT);
+    button.style.setProperty("transform", "translateY(0)");
   });
-
-  const icon = button.querySelector("svg");
-  icon?.setAttribute("width", "24");
-  icon?.setAttribute("height", "24");
-  icon?.style.setProperty("filter", "drop-shadow(0 1px 2px rgba(0,0,0,0.06))");
 }
 
 function applyButtonPlatform(
   button: HTMLButtonElement,
-  platform: VideoPlatform
+  _platform: VideoPlatform
 ): void {
   resetButtonStyle(button);
-
-  if (platform === "bilibili") {
-    applyBilibiliButtonStyle(button);
-    return;
-  }
 
   button.className = YOUTUBE_BUTTON_CLASS_NAME;
   applyBrandedButtonStyle(button);
@@ -172,10 +142,10 @@ function applyHostPlatform(host: HTMLElement, platform: VideoPlatform): void {
   resetHostStyle(host);
 
   if (platform === "bilibili") {
-    host.className = "tuf-bilibili-action-host";
+    host.className = "tuf-bilibili-floating-button-host";
     host.style.setProperty("display", "flex");
     host.style.setProperty("align-items", "center");
-    host.style.setProperty("margin-right", "24px");
+    host.style.setProperty("margin", "0");
     return;
   }
 
@@ -237,6 +207,12 @@ function ensurePretendardFontFace(): void {
 
   const style = document.createElement("style");
   style.id = PRETENDARD_FONT_STYLE_ID;
-  style.textContent = PRETENDARD_FONT_FACE;
+  style.textContent = `
+@font-face {
+  font-family: "Pretendard";
+  font-display: swap;
+  font-weight: 45 920;
+  src: url("${chrome.runtime.getURL("fonts/pretendard-variable.woff2")}") format("woff2-variations");
+}`;
   document.head.append(style);
 }

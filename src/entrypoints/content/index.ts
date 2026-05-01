@@ -1,4 +1,9 @@
-import { clearDrawer, mountOrUpdateDrawer, toggleDrawer } from "@drawer/drawer-controller";
+import {
+  clearDrawer,
+  isDrawerPinnedOpen,
+  mountOrUpdateDrawer,
+  toggleDrawer
+} from "@drawer/drawer-controller";
 import { getVideoReference } from "@domain/video/video-reference";
 import { injectTufButton, removeTufButton } from "@features/tuf-button/inject-tuf-button";
 import { isExtensionContextInvalidatedError } from "@platform/chrome/extension-context";
@@ -66,11 +71,19 @@ async function resolveCurrentVideo(): Promise<void> {
   }
 
   logInfo("Detected supported video", video);
+  const shouldKeepPinnedDrawerOpen = isDrawerPinnedOpen();
   lastCanonicalUrl = video.canonicalUrl;
   activeVideo = video;
   activeItems = [];
   removeTufButton();
-  clearDrawer();
+  if (shouldKeepPinnedDrawerOpen) {
+    mountOrUpdateDrawer([], {
+      isResolving: true,
+      open: true
+    });
+  } else {
+    clearDrawer();
+  }
 
   logInfo("Requesting TUF video resolution", video);
   const response = await sendRuntimeMessage<ResolveVideoResult>({
@@ -92,7 +105,15 @@ async function resolveCurrentVideo(): Promise<void> {
   if (items.length === 0) {
     logInfo("No TUF result matched for current video", video);
     activeItems = [];
-    clearDrawer();
+    if (isDrawerPinnedOpen()) {
+      mountOrUpdateDrawer([], {
+        emptyReason: "No TUF result for this video.",
+        isResolving: false,
+        open: true
+      });
+    } else {
+      clearDrawer();
+    }
   }
 }
 

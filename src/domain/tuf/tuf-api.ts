@@ -203,6 +203,8 @@ export async function getLevelPageData(levelId: string): Promise<LevelPageData> 
     const passes = mapPasses(passesResponse);
     const level = mapLevelDetail(rawLevel, levelId, difficultyCatalog);
     const difficulty = level.difficulty ?? {};
+    const ratings = asRecord(ratingsResponse);
+    const ratingDifficulty = mapRatingDifficulty(ratings, difficultyCatalog);
     const videoDetails = await getVideoDetails(level.videoLink);
     const thumbnailUrl = videoDetails?.image ?? getYoutubeThumbnailUrl(level.videoLink);
     const embedUrl = videoDetails?.embed ?? getYoutubeEmbedUrl(level.videoLink);
@@ -217,7 +219,8 @@ export async function getLevelPageData(levelId: string): Promise<LevelPageData> 
       levelUrl: `https://tuforums.com/levels/${level.id}`,
       metadata: asRecord(cdnRecord?.metadata),
       passes,
-      ratings: asRecord(ratingsResponse),
+      ratingDifficulty,
+      ratings,
       rerateHistory: Array.isArray(detailRecord?.rerateHistory)
         ? detailRecord.rerateHistory
         : [],
@@ -594,6 +597,7 @@ function mapPassPlayer(rawPass: TufRecord): PassPlayer {
   const player = asRecord(rawPass.player);
   const user = asRecord(player?.user);
   const ranks = asRecord(rawPass.ranks);
+  const playerId = readString(player, ["id"]) ?? readString(rawPass, ["playerId"]);
 
   return {
     avatarUrl:
@@ -602,8 +606,9 @@ function mapPassPlayer(rawPass: TufRecord): PassPlayer {
       selectIconSize(readString(player, ["pfp"]), "small"),
     country: readString(player, ["country"]),
     discordUsername: readString(player, ["discordUsername", "discordTag"]),
-    id: readString(player, ["id"]) ?? readString(rawPass, ["playerId"]),
+    id: playerId,
     name: readString(player, ["name"]) ?? "Unknown Player",
+    profileUrl: playerId ? `https://tuforums.com/profile/${playerId}` : undefined,
     rankedScoreRank: readNumber(ranks, ["rankedScoreRank"])
   };
 }
@@ -672,6 +677,28 @@ function mapDifficultyFromCatalog(
 ): LevelDifficulty | undefined {
   const diffId = readString(rawLevel, ["diffId", "difficultyId"]);
   const difficulty = diffId ? difficultyCatalog?.get(diffId) : undefined;
+
+  if (!difficulty) {
+    return undefined;
+  }
+
+  return {
+    baseScore: difficulty.baseScore,
+    icon: difficulty.icon,
+    id: difficulty.id,
+    name: difficulty.name,
+    type: difficulty.type
+  };
+}
+
+function mapRatingDifficulty(
+  ratings: TufRecord | null,
+  difficultyCatalog: Map<string, DifficultyEntry> | undefined
+): LevelDifficulty | undefined {
+  const averageDifficultyId = readString(ratings, ["averageDifficultyId"]);
+  const difficulty = averageDifficultyId
+    ? difficultyCatalog?.get(averageDifficultyId)
+    : undefined;
 
   if (!difficulty) {
     return undefined;

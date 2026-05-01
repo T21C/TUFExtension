@@ -46,11 +46,15 @@ export function PassStatsPanel({ pass }: { pass: PassDetail }) {
 
 function StatItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md bg-black/25 px-2.5 py-2">
+    <div className="min-w-0 rounded-md bg-black/25 px-2.5 py-2">
       <p className="text-xs font-black uppercase tracking-[0.08em] text-white/35">
         {label}
       </p>
-      <SpoilerText as="p" className="mt-0.5 truncate text-base font-black text-white">
+      <SpoilerText
+        as="p"
+        className="mt-0.5 block max-w-full truncate text-base font-black text-white"
+        title={value}
+      >
         {value}
       </SpoilerText>
     </div>

@@ -1,5 +1,7 @@
 import tailwindCss from "../../styles/tailwind.css?inline";
 
+const PRETENDARD_FONT_URL_TOKEN = "__TUF_PRETENDARD_FONT_URL__";
+
 interface ShadowHostOptions {
   hostId: string;
   onHostCreate?: (host: HTMLElement) => void;
@@ -34,7 +36,7 @@ export function ensureShadowHost({
 
   const shadowRoot = host.attachShadow({ mode: "open" });
   const style = document.createElement("style");
-  style.textContent = tailwindCss;
+  style.textContent = getShadowCss();
 
   const mountNode = document.createElement("div");
   mountNode.dataset.tufShadowMount = "true";
@@ -44,4 +46,11 @@ export function ensureShadowHost({
   document.body.append(host);
 
   return { host, mountNode };
+}
+
+function getShadowCss(): string {
+  return tailwindCss.replaceAll(
+    PRETENDARD_FONT_URL_TOKEN,
+    chrome.runtime.getURL("fonts/pretendard-variable.woff2")
+  );
 }

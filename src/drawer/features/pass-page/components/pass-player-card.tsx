@@ -13,10 +13,24 @@ import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 export function PassPlayerCard({ pass }: { pass: PassDetail }) {
   const rankColor = getRankColor(pass.player.rankedScoreRank);
+  const playerProfileUrl =
+    pass.player.profileUrl ??
+    (pass.player.id ? `https://tuforums.com/profile/${pass.player.id}` : undefined);
+  const PlayerHeader = playerProfileUrl ? "a" : "div";
 
   return (
     <section className={`${panelSurfaceClassName} p-3`} style={softGlowBorderStyle}>
-      <div className="flex items-center gap-3">
+      <PlayerHeader
+        className={[
+          "flex items-center gap-3 rounded-lg",
+          playerProfileUrl
+            ? "transition hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-300"
+            : ""
+        ].join(" ")}
+        href={playerProfileUrl}
+        rel={playerProfileUrl ? "noreferrer" : undefined}
+        target={playerProfileUrl ? "_blank" : undefined}
+      >
         <div className="h-12 w-12 overflow-hidden rounded-full bg-black/35">
           {pass.player.avatarUrl ? (
             <img
@@ -48,7 +62,7 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             #{pass.player.rankedScoreRank}
           </span>
         ) : null}
-      </div>
+      </PlayerHeader>
 
       <div className="my-3 h-px" style={glowDividerStyle} />
 
