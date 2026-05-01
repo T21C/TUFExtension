@@ -1,16 +1,25 @@
 import { createTufButtonIcon } from "./tuf-button-icon";
 import { logDebug, logInfo } from "@platform/content-script/logger";
 import {
+  cancelPendingBilibiliActionBarMount,
+  insertHostIntoBilibiliActionBar,
+  moveHostIntoBilibiliActionBar,
+  waitForBilibiliActionBar
+} from "@platform/content-script/bilibili-action-bar";
+import {
+  TUF_BUTTON_HOST_ID,
+  TUF_BUTTON_ID
+} from "@platform/content-script/tuf-button-elements";
+import {
   cancelPendingActionBarMount,
   insertHostIntoYouTubeActionBar,
   moveHostIntoYouTubeActionBar,
-  TUF_BUTTON_HOST_ID,
-  TUF_BUTTON_ID,
   waitForYouTubeActionBar
 } from "@platform/content-script/youtube-action-bar";
 import type { ResolvedTufContext } from "@domain/tuf/types";
+import type { VideoPlatform } from "@domain/video/types";
 
-const BUTTON_CLASS_NAME =
+const YOUTUBE_BUTTON_CLASS_NAME =
   "ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconLeading ytSpecButtonShapeNextEnableBackdropFilterExperiment";
 const ACTION_BUTTON_GAP_PX = "8px";
 const BUTTON_GRADIENT = "linear-gradient(90deg, #2F0565 0%, #5339B2 100%)";
@@ -30,17 +39,19 @@ export function injectTufButton(
   item: ResolvedTufContext,
   onClick: () => void
 ): void {
-  cancelPendingActionBarMount();
+  cancelPendingMounts();
 
   const existingButton = getExistingButton();
+  const platform = item.video.platform;
 
   if (existingButton) {
     logDebug("TUF button already exists; updating active item", {
       itemKey: item.itemKey
     });
     existingButton.dataset.tufItemKey = item.itemKey;
-    applyBrandedButtonStyle(existingButton);
-    moveHostIntoYouTubeActionBar(existingButton.parentElement ?? existingButton);
+    existingButton.setAttribute("aria-label", `Open TUF: ${item.title}`);
+    applyButtonPlatform(existingButton, platform);
+    moveHostIntoActionBar(platform, existingButton.parentElement ?? existingButton);
     return;
   }
 
@@ -51,16 +62,14 @@ export function injectTufButton(
 
   const host = document.createElement("div");
   host.id = TUF_BUTTON_HOST_ID;
-  host.style.marginRight = ACTION_BUTTON_GAP_PX;
 
   const button = document.createElement("button");
   button.id = TUF_BUTTON_ID;
   button.type = "button";
-  button.className = BUTTON_CLASS_NAME;
   button.setAttribute("aria-label", `Open TUF: ${item.title}`);
   button.dataset.tufItemKey = item.itemKey;
   button.addEventListener("click", onClick);
-  applyBrandedButtonStyle(button);
+  applyButtonPlatform(button, platform);
 
   const label = document.createElement("span");
   label.textContent = "TUF";
@@ -68,16 +77,18 @@ export function injectTufButton(
   button.append(createTufButtonIcon(), label);
   host.append(button);
 
-  if (insertHostIntoYouTubeActionBar(host)) {
+  applyHostPlatform(host, platform);
+
+  if (insertHostIntoActionBar(platform, host)) {
     return;
   }
 
-  logInfo("YouTube action bar was not ready; waiting to mount TUF button");
-  waitForYouTubeActionBar(host);
+  logInfo(`${platform} action bar was not ready; waiting to mount TUF button`);
+  waitForActionBar(platform, host);
 }
 
 export function removeTufButton(): void {
-  cancelPendingActionBarMount();
+  cancelPendingMounts();
   const host = getExistingHost();
 
   if (host) {
@@ -107,6 +118,116 @@ function applyBrandedButtonStyle(button: HTMLButtonElement): void {
   button.addEventListener("mouseleave", () => {
     button.style.setProperty("background", BUTTON_GRADIENT);
   });
+}
+
+function applyBilibiliButtonStyle(button: HTMLButtonElement): void {
+  ensurePretendardFontFace();
+  button.className = "video-toolbar-left-item tuf-bilibili-action";
+  button.style.setProperty("align-items", "center");
+  button.style.setProperty("appearance", "none");
+  button.style.setProperty("background", "transparent");
+  button.style.setProperty("border", "0");
+  button.style.setProperty("color", "#61666D");
+  button.style.setProperty("cursor", "pointer");
+  button.style.setProperty("display", "flex");
+  button.style.setProperty("font-family", PRETENDARD_FONT_STACK);
+  button.style.setProperty("font-size", "13px");
+  button.style.setProperty("font-weight", "500");
+  button.style.setProperty("gap", "5px");
+  button.style.setProperty("height", "28px");
+  button.style.setProperty("line-height", "1");
+  button.style.setProperty("margin", "0");
+  button.style.setProperty("padding", "0");
+  button.style.setProperty("transition", "color 160ms ease");
+
+  button.addEventListener("mouseenter", () => {
+    button.style.setProperty("color", "#00AEEC");
+  });
+  button.addEventListener("mouseleave", () => {
+    button.style.setProperty("color", "#61666D");
+  });
+
+  const icon = button.querySelector("svg");
+  icon?.setAttribute("width", "24");
+  icon?.setAttribute("height", "24");
+  icon?.style.setProperty("filter", "drop-shadow(0 1px 2px rgba(0,0,0,0.06))");
+}
+
+function applyButtonPlatform(
+  button: HTMLButtonElement,
+  platform: VideoPlatform
+): void {
+  resetButtonStyle(button);
+
+  if (platform === "bilibili") {
+    applyBilibiliButtonStyle(button);
+    return;
+  }
+
+  button.className = YOUTUBE_BUTTON_CLASS_NAME;
+  applyBrandedButtonStyle(button);
+}
+
+function applyHostPlatform(host: HTMLElement, platform: VideoPlatform): void {
+  resetHostStyle(host);
+
+  if (platform === "bilibili") {
+    host.className = "tuf-bilibili-action-host";
+    host.style.setProperty("display", "flex");
+    host.style.setProperty("align-items", "center");
+    host.style.setProperty("margin-right", "24px");
+    return;
+  }
+
+  host.style.marginRight = ACTION_BUTTON_GAP_PX;
+}
+
+function insertHostIntoActionBar(
+  platform: VideoPlatform,
+  host: HTMLElement
+): boolean {
+  return platform === "bilibili"
+    ? insertHostIntoBilibiliActionBar(host)
+    : insertHostIntoYouTubeActionBar(host);
+}
+
+function moveHostIntoActionBar(platform: VideoPlatform, host: Element): void {
+  if (!(host instanceof HTMLElement)) {
+    return;
+  }
+
+  applyHostPlatform(host, platform);
+
+  if (platform === "bilibili") {
+    moveHostIntoBilibiliActionBar(host);
+    return;
+  }
+
+  moveHostIntoYouTubeActionBar(host);
+}
+
+function waitForActionBar(platform: VideoPlatform, host: HTMLElement): void {
+  if (platform === "bilibili") {
+    waitForBilibiliActionBar(host);
+    return;
+  }
+
+  waitForYouTubeActionBar(host);
+}
+
+function cancelPendingMounts(): void {
+  cancelPendingActionBarMount();
+  cancelPendingBilibiliActionBarMount();
+}
+
+function resetButtonStyle(button: HTMLButtonElement): void {
+  button.removeAttribute("class");
+  button.removeAttribute("style");
+}
+
+function resetHostStyle(host: HTMLElement): void {
+  host.removeAttribute("class");
+  host.removeAttribute("style");
 }
 
 function ensurePretendardFontFace(): void {
