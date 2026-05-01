@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    name: Package extension
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Validate release tag
+        id: version
+        run: |
+          PACKAGE_VERSION="$(bun -e "console.log(require('./package.json').version)")"
+          EXPECTED_TAG="v${PACKAGE_VERSION}"
+
+          if [ "${GITHUB_REF_NAME}" != "${EXPECTED_TAG}" ]; then
+            echo "Tag ${GITHUB_REF_NAME} does not match package.json version ${PACKAGE_VERSION}."
+            echo "Expected ${EXPECTED_TAG}."
+            exit 1
+          fi
+
+          echo "version=${PACKAGE_VERSION}" >> "${GITHUB_OUTPUT}"
+          echo "tag=${EXPECTED_TAG}" >> "${GITHUB_OUTPUT}"
+          echo "artifact=tufe-${EXPECTED_TAG}.zip" >> "${GITHUB_OUTPUT}"
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Build
+        run: bun run build
+
+      - name: Package dist
+        run: |
+          cd dist
+          zip -r "../${{ steps.version.outputs.artifact }}" .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "TUFExtension ${{ steps.version.outputs.tag }}"
+          generate_release_notes: true
+          files: "${{ steps.version.outputs.artifact }}"

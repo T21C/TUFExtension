@@ -1,10 +1,11 @@
 import { defineManifest } from "@crxjs/vite-plugin";
+import packageJson from "./package.json";
 
 export default defineManifest({
   manifest_version: 3,
   name: "TUFExtension",
   description: "Chrome Extension for TUF",
-  version: "0.1.0",
+  version: packageJson.version,
   icons: {
     16: "icons/icon16.png",
     32: "icons/icon32.png",

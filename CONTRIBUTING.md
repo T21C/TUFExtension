@@ -57,3 +57,25 @@ style: refine pass spoiler controls
 docs: add commit convention
 chore: update extension manifest metadata
 ```
+
+## Release Flow
+
+`package.json` is the source of truth for the extension version. `manifest.config.ts` reads that version when CRXJS generates `dist/manifest.json`.
+
+To create a GitHub Release:
+
+1. Update `package.json` version.
+2. Commit and merge the change.
+3. Create a matching tag:
+
+```txt
+v<package.json version>
+```
+
+Example:
+
+```txt
+v0.1.0
+```
+
+Pushing the tag runs GitHub Actions. The workflow verifies that the tag matches `package.json`, builds the extension, packages the contents of `dist/`, and uploads `tufe-v<version>.zip` to the GitHub Release.
