@@ -4,18 +4,18 @@ import {
   HeartIcon,
   SteamIcon,
   TufIcon,
-} from "@drawer/shared/level-icons";
-import type { LevelPageData } from "@domain/tuf/types";
-import type { LevelLikeController } from "@features/drawer/use-level-like";
+} from "~/drawer/shared/level-icons";
+import type { LevelPageData } from "~/domain/tuf/types";
+import type { LevelLikeController } from "~/features/drawer/use-level-like";
 import {
   interactiveSurfaceClassName,
   mutedSurfaceClassName,
   softGlowBorderStyle,
-} from "@drawer/shared/level-surface";
+} from "~/drawer/shared/level-surface";
 
 export function LevelActionStrip({
   data,
-  likeController
+  likeController,
 }: {
   data: LevelPageData;
   likeController: LevelLikeController;
@@ -77,7 +77,10 @@ function ActionLink({
   return (
     <a
       aria-label={label}
-      className={["grid h-12 place-items-center", interactiveSurfaceClassName].join(" ")}
+      className={[
+        "grid h-12 place-items-center",
+        interactiveSurfaceClassName,
+      ].join(" ")}
       href={href}
       rel="noreferrer"
       style={softGlowBorderStyle}
@@ -99,7 +102,10 @@ function DisabledAction({
   return (
     <button
       aria-label={label}
-      className={["grid h-12 cursor-not-allowed place-items-center", mutedSurfaceClassName].join(" ")}
+      className={[
+        "grid h-12 cursor-not-allowed place-items-center",
+        mutedSurfaceClassName,
+      ].join(" ")}
       disabled
       title={label}
       type="button"

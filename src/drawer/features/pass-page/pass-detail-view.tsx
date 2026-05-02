@@ -1,10 +1,10 @@
 import { useState } from "react";
-import type {
-  PassPageData,
-  PassPageLoadState
-} from "@domain/tuf/types";
+import type { PassPageData, PassPageLoadState } from "~/domain/tuf/types";
 import { PassActionStrip } from "./components/pass-action-strip";
-import { PassDetailError, PassDetailSkeleton } from "./components/pass-detail-state";
+import {
+  PassDetailError,
+  PassDetailSkeleton,
+} from "./components/pass-detail-state";
 import { PassHero } from "./components/pass-hero";
 import { PassJudgementsPanel } from "./components/pass-judgements-panel";
 import { PassPlayerCard } from "./components/pass-player-card";

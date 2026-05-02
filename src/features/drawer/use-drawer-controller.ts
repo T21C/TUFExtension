@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { ResolvedTufContext } from "@domain/tuf/types";
+import type { ResolvedTufContext } from "~/domain/tuf/types";
 
 interface UseDrawerControllerParams {
   activeItemKey: string | null;
@@ -22,7 +22,7 @@ export function useDrawerController({
   items,
   onClose,
   onSelectItem,
-  onTogglePinned
+  onTogglePinned,
 }: UseDrawerControllerParams): UseDrawerControllerParams {
   const safeActiveItemKey = useMemo(() => {
     if (items.length === 0) {
@@ -45,6 +45,6 @@ export function useDrawerController({
     items,
     onClose,
     onSelectItem,
-    onTogglePinned
+    onTogglePinned,
   };
 }

@@ -4,24 +4,24 @@ import {
   HeartIcon,
   MetronomeIcon,
   TimeIcon,
-} from "@drawer/shared/level-icons";
-import type { LevelPageData } from "@domain/tuf/types";
-import type { LevelLikeController } from "@features/drawer/use-level-like";
+} from "~/drawer/shared/level-icons";
+import type { LevelPageData } from "~/domain/tuf/types";
+import type { LevelLikeController } from "~/features/drawer/use-level-like";
 import {
   formatBaseScore,
   formatDuration,
   formatInteger,
   formatNumber,
-} from "@drawer/shared/formatters";
+} from "~/drawer/shared/formatters";
 import {
   glowBorderStyle,
   interactiveSurfaceClassName,
   softGlowBorderStyle,
-} from "@drawer/shared/level-surface";
+} from "~/drawer/shared/level-surface";
 
 export function LevelHero({
   data,
-  likeController
+  likeController,
 }: {
   data: LevelPageData;
   likeController: LevelLikeController;
@@ -67,16 +67,16 @@ export function LevelHero({
                   src={ratingDifficulty.icon}
                   style={{
                     left: "-0.5rem",
-                    top: "-0.5rem"
+                    top: "-0.5rem",
                   }}
                   title={ratingDifficulty.name}
                 />
               ) : null}
             </div>
-              <div
-                className="rounded border bg-black/35 px-2.5 py-1 text-sm font-black leading-none text-white backdrop-blur-md"
-                style={softGlowBorderStyle}
-              >
+            <div
+              className="rounded border bg-black/35 px-2.5 py-1 text-sm font-black leading-none text-white backdrop-blur-md"
+              style={softGlowBorderStyle}
+            >
               {formatBaseScore(level.pp ?? data.difficulty.baseScore ?? 0)}PP
             </div>
             <div className="text-sm font-black text-white/45">#{level.id}</div>

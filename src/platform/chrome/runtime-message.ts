@@ -1,16 +1,16 @@
-import { logDebug, logWarn } from "@platform/content-script/logger";
+import { logDebug, logWarn } from "~/platform/content-script/logger";
 import type {
   LevelAuthState,
   LevelPageData,
   PassPageData,
   ResolvedLevelContext,
   ResolvedPassContext,
-  ResolvedTufContext
-} from "@domain/tuf/types";
-import type { VideoReference } from "@domain/video/types";
+  ResolvedTufContext,
+} from "~/domain/tuf/types";
+import type { VideoReference } from "~/domain/video/types";
 import {
   isExtensionContextAvailable,
-  isExtensionContextInvalidatedError
+  isExtensionContextInvalidatedError,
 } from "./extension-context";
 
 export interface ResolveVideoRequest {
@@ -102,23 +102,29 @@ export type ExtensionResponse =
   | SetLevelLikeResult;
 
 export function sendRuntimeMessage<TResponse>(
-  message: ExtensionRequest
+  message: ExtensionRequest,
 ): Promise<TResponse | undefined> {
   logDebug("Sending runtime message", message);
 
   if (!isExtensionContextAvailable()) {
-    logWarn("Runtime message skipped because extension context is unavailable", {
-      message
-    });
+    logWarn(
+      "Runtime message skipped because extension context is unavailable",
+      {
+        message,
+      },
+    );
     return Promise.resolve(undefined);
   }
 
   try {
     return chrome.runtime.sendMessage(message).catch((error: unknown) => {
       if (isExtensionContextInvalidatedError(error)) {
-        logWarn("Runtime message skipped after extension context invalidation", {
-          message
-        });
+        logWarn(
+          "Runtime message skipped after extension context invalidation",
+          {
+            message,
+          },
+        );
         return undefined;
       }
 
@@ -128,7 +134,7 @@ export function sendRuntimeMessage<TResponse>(
   } catch (error) {
     if (isExtensionContextInvalidatedError(error)) {
       logWarn("Runtime message skipped after extension context invalidation", {
-        message
+        message,
       });
       return Promise.resolve(undefined);
     }

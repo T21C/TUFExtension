@@ -3,9 +3,9 @@ import {
   sendRuntimeMessage,
   type GetLevelAuthStateResult,
   type OpenTufLoginResult,
-  type SetLevelLikeResult
-} from "@platform/chrome/runtime-message";
-import type { AuthStatus, AuthUser } from "@domain/tuf/types";
+  type SetLevelLikeResult,
+} from "~/platform/chrome/runtime-message";
+import type { AuthStatus, AuthUser } from "~/domain/tuf/types";
 
 interface UseLevelLikeParams {
   initialLikes: number;
@@ -26,9 +26,11 @@ export interface LevelLikeController {
 
 export function useLevelLike({
   initialLikes,
-  levelId
+  levelId,
 }: UseLevelLikeParams): LevelLikeController {
-  const [authStatus, setAuthStatus] = useState<AuthStatus | "loading">("loading");
+  const [authStatus, setAuthStatus] = useState<AuthStatus | "loading">(
+    "loading",
+  );
   const [error, setError] = useState<string | undefined>();
   const [isPending, setIsPending] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -47,7 +49,7 @@ export function useLevelLike({
 
     void sendRuntimeMessage<GetLevelAuthStateResult>({
       levelId,
-      type: "GET_LEVEL_AUTH_STATE"
+      type: "GET_LEVEL_AUTH_STATE",
     }).then((response) => {
       if (isCancelled) {
         return;
@@ -81,13 +83,13 @@ export function useLevelLike({
       likes,
       onOpenLogin: () => {
         void sendRuntimeMessage<OpenTufLoginResult>({
-          type: "OPEN_TUF_LOGIN"
+          type: "OPEN_TUF_LOGIN",
         });
       },
       onToggleLike: () => {
         if (authStatus === "unauthenticated") {
           void sendRuntimeMessage<OpenTufLoginResult>({
-            type: "OPEN_TUF_LOGIN"
+            type: "OPEN_TUF_LOGIN",
           });
           return;
         }
@@ -103,11 +105,15 @@ export function useLevelLike({
         void sendRuntimeMessage<SetLevelLikeResult>({
           levelId,
           liked: nextLiked,
-          type: "SET_LEVEL_LIKE"
+          type: "SET_LEVEL_LIKE",
         }).then((response) => {
           setIsPending(false);
 
-          if (!response || response.error || typeof response.liked !== "boolean") {
+          if (
+            !response ||
+            response.error ||
+            typeof response.liked !== "boolean"
+          ) {
             setAuthStatus(response?.error ? "error" : authStatus);
             setError(response?.error ?? "Failed to update like.");
             return;
@@ -115,11 +121,13 @@ export function useLevelLike({
 
           setAuthStatus("authenticated");
           setLiked(response.liked);
-          setLikes(response.likes ?? Math.max(0, likes + (response.liked ? 1 : -1)));
+          setLikes(
+            response.likes ?? Math.max(0, likes + (response.liked ? 1 : -1)),
+          );
         });
       },
-      user
+      user,
     }),
-    [authStatus, error, isPending, levelId, liked, likes, user]
+    [authStatus, error, isPending, levelId, liked, likes, user],
   );
 }

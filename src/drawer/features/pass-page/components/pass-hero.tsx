@@ -1,23 +1,23 @@
 import type { ReactNode } from "react";
-import type { PassPageData } from "@domain/tuf/types";
+import type { PassPageData } from "~/domain/tuf/types";
 import {
   CalendarIcon,
   ChartIcon,
   SpeedIcon,
-  TufIcon
-} from "@drawer/shared/level-icons";
+  TufIcon,
+} from "~/drawer/shared/level-icons";
 import {
   formatAccuracy,
   formatBaseScore,
   formatDate,
   formatScore,
-  formatSpeed
-} from "@drawer/shared/formatters";
+  formatSpeed,
+} from "~/drawer/shared/formatters";
 import {
   glowBorderStyle,
   mutedSurfaceClassName,
-  panelSurfaceClassName
-} from "@drawer/shared/level-surface";
+  panelSurfaceClassName,
+} from "~/drawer/shared/level-surface";
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 export function PassHero({ data }: { data: PassPageData }) {
@@ -35,7 +35,7 @@ export function PassHero({ data }: { data: PassPageData }) {
         ...glowBorderStyle,
         backgroundImage,
         backgroundPosition: "center",
-        backgroundSize: "cover"
+        backgroundSize: "cover",
       }}
     >
       <div className="absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
@@ -56,7 +56,9 @@ export function PassHero({ data }: { data: PassPageData }) {
             {formatBaseScore(baseScore)}PP
           </span>
           {pass.level.id ? (
-            <span className="text-xs font-black text-white/45">#{pass.level.id}</span>
+            <span className="text-xs font-black text-white/45">
+              #{pass.level.id}
+            </span>
           ) : null}
         </div>
 
@@ -74,9 +76,19 @@ export function PassHero({ data }: { data: PassPageData }) {
 
           <SpoilerSection>
             <div className="mt-4 grid grid-cols-2 gap-2">
-              <HeroMetric icon={<ChartIcon size={16} />} label={formatScore(pass.score)} />
-              <HeroMetric icon={<CalendarIcon size={16} />} label={formatDate(pass.date ?? "")} />
-              <HeroMetric icon={<SpeedIcon size={16} />} isSpoiler label={formatSpeed(pass.speed)} />
+              <HeroMetric
+                icon={<ChartIcon size={16} />}
+                label={formatScore(pass.score)}
+              />
+              <HeroMetric
+                icon={<CalendarIcon size={16} />}
+                label={formatDate(pass.date ?? "")}
+              />
+              <HeroMetric
+                icon={<SpeedIcon size={16} />}
+                isSpoiler
+                label={formatSpeed(pass.speed)}
+              />
               <HeroMetric isSpoiler label={formatAccuracy(pass.accuracy)} />
             </div>
           </SpoilerSection>
@@ -89,14 +101,16 @@ export function PassHero({ data }: { data: PassPageData }) {
 function HeroMetric({
   icon,
   isSpoiler = false,
-  label
+  label,
 }: {
   icon?: ReactNode;
   isSpoiler?: boolean;
   label: string;
 }) {
   return (
-    <div className={`${mutedSurfaceClassName} flex min-w-0 items-center justify-center gap-1.5 px-2 py-2 text-sm font-black text-white`}>
+    <div
+      className={`${mutedSurfaceClassName} flex min-w-0 items-center justify-center gap-1.5 px-2 py-2 text-sm font-black text-white`}
+    >
       {icon}
       {isSpoiler ? (
         <SpoilerText className="min-w-0 truncate">{label || "-"}</SpoilerText>
@@ -108,11 +122,9 @@ function HeroMetric({
 }
 
 function getCreditsText(data: PassPageData["pass"]): string {
-  const parts = [
-    data.level.team,
-    data.level.charter,
-    data.level.vfxer
-  ].filter(Boolean);
+  const parts = [data.level.team, data.level.charter, data.level.vfxer].filter(
+    Boolean,
+  );
 
   return parts.length > 0 ? parts.join(" | ") : "Unknown credits";
 }

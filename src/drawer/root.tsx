@@ -1,6 +1,6 @@
-import { useDrawerController } from "@features/drawer/use-drawer-controller";
+import { useDrawerController } from "~/features/drawer/use-drawer-controller";
 import { LevelPage } from "./features/level-page/level-page";
-import type { ResolvedTufContext } from "@domain/tuf/types";
+import type { ResolvedTufContext } from "~/domain/tuf/types";
 
 interface DrawerRootProps {
   activeItemKey: string | null;

@@ -1,6 +1,6 @@
-import { IconImage } from "@drawer/components/icon-image";
-import type { ResolvedTufContext } from "@domain/tuf/types";
-import { glowDividerStyle } from "@drawer/shared/level-surface";
+import { IconImage } from "~/drawer/components/icon-image";
+import type { ResolvedTufContext } from "~/domain/tuf/types";
+import { glowDividerStyle } from "~/drawer/shared/level-surface";
 
 interface LevelTabsProps {
   activeItemKey: string;
@@ -11,7 +11,7 @@ interface LevelTabsProps {
 export function LevelTabs({
   activeItemKey,
   items,
-  onSelectItem
+  onSelectItem,
 }: LevelTabsProps) {
   return (
     <div
@@ -27,9 +27,7 @@ export function LevelTabs({
             aria-selected={isActive}
             className={[
               "group relative grid h-11 w-11 shrink-0 cursor-pointer place-items-center rounded-md border border-transparent bg-transparent p-1 transition",
-              isActive
-                ? "text-white"
-                : "text-white/35 hover:text-white/75",
+              isActive ? "text-white" : "text-white/35 hover:text-white/75",
             ].join(" ")}
             key={item.itemKey}
             onClick={() => onSelectItem(item.itemKey)}

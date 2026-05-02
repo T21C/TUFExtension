@@ -1,10 +1,7 @@
 import type { ReactNode } from "react";
-import type { PassPageData } from "@domain/tuf/types";
-import {
-  TufIcon,
-  VideoIcon
-} from "@drawer/shared/level-icons";
-import { interactiveSurfaceClassName } from "@drawer/shared/level-surface";
+import type { PassPageData } from "~/domain/tuf/types";
+import { TufIcon, VideoIcon } from "~/drawer/shared/level-icons";
+import { interactiveSurfaceClassName } from "~/drawer/shared/level-surface";
 
 interface PassAction {
   href: string;
@@ -15,7 +12,7 @@ interface PassAction {
 export function PassActionStrip({
   data,
   onHideSpoilers,
-  onRevealSpoilers
+  onRevealSpoilers,
 }: {
   data: PassPageData;
   onHideSpoilers: () => void;
@@ -25,15 +22,15 @@ export function PassActionStrip({
     {
       href: data.passUrl,
       icon: <PassIcon />,
-      label: "Open Pass in TUF"
+      label: "Open Pass in TUF",
     },
     data.pass.level.id
       ? {
           href: `https://tuforums.com/levels/${data.pass.level.id}`,
           icon: <TufIcon size={22} />,
-          label: "Open Level"
+          label: "Open Level",
         }
-      : null
+      : null,
   ];
   const actions = candidates.filter(isPassAction);
 
@@ -80,12 +77,7 @@ function isPassAction(value: PassAction | null): value is PassAction {
 
 function EyeIcon() {
   return (
-    <svg
-      aria-hidden="true"
-      className="h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
+    <svg aria-hidden="true" className="h-6 w-6" fill="none" viewBox="0 0 24 24">
       <path
         d="M2.28 10.75C3.38 9.12 6.75 5 12 5s8.62 4.12 9.72 5.75c.37.55.37 1.95 0 2.5C20.62 14.88 17.25 19 12 19s-8.62-4.12-9.72-5.75c-.37-.55-.37-1.95 0-2.5Z"
         stroke="currentColor"
@@ -106,12 +98,7 @@ function EyeIcon() {
 
 function EyeSlashIcon() {
   return (
-    <svg
-      aria-hidden="true"
-      className="h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
+    <svg aria-hidden="true" className="h-6 w-6" fill="none" viewBox="0 0 24 24">
       <path
         d="M3 3L21 21"
         stroke="currentColor"
@@ -138,12 +125,7 @@ function EyeSlashIcon() {
 
 function PassIcon() {
   return (
-    <svg
-      aria-hidden="true"
-      className="h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
+    <svg aria-hidden="true" className="h-6 w-6" fill="none" viewBox="0 0 24 24">
       <path
         d="M5 4.5h9.2L19 9.3v10.2H5V4.5Z"
         stroke="currentColor"
