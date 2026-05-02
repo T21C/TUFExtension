@@ -73,8 +73,8 @@ export function LevelPage({
                   onSelectItem={onSelectItem}
                 />
               ) : (
-                <div className="px-1 text-xs font-black uppercase tracking-[0.24em] text-white/35">
-                  TUF drawer
+                <div className="px-1 text-xs font-bold text-white/35">
+                  TUFExtension
                 </div>
               )}
             </div>
