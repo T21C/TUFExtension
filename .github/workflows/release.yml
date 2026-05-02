@@ -53,6 +53,20 @@ jobs:
       - name: Produce Firefox artifact
         run: bun run zip:firefox
 
+      - name: Normalize Firefox artifact name
+        run: |
+          EXPECTED_FILE=".output/tufe-${{ steps.version.outputs.tag }}-firefox.zip"
+          SOURCE_FILE="$(find .output -maxdepth 1 -type f -name 'tufe-*-firefox.zip' | head -n 1)"
+
+          if [ -z "${SOURCE_FILE}" ]; then
+            echo "Unable to find Firefox artifact in .output"
+            exit 1
+          fi
+
+          if [ "${SOURCE_FILE}" != "${EXPECTED_FILE}" ]; then
+            mv "${SOURCE_FILE}" "${EXPECTED_FILE}"
+          fi
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -60,5 +74,5 @@ jobs:
           generate_release_notes: true
           prerelease: ${{ steps.version.outputs.prerelease }}
           files: |
-            .output/tufe-*-chrome.zip
-            .output/tufe-*-firefox.zip
+            .output/tufe-${{ steps.version.outputs.tag }}-chrome.zip
+            .output/tufe-${{ steps.version.outputs.tag }}-firefox.zip
