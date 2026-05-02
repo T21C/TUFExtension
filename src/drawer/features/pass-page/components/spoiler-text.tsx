@@ -5,7 +5,7 @@ import {
   useMemo,
   useState,
   type CSSProperties,
-  type ReactNode
+  type ReactNode,
 } from "react";
 
 interface SpoilerContextValue {
@@ -38,22 +38,20 @@ export function SpoilerSection({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       isRevealed,
-      reveal: () => setIsRevealed(true)
+      reveal: () => setIsRevealed(true),
     }),
-    [isRevealed]
+    [isRevealed],
   );
 
   return (
-    <SpoilerContext.Provider value={value}>
-      {children}
-    </SpoilerContext.Provider>
+    <SpoilerContext.Provider value={value}>{children}</SpoilerContext.Provider>
   );
 }
 
 export function SpoilerControlsProvider({
   children,
   hideAllVersion,
-  revealAllVersion
+  revealAllVersion,
 }: {
   children: ReactNode;
   hideAllVersion: number;
@@ -62,9 +60,9 @@ export function SpoilerControlsProvider({
   const value = useMemo(
     () => ({
       hideAllVersion,
-      revealAllVersion
+      revealAllVersion,
     }),
-    [hideAllVersion, revealAllVersion]
+    [hideAllVersion, revealAllVersion],
   );
 
   return (
@@ -87,7 +85,7 @@ export function SpoilerText({
   children,
   className,
   style,
-  title
+  title,
 }: SpoilerTextProps) {
   const spoilerGroup = useContext(SpoilerContext);
   const spoilerControls = useContext(SpoilerControlsContext);
@@ -101,7 +99,7 @@ export function SpoilerText({
         minWidth: 0,
         overflow: "hidden",
         textOverflow: "ellipsis",
-        whiteSpace: "nowrap"
+        whiteSpace: "nowrap",
       }
     : undefined;
 
@@ -129,11 +127,13 @@ export function SpoilerText({
   return (
     <Component
       className={[
-        shouldTruncate ? "cursor-pointer rounded px-1.5 py-0.5 transition duration-200" : "inline-block cursor-pointer rounded px-1.5 py-0.5 transition duration-200",
+        shouldTruncate
+          ? "cursor-pointer rounded px-1.5 py-0.5 transition duration-200"
+          : "inline-block cursor-pointer rounded px-1.5 py-0.5 transition duration-200",
         isRevealed
           ? "blur-0"
           : "select-none border border-white/15 bg-white/30 text-white/75 shadow-[0_0_16px_rgba(255,255,255,0.12)] backdrop-blur-md",
-        className ?? ""
+        className ?? "",
       ].join(" ")}
       onClick={(event) => {
         event.stopPropagation();
@@ -153,7 +153,7 @@ export function SpoilerText({
       <span
         className={[
           shouldTruncate ? "block min-w-0 truncate" : "inline-block",
-          isRevealed ? "" : "blur-sm"
+          isRevealed ? "" : "blur-sm",
         ].join(" ")}
         style={truncateStyle}
       >

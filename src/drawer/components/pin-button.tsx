@@ -12,7 +12,7 @@ export function PinButton({ isPinned, onClick }: PinButtonProps) {
         "grid h-10 w-10 shrink-0 place-items-center rounded-lg transition-colors",
         isPinned
           ? "bg-violet-500/20 text-violet-100 shadow-[0_0_16px_rgba(168,85,247,0.34)]"
-          : "bg-transparent text-white/60 hover:bg-white/10 hover:text-white"
+          : "bg-transparent text-white/60 hover:bg-white/10 hover:text-white",
       ].join(" ")}
       onClick={onClick}
       title={isPinned ? "Unpin drawer" : "Pin drawer"}

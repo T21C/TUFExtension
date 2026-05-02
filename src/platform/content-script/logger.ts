@@ -19,7 +19,7 @@ export function logError(message: string, details?: unknown): void {
 function writeLog(
   level: "debug" | "info" | "warn" | "error",
   message: string,
-  details?: unknown
+  details?: unknown,
 ): void {
   if (details === undefined) {
     console[level](`${LOG_PREFIX} ${message}`);

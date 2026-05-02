@@ -3,7 +3,7 @@ import { logDebug, logInfo } from "./logger";
 const YOUTUBE_NAVIGATION_EVENTS = [
   "yt-navigate-finish",
   "yt-page-data-updated",
-  "yt-player-updated"
+  "yt-player-updated",
 ] as const;
 const DOM_SETTLE_CHECK_DELAYS_MS = [100, 500, 1500] as const;
 
@@ -17,7 +17,7 @@ export function watchUrlChanges(callback: () => void): void {
 
     logInfo("Page URL changed", {
       from: previousUrl,
-      to: window.location.href
+      to: window.location.href,
     });
     previousUrl = window.location.href;
     callback();
@@ -32,7 +32,7 @@ export function watchUrlChanges(callback: () => void): void {
   const handleYouTubeNavigation = (event: Event) => {
     logDebug("YouTube navigation event detected", {
       eventType: event.type,
-      href: window.location.href
+      href: window.location.href,
     });
     checkForChange();
     scheduleSettledChecks();

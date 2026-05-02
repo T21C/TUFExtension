@@ -16,17 +16,18 @@ export interface ShadowHostMount {
 export function ensureShadowHost({
   hostId,
   onHostCreate,
-  onMountNodeCreate
+  onMountNodeCreate,
 }: ShadowHostOptions): ShadowHostMount {
   const existingHost = document.getElementById(hostId);
-  const existingMountNode = existingHost?.shadowRoot?.querySelector<HTMLElement>(
-    "[data-tuf-shadow-mount]"
-  );
+  const existingMountNode =
+    existingHost?.shadowRoot?.querySelector<HTMLElement>(
+      "[data-tuf-shadow-mount]",
+    );
 
   if (existingHost && existingMountNode) {
     return {
       host: existingHost,
-      mountNode: existingMountNode
+      mountNode: existingMountNode,
     };
   }
 
@@ -51,6 +52,6 @@ export function ensureShadowHost({
 function getShadowCss(): string {
   return tailwindCss.replaceAll(
     PRETENDARD_FONT_URL_TOKEN,
-    chrome.runtime.getURL("fonts/pretendard-variable.woff2")
+    chrome.runtime.getURL("fonts/pretendard-variable.woff2"),
   );
 }
