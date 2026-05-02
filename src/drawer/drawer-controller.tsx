@@ -333,7 +333,53 @@ function stopDrawerScrollPropagation(event: Event): void {
     return;
   }
 
+  if (event instanceof WheelEvent && handleTabsWheelScroll(event)) {
+    event.stopPropagation();
+    return;
+  }
+
   event.stopPropagation();
+}
+
+function handleTabsWheelScroll(event: WheelEvent): boolean {
+  const tabsElement = findTabsScrollElement(event);
+
+  if (!tabsElement) {
+    return false;
+  }
+
+  const canScrollHorizontally =
+    tabsElement.scrollWidth > tabsElement.clientWidth;
+
+  if (!canScrollHorizontally) {
+    return false;
+  }
+
+  const scrollDelta =
+    Math.abs(event.deltaY) > Math.abs(event.deltaX)
+      ? event.deltaY
+      : event.deltaX;
+
+  if (scrollDelta === 0) {
+    return false;
+  }
+
+  event.preventDefault();
+  tabsElement.scrollLeft += scrollDelta;
+  return true;
+}
+
+function findTabsScrollElement(event: Event): HTMLElement | null {
+  for (const target of event.composedPath()) {
+    if (
+      target instanceof HTMLElement &&
+      target.dataset.tufTabsScroll === "true"
+    ) {
+      return target;
+    }
+  }
+
+  return null;
 }
 
 function handleKeyDown(event: KeyboardEvent): void {

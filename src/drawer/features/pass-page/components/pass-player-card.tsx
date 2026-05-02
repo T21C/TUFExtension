@@ -1,5 +1,9 @@
 import type { PassDetail } from "~/domain/tuf/types";
-import { countryToEmoji, formatScore } from "~/drawer/shared/formatters";
+import {
+  countryToEmoji,
+  formatNumber,
+  formatScore,
+} from "~/drawer/shared/formatters";
 import {
   glowDividerStyle,
   panelSurfaceClassName,
@@ -81,6 +85,20 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             label="Feeling"
             value={pass.feelingRating ?? "None"}
           />
+          {typeof pass.scoreInfo?.currentRankedScore === "number" ? (
+            <InfoLine
+              isSpoiler
+              label="Ranked Score"
+              value={formatNumber(pass.scoreInfo.currentRankedScore)}
+            />
+          ) : null}
+          {typeof pass.scoreInfo?.impact === "number" ? (
+            <InfoLine
+              isSpoiler
+              label="Impact"
+              value={formatImpact(pass.scoreInfo.impact)}
+            />
+          ) : null}
         </div>
         <PassFlags pass={pass} />
       </SpoilerSection>
@@ -140,6 +158,14 @@ function InfoLine({
       )}
     </div>
   );
+}
+
+function formatImpact(impact: number): string {
+  if (impact === 0) {
+    return "-";
+  }
+
+  return `${impact > 0 ? "+" : ""}${formatNumber(impact)}`;
 }
 
 function getRankColor(rank: number | undefined): string {
