@@ -42,19 +42,16 @@ jobs:
 
           echo "version=${PACKAGE_VERSION}" >> "${GITHUB_OUTPUT}"
           echo "tag=${EXPECTED_TAG}" >> "${GITHUB_OUTPUT}"
-          echo "artifact=tufe-${EXPECTED_TAG}.zip" >> "${GITHUB_OUTPUT}"
           echo "prerelease=${PRERELEASE}" >> "${GITHUB_OUTPUT}"
 
       - name: Typecheck
         run: bun run typecheck
 
-      - name: Build
-        run: bun run build
+      - name: Produce Chrome artifact
+        run: bun run zip
 
-      - name: Package dist
-        run: |
-          cd dist
-          zip -r "../${{ steps.version.outputs.artifact }}" .
+      - name: Produce Firefox artifact
+        run: bun run zip:firefox
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -62,4 +59,6 @@ jobs:
           name: "TUFExtension ${{ steps.version.outputs.tag }}"
           generate_release_notes: true
           prerelease: ${{ steps.version.outputs.prerelease }}
-          files: "${{ steps.version.outputs.artifact }}"
+          files: |
+            .output/tufe-${{ steps.version.outputs.tag }}-chrome.zip
+            .output/tufe-${{ steps.version.outputs.tag }}-firefox.zip

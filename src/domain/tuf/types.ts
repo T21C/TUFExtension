@@ -1,5 +1,5 @@
-import type { VideoReference } from "@domain/video/types";
-import type { UnknownRecord } from "@shared/object";
+import type { VideoReference } from "~/domain/video/types";
+import type { UnknownRecord } from "~/shared/object";
 
 export type TufRecord = UnknownRecord;
 

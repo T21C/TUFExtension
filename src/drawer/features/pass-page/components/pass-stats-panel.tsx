@@ -1,21 +1,24 @@
-import type { PassDetail } from "@domain/tuf/types";
+import type { PassDetail } from "~/domain/tuf/types";
 import {
   formatAccuracy,
   formatScore,
-  formatSpeed
-} from "@drawer/shared/formatters";
+  formatSpeed,
+} from "~/drawer/shared/formatters";
 import {
   glowDividerStyle,
   panelSurfaceClassName,
-  softGlowBorderStyle
-} from "@drawer/shared/level-surface";
+  softGlowBorderStyle,
+} from "~/drawer/shared/level-surface";
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 export function PassStatsPanel({ pass }: { pass: PassDetail }) {
   const flags = getFlags(pass);
 
   return (
-    <section className={`${panelSurfaceClassName} p-3`} style={softGlowBorderStyle}>
+    <section
+      className={`${panelSurfaceClassName} p-3`}
+      style={softGlowBorderStyle}
+    >
       <SpoilerSection>
         <div className="grid grid-cols-2 gap-2">
           <StatItem label="Score" value={formatScore(pass.score)} />

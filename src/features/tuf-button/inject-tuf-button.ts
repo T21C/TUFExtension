@@ -1,23 +1,23 @@
 import { createTufButtonIcon } from "./tuf-button-icon";
-import { logDebug, logInfo } from "@platform/content-script/logger";
+import { logDebug, logInfo } from "~/platform/content-script/logger";
 import {
   cancelPendingBilibiliActionBarMount,
   insertHostIntoBilibiliActionBar,
   moveHostIntoBilibiliActionBar,
-  waitForBilibiliActionBar
-} from "@platform/content-script/bilibili-action-bar";
+  waitForBilibiliActionBar,
+} from "~/platform/content-script/bilibili-action-bar";
 import {
   TUF_BUTTON_HOST_ID,
-  TUF_BUTTON_ID
-} from "@platform/content-script/tuf-button-elements";
+  TUF_BUTTON_ID,
+} from "~/platform/content-script/tuf-button-elements";
 import {
   cancelPendingActionBarMount,
   insertHostIntoYouTubeActionBar,
   moveHostIntoYouTubeActionBar,
-  waitForYouTubeActionBar
-} from "@platform/content-script/youtube-action-bar";
-import type { ResolvedTufContext } from "@domain/tuf/types";
-import type { VideoPlatform } from "@domain/video/types";
+  waitForYouTubeActionBar,
+} from "~/platform/content-script/youtube-action-bar";
+import type { ResolvedTufContext } from "~/domain/tuf/types";
+import type { VideoPlatform } from "~/domain/video/types";
 
 const YOUTUBE_BUTTON_CLASS_NAME =
   "ytSpecButtonShapeNextHost ytSpecButtonShapeNextTonal ytSpecButtonShapeNextMono ytSpecButtonShapeNextSizeM ytSpecButtonShapeNextIconLeading ytSpecButtonShapeNextEnableBackdropFilterExperiment";
@@ -25,12 +25,13 @@ const ACTION_BUTTON_GAP_PX = "8px";
 const BUTTON_GRADIENT = "linear-gradient(90deg, #2F0565 0%, #5339B2 100%)";
 const BUTTON_HOVER_GRADIENT =
   "linear-gradient(90deg, #3B0877 0%, #6148C6 100%)";
-const PRETENDARD_FONT_STACK = '"Pretendard", ui-sans-serif, system-ui, sans-serif';
+const PRETENDARD_FONT_STACK =
+  '"Pretendard", ui-sans-serif, system-ui, sans-serif';
 const PRETENDARD_FONT_STYLE_ID = "tuf-level-helper-pretendard-font";
 
 export function injectTufButton(
   item: ResolvedTufContext,
-  onClick: () => void
+  onClick: () => void,
 ): void {
   cancelPendingMounts();
 
@@ -39,18 +40,21 @@ export function injectTufButton(
 
   if (existingButton) {
     logDebug("TUF button already exists; updating active item", {
-      itemKey: item.itemKey
+      itemKey: item.itemKey,
     });
     existingButton.dataset.tufItemKey = item.itemKey;
     existingButton.setAttribute("aria-label", `Open TUF: ${item.title}`);
     applyButtonPlatform(existingButton, platform);
-    moveHostIntoActionBar(platform, existingButton.parentElement ?? existingButton);
+    moveHostIntoActionBar(
+      platform,
+      existingButton.parentElement ?? existingButton,
+    );
     return;
   }
 
   logInfo("Injecting TUF button", {
     itemKey: item.itemKey,
-    title: item.title
+    title: item.title,
   });
 
   const host = document.createElement("div");
@@ -115,8 +119,14 @@ function applyBrandedButtonStyle(button: HTMLButtonElement): void {
   button.style.setProperty("height", "40px");
   button.style.setProperty("line-height", "1");
   button.style.setProperty("padding", "0 16px 0 12px");
-  button.style.setProperty("box-shadow", "inset 0 0 0 1px rgba(255,255,255,0.14)");
-  button.style.setProperty("transition", "background 160ms ease, transform 160ms ease");
+  button.style.setProperty(
+    "box-shadow",
+    "inset 0 0 0 1px rgba(255,255,255,0.14)",
+  );
+  button.style.setProperty(
+    "transition",
+    "background 160ms ease, transform 160ms ease",
+  );
 
   button.addEventListener("mouseenter", () => {
     button.style.setProperty("background", BUTTON_HOVER_GRADIENT);
@@ -130,7 +140,7 @@ function applyBrandedButtonStyle(button: HTMLButtonElement): void {
 
 function applyButtonPlatform(
   button: HTMLButtonElement,
-  _platform: VideoPlatform
+  _platform: VideoPlatform,
 ): void {
   resetButtonStyle(button);
 
@@ -154,7 +164,7 @@ function applyHostPlatform(host: HTMLElement, platform: VideoPlatform): void {
 
 function insertHostIntoActionBar(
   platform: VideoPlatform,
-  host: HTMLElement
+  host: HTMLElement,
 ): boolean {
   return platform === "bilibili"
     ? insertHostIntoBilibiliActionBar(host)

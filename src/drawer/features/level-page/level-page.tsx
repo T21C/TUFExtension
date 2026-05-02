@@ -1,18 +1,18 @@
 import { useMemo } from "react";
-import { CloseButton } from "@drawer/components/close-button";
-import { DrawerShell } from "@drawer/drawer-shell";
-import { PinButton } from "@drawer/components/pin-button";
-import { useLevelPage } from "@features/drawer/use-level-page";
-import { usePassPage } from "@features/drawer/use-pass-page";
-import { PassDetailView } from "@drawer/features/pass-page/pass-detail-view";
+import { CloseButton } from "~/drawer/components/close-button";
+import { DrawerShell } from "~/drawer/drawer-shell";
+import { PinButton } from "~/drawer/components/pin-button";
+import { useLevelPage } from "~/features/drawer/use-level-page";
+import { usePassPage } from "~/features/drawer/use-pass-page";
+import { PassDetailView } from "~/drawer/features/pass-page/pass-detail-view";
 import { LevelDetailView } from "./level-detail-view";
 import { LevelTabs } from "./components/level-tabs";
 import type {
   ResolvedLevelContext,
   ResolvedPassContext,
-  ResolvedTufContext
-} from "@domain/tuf/types";
-import { glowDividerStyle } from "@drawer/shared/level-surface";
+  ResolvedTufContext,
+} from "~/domain/tuf/types";
+import { glowDividerStyle } from "~/drawer/shared/level-surface";
 
 interface LevelPageProps {
   activeItemKey: string | null;
@@ -37,7 +37,8 @@ export function LevelPage({
   onSelectItem,
   onTogglePinned,
 }: LevelPageProps) {
-  const activeItem = items.find((item) => item.itemKey === activeItemKey) ?? items[0];
+  const activeItem =
+    items.find((item) => item.itemKey === activeItemKey) ?? items[0];
 
   return (
     <DrawerShell isOpen={isOpen}>
@@ -90,7 +91,7 @@ export function LevelPage({
 
 function LevelDetailContainer({
   item,
-  items
+  items,
 }: {
   item: ResolvedLevelContext;
   items: ResolvedTufContext[];
@@ -98,7 +99,7 @@ function LevelDetailContainer({
   const levels = useMemo(() => items.filter(isLevelContext), [items]);
   const { activeState, retryActiveLevel } = useLevelPage({
     activeLevelId: item.levelId,
-    levels
+    levels,
   });
 
   return <LevelDetailView onRetry={retryActiveLevel} state={activeState} />;
@@ -106,7 +107,7 @@ function LevelDetailContainer({
 
 function PassDetailContainer({
   item,
-  items
+  items,
 }: {
   item: ResolvedPassContext;
   items: ResolvedTufContext[];
@@ -114,7 +115,7 @@ function PassDetailContainer({
   const passes = useMemo(() => items.filter(isPassContext), [items]);
   const { activeState, retryActivePass } = usePassPage({
     activePassId: item.passId,
-    passes
+    passes,
   });
 
   return <PassDetailView onRetry={retryActivePass} state={activeState} />;
@@ -122,7 +123,7 @@ function PassDetailContainer({
 
 function DrawerStatusView({
   description,
-  isResolving
+  isResolving,
 }: {
   description: string | null;
   isResolving: boolean;
@@ -147,7 +148,9 @@ function DrawerStatusView({
   );
 }
 
-function isLevelContext(item: ResolvedTufContext): item is ResolvedLevelContext {
+function isLevelContext(
+  item: ResolvedTufContext,
+): item is ResolvedLevelContext {
   return item.kind === "level";
 }
 

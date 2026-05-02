@@ -1,4 +1,4 @@
-import { asRecord, readNumber, readString } from "@shared/object";
+import { asRecord, readNumber, readString } from "~/shared/object";
 import type { TufRecord } from "./types";
 
 export interface DifficultyEntry {
@@ -9,7 +9,9 @@ export interface DifficultyEntry {
   type?: string;
 }
 
-export function createDifficultyCatalog(payload: unknown): Map<string, DifficultyEntry> {
+export function createDifficultyCatalog(
+  payload: unknown,
+): Map<string, DifficultyEntry> {
   const difficulties = Array.isArray(payload)
     ? payload.map(asRecord).filter(isTufRecord)
     : [];
@@ -26,7 +28,7 @@ export function createDifficultyCatalog(payload: unknown): Map<string, Difficult
       icon: selectIconSize(readString(difficulty, ["icon"]), "medium"),
       id,
       name: readString(difficulty, ["name"]),
-      type: readString(difficulty, ["type"])
+      type: readString(difficulty, ["type"]),
     });
   }
 
@@ -34,18 +36,20 @@ export function createDifficultyCatalog(payload: unknown): Map<string, Difficult
 }
 
 export function needsDifficultyCatalog(candidate: TufRecord): boolean {
-  return Boolean(!getDirectDifficulty(candidate)?.icon && readString(candidate, ["diffId"]));
+  return Boolean(
+    !getDirectDifficulty(candidate)?.icon && readString(candidate, ["diffId"]),
+  );
 }
 
 export function getTabIcon(
   candidate: TufRecord,
-  difficultyCatalog?: Map<string, DifficultyEntry>
+  difficultyCatalog?: Map<string, DifficultyEntry>,
 ): { alt: string; url: string } | undefined {
   const directDifficulty = getDirectDifficulty(candidate);
   if (directDifficulty?.icon) {
     return {
       alt: `${directDifficulty.name ?? "Difficulty"} icon`,
-      url: directDifficulty.icon
+      url: directDifficulty.icon,
     };
   }
 
@@ -55,14 +59,16 @@ export function getTabIcon(
   if (catalogDifficulty?.icon) {
     return {
       alt: `${catalogDifficulty.name ?? "Difficulty"} icon`,
-      url: catalogDifficulty.icon
+      url: catalogDifficulty.icon,
     };
   }
 
   return undefined;
 }
 
-export function getDirectDifficulty(candidate: TufRecord): DifficultyEntry | undefined {
+export function getDirectDifficulty(
+  candidate: TufRecord,
+): DifficultyEntry | undefined {
   const difficulty = asRecord(candidate.difficulty);
   if (!difficulty) {
     return undefined;
@@ -79,11 +85,14 @@ export function getDirectDifficulty(candidate: TufRecord): DifficultyEntry | und
     icon,
     id: id ?? "",
     name: readString(difficulty, ["name"]),
-    type: readString(difficulty, ["type"])
+    type: readString(difficulty, ["type"]),
   };
 }
 
-function selectIconSize(url: string | undefined, size: "medium" | "small"): string | undefined {
+function selectIconSize(
+  url: string | undefined,
+  size: "medium" | "small",
+): string | undefined {
   return url?.replace("/original", `/${size}`);
 }
 

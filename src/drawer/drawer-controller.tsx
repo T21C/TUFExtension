@@ -1,15 +1,16 @@
 import { createRoot, type Root } from "react-dom/client";
 import { DrawerRoot } from "./root";
-import { ensureShadowHost } from "@platform/content-script/shadow-host";
+import { ensureShadowHost } from "~/platform/content-script/shadow-host";
 import {
   TUF_BUTTON_HOST_ID,
-  TUF_BUTTON_ID
-} from "@platform/content-script/tuf-button-elements";
-import { logDebug, logInfo } from "@platform/content-script/logger";
-import type { ResolvedTufContext } from "@domain/tuf/types";
+  TUF_BUTTON_ID,
+} from "~/platform/content-script/tuf-button-elements";
+import { logDebug, logInfo } from "~/platform/content-script/logger";
+import type { ResolvedTufContext } from "~/domain/tuf/types";
 
 const DRAWER_HOST_ID = "tuf-level-helper-drawer-host";
-const PRETENDARD_FONT_STACK = '"Pretendard", ui-sans-serif, system-ui, sans-serif';
+const PRETENDARD_FONT_STACK =
+  '"Pretendard", ui-sans-serif, system-ui, sans-serif';
 
 let root: Root | null = null;
 let host: HTMLElement | null = null;
@@ -29,7 +30,7 @@ export function mountOrUpdateDrawer(
     emptyReason?: string;
     isResolving?: boolean;
     open?: boolean;
-  } = {}
+  } = {},
 ): void {
   const shouldRenderEmptyState =
     items.length === 0 && (isDrawerPinned || options.open === true);
@@ -40,9 +41,10 @@ export function mountOrUpdateDrawer(
   }
 
   currentItems = items;
-  activeItemKey = items.length > 0
-    ? getNextActiveItemKey(items, options.activeItemKey)
-    : null;
+  activeItemKey =
+    items.length > 0
+      ? getNextActiveItemKey(items, options.activeItemKey)
+      : null;
   isDrawerResolving = options.isResolving ?? false;
   drawerEmptyReason = options.emptyReason ?? null;
 
@@ -56,7 +58,7 @@ export function mountOrUpdateDrawer(
     itemKeys: items.map((item) => item.itemKey),
     pinned: isDrawerPinned,
     resolving: isDrawerResolving,
-    open: isDrawerOpen
+    open: isDrawerOpen,
   });
   renderDrawer();
 }
@@ -123,7 +125,8 @@ function renderDrawer(): void {
     return;
   }
 
-  activeItemKey = currentItems.length > 0 ? getNextActiveItemKey(currentItems) : null;
+  activeItemKey =
+    currentItems.length > 0 ? getNextActiveItemKey(currentItems) : null;
   ensureDrawerRoot();
   installGlobalListeners();
   updateDrawerHostInteraction();
@@ -139,7 +142,7 @@ function renderDrawer(): void {
       onClose={closeDrawer}
       onSelectItem={selectDrawerItem}
       onTogglePinned={togglePinned}
-    />
+    />,
   );
 }
 
@@ -157,16 +160,19 @@ function togglePinned(): void {
   isDrawerPinned = !isDrawerPinned;
 
   logInfo("Toggled TUF drawer pin", {
-    pinned: isDrawerPinned
+    pinned: isDrawerPinned,
   });
   renderDrawer();
 }
 
 function getNextActiveItemKey(
   items: ResolvedTufContext[],
-  requestedItemKey = activeItemKey
+  requestedItemKey = activeItemKey,
 ): string {
-  if (requestedItemKey && items.some((item) => item.itemKey === requestedItemKey)) {
+  if (
+    requestedItemKey &&
+    items.some((item) => item.itemKey === requestedItemKey)
+  ) {
     return requestedItemKey;
   }
 
@@ -181,7 +187,7 @@ function ensureDrawerRoot(): void {
   const { host: nextHost, mountNode } = ensureShadowHost({
     hostId: DRAWER_HOST_ID,
     onHostCreate: applyDrawerHostStyle,
-    onMountNodeCreate: applyMountNodeStyle
+    onMountNodeCreate: applyMountNodeStyle,
   });
 
   host = nextHost;
@@ -244,11 +250,11 @@ function installDrawerScrollBoundaryListeners(element: HTMLElement): void {
 
   element.addEventListener("wheel", stopDrawerScrollPropagation, {
     capture: true,
-    passive: false
+    passive: false,
   });
   element.addEventListener("touchmove", stopDrawerScrollPropagation, {
     capture: true,
-    passive: false
+    passive: false,
   });
   drawerScrollListenersInstalled = true;
 }

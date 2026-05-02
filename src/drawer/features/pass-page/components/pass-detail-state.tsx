@@ -1,4 +1,4 @@
-import { panelSurfaceClassName } from "@drawer/shared/level-surface";
+import { panelSurfaceClassName } from "~/drawer/shared/level-surface";
 
 export function PassDetailSkeleton() {
   return (
@@ -12,7 +12,7 @@ export function PassDetailSkeleton() {
 
 export function PassDetailError({
   message,
-  onRetry
+  onRetry,
 }: {
   message?: string;
   onRetry: () => void;
