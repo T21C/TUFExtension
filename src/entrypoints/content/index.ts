@@ -1,5 +1,6 @@
 import {
   clearDrawer,
+  isDrawerPinnedOpen,
   mountOrUpdateDrawer,
   toggleDrawer,
 } from "~/drawer/drawer-controller";
@@ -80,11 +81,20 @@ export default defineContentScript({
       }
 
       logInfo("Detected supported video", video);
+      const shouldKeepPinnedDrawerOpen = isDrawerPinnedOpen();
       lastCanonicalUrl = video.canonicalUrl;
       activeVideo = video;
       activeItems = [];
       removeTufButton();
-      clearDrawer();
+
+      if (shouldKeepPinnedDrawerOpen) {
+        mountOrUpdateDrawer([], {
+          isResolving: true,
+          open: true,
+        });
+      } else {
+        clearDrawer();
+      }
 
       logInfo("Requesting TUF video resolution", video);
       const response = await sendRuntimeMessage<ResolveVideoResult>({
@@ -109,7 +119,16 @@ export default defineContentScript({
       if (items.length === 0) {
         logInfo("No TUF result matched for current video", video);
         activeItems = [];
-        clearDrawer();
+
+        if (isDrawerPinnedOpen()) {
+          mountOrUpdateDrawer([], {
+            emptyReason: "No TUF result for this video.",
+            isResolving: false,
+            open: true,
+          });
+        } else {
+          clearDrawer();
+        }
       }
     }
 
