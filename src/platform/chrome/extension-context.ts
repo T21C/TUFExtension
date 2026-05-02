@@ -7,5 +7,8 @@ export function isExtensionContextAvailable(): boolean {
 }
 
 export function isExtensionContextInvalidatedError(error: unknown): boolean {
-  return error instanceof Error && error.message.includes("Extension context invalidated");
+  return (
+    error instanceof Error &&
+    error.message.includes("Extension context invalidated")
+  );
 }

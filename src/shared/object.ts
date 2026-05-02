@@ -10,7 +10,7 @@ export function asRecord(value: unknown): UnknownRecord | null {
 
 export function readString(
   record: UnknownRecord | null | undefined,
-  keys: string[]
+  keys: string[],
 ): string | undefined {
   if (!record) {
     return undefined;
@@ -33,7 +33,7 @@ export function readString(
 
 export function readNumber(
   record: UnknownRecord | null | undefined,
-  keys: string[]
+  keys: string[],
 ): number | undefined {
   if (!record) {
     return undefined;

@@ -80,7 +80,11 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
       <SpoilerSection>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <InfoLine label="Clear Date" value={formatDate(pass.date ?? "")} />
-          <InfoLine isSpoiler label="Score" value={formatNumber(pass.score)} />
+          <InfoLine
+            isSpoiler
+            label="Feeling"
+            value={pass.feelingRating ?? "None"}
+          />
           {pass.scoreInfo?.currentRankedScore ? (
             <InfoLine
               isSpoiler
@@ -96,8 +100,33 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             />
           ) : null}
         </div>
+        <PassFlags pass={pass} />
       </SpoilerSection>
     </section>
+  );
+}
+
+function PassFlags({ pass }: { pass: PassDetail }) {
+  const flags = getFlags(pass);
+
+  if (flags.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      <div className="my-3 h-px" style={glowDividerStyle} />
+      <div className="flex flex-wrap gap-1.5">
+        {flags.map((flag) => (
+          <span
+            className="rounded-md border border-violet-400/25 bg-black/30 px-2 py-1 text-xs font-black text-violet-100 shadow-[0_0_12px_rgba(168,85,247,0.18)]"
+            key={flag}
+          >
+            <SpoilerText>{flag}</SpoilerText>
+          </span>
+        ))}
+      </div>
+    </>
   );
 }
 
@@ -142,4 +171,27 @@ function getRankColor(rank: number | undefined): string {
     default:
       return "#a3a3a3";
   }
+}
+
+function getFlags(pass: PassDetail): string[] {
+  const flags: string[] = [];
+  if (pass.isWorldsFirst) {
+    flags.push("World's First");
+  }
+  if (pass.is12K) {
+    flags.push("12K");
+  }
+  if (pass.is16K) {
+    flags.push("16K");
+  }
+  if (pass.isNoHoldTap) {
+    flags.push("No Hold Tap");
+  }
+  if (pass.isHidden) {
+    flags.push("Hidden");
+  }
+  if (pass.isDeleted) {
+    flags.push("Deleted");
+  }
+  return flags;
 }

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { PassPageData } from "~/domain/tuf/types";
-import { TufIcon, VideoIcon } from "~/drawer/shared/level-icons";
+import { TufIcon } from "~/drawer/shared/level-icons";
 import { interactiveSurfaceClassName } from "~/drawer/shared/level-surface";
 
 interface PassAction {
@@ -10,13 +10,13 @@ interface PassAction {
 }
 
 export function PassActionStrip({
+  areSpoilersRevealed,
   data,
-  onHideSpoilers,
-  onRevealSpoilers,
+  onToggleSpoilers,
 }: {
+  areSpoilersRevealed: boolean;
   data: PassPageData;
-  onHideSpoilers: () => void;
-  onRevealSpoilers: () => void;
+  onToggleSpoilers: () => void;
 }) {
   const candidates: Array<PassAction | null> = [
     {
@@ -33,26 +33,21 @@ export function PassActionStrip({
       : null,
   ];
   const actions = candidates.filter(isPassAction);
+  const spoilerLabel = areSpoilersRevealed
+    ? "Hide all pass spoilers"
+    : "Reveal all pass spoilers";
 
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-3 gap-2">
       <button
-        aria-label="Reveal all pass spoilers"
+        aria-pressed={areSpoilersRevealed}
+        aria-label={spoilerLabel}
         className={`${interactiveSurfaceClassName} grid h-11 place-items-center`}
-        onClick={onRevealSpoilers}
-        title="Reveal all spoilers"
+        onClick={onToggleSpoilers}
+        title={spoilerLabel}
         type="button"
       >
-        <EyeIcon />
-      </button>
-      <button
-        aria-label="Hide all pass spoilers"
-        className={`${interactiveSurfaceClassName} grid h-11 place-items-center`}
-        onClick={onHideSpoilers}
-        title="Hide all spoilers"
-        type="button"
-      >
-        <EyeSlashIcon />
+        {areSpoilersRevealed ? <EyeSlashIcon /> : <EyeIcon />}
       </button>
       {actions.map((action) => (
         <a

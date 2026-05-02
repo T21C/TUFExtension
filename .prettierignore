@@ -1,1 +1,6 @@
-*.json
+.git
+node_modules
+dist
+.wxt
+.output
+coverage

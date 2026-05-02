@@ -14,22 +14,22 @@ export const activeSurfaceClassName =
 
 export const glowBorderStyle: CSSProperties = {
   borderColor: "rgba(168, 85, 247, 0.45)",
-  boxShadow: "0 0 24px rgba(168, 85, 247, 0.2)"
+  boxShadow: "0 0 24px rgba(168, 85, 247, 0.2)",
 };
 
 export const softGlowBorderStyle: CSSProperties = {
   borderColor: "rgba(168, 85, 247, 0.32)",
-  boxShadow: "0 0 14px rgba(168, 85, 247, 0.16)"
+  boxShadow: "0 0 14px rgba(168, 85, 247, 0.16)",
 };
 
 export const glowDividerStyle: CSSProperties = {
   background:
     "linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.7), transparent)",
-  boxShadow: "0 0 10px rgba(168, 85, 247, 0.45)"
+  boxShadow: "0 0 10px rgba(168, 85, 247, 0.45)",
 };
 
 export const verticalGlowDividerStyle: CSSProperties = {
   background:
     "linear-gradient(180deg, transparent, rgba(168, 85, 247, 0.42), transparent)",
-  boxShadow: "0 0 10px rgba(168, 85, 247, 0.24)"
+  boxShadow: "0 0 10px rgba(168, 85, 247, 0.24)",
 };

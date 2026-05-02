@@ -1,12 +1,10 @@
-name: Check build on PR
+name: CI
 
 on:
   pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,6 +15,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Check format
+        run: bun run format:check
 
       - name: Check TS
         run: bun run typecheck

@@ -5,7 +5,7 @@ const YOUTUBE_ACTION_BAR_SELECTORS = [
   "ytd-watch-metadata #top-level-buttons-computed",
   "ytd-watch-metadata ytd-menu-renderer #top-level-buttons-computed",
   "ytd-watch-metadata #actions ytd-menu-renderer #top-level-buttons-computed",
-  "#actions ytd-menu-renderer #top-level-buttons-computed"
+  "#actions ytd-menu-renderer #top-level-buttons-computed",
 ] as const;
 
 const ACTION_BAR_SELECTOR_LABEL = YOUTUBE_ACTION_BAR_SELECTORS.join(", ");
@@ -33,7 +33,7 @@ export function insertHostIntoYouTubeActionBar(host: HTMLElement): boolean {
 export function moveHostIntoYouTubeActionBar(host: HTMLElement): void {
   if (!insertHostIntoYouTubeActionBar(host)) {
     logInfo(
-      `Could not move existing TUF button yet; YouTube action bar missing (${ACTION_BAR_SELECTOR_LABEL})`
+      `Could not move existing TUF button yet; YouTube action bar missing (${ACTION_BAR_SELECTOR_LABEL})`,
     );
     waitForYouTubeActionBar(host);
   }
@@ -63,12 +63,12 @@ export function waitForYouTubeActionBar(host: HTMLElement): void {
 
   pendingObserver.observe(document.documentElement, {
     childList: true,
-    subtree: true
+    subtree: true,
   });
 
   pendingTimeoutId = window.setTimeout(() => {
     logWarn(
-      `Stopped waiting for YouTube action bar; TUF button was not mounted (${ACTION_BAR_SELECTOR_LABEL})`
+      `Stopped waiting for YouTube action bar; TUF button was not mounted (${ACTION_BAR_SELECTOR_LABEL})`,
     );
     cancelPendingActionBarMount();
   }, 10_000);

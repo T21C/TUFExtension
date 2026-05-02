@@ -35,22 +35,45 @@ export function PassJudgementsPanel({
       <div className="my-3 h-px" style={glowDividerStyle} />
       <SpoilerSection>
         <div className="grid grid-cols-7 gap-1.5 rounded-md bg-violet-500/45 p-1.5">
-          {JUDGEMENT_CELLS.map((cell) => (
-            <div
-              className="grid min-h-9 place-items-center rounded bg-black/18 px-1 text-center"
-              key={cell.key}
-              title={cell.label}
-            >
-              <SpoilerText
-                className="tabular-nums leading-none text-sm font-black drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]"
-                style={{ color: cell.color }}
+          {JUDGEMENT_CELLS.map((cell) => {
+            const value = String(judgements[cell.key]);
+
+            return (
+              <div
+                className="grid min-h-9 min-w-0 place-items-center rounded bg-black/18 px-0.5 text-center"
+                key={cell.key}
+                title={cell.label}
               >
-                {judgements[cell.key]}
-              </SpoilerText>
-            </div>
-          ))}
+                <SpoilerText
+                  className={[
+                    "max-w-full tabular-nums leading-none font-black drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]",
+                    getJudgementTextSize(value),
+                  ].join(" ")}
+                  style={{ color: cell.color }}
+                >
+                  {value}
+                </SpoilerText>
+              </div>
+            );
+          })}
         </div>
       </SpoilerSection>
     </section>
   );
+}
+
+function getJudgementTextSize(value: string): string {
+  if (value.length >= 6) {
+    return "text-[10px]";
+  }
+
+  if (value.length >= 5) {
+    return "text-[11px]";
+  }
+
+  if (value.length >= 4) {
+    return "text-xs";
+  }
+
+  return "text-sm";
 }
