@@ -1,4 +1,4 @@
-name: test_and_build_check_at_pr
+name: Check build on PR
 
 on:
   pull_request:
