@@ -3,6 +3,7 @@ import type { PassPageData } from "~/domain/tuf/types";
 import {
   CalendarIcon,
   ChartIcon,
+  PercentIcon,
   SpeedIcon,
   TufIcon,
 } from "~/drawer/shared/level-icons";
@@ -89,7 +90,11 @@ export function PassHero({ data }: { data: PassPageData }) {
                 isSpoiler
                 label={formatSpeed(pass.speed)}
               />
-              <HeroMetric isSpoiler label={formatAccuracy(pass.accuracy)} />
+              <HeroMetric
+                icon={<PercentIcon size={16} />}
+                isSpoiler
+                label={formatAccuracy(pass.accuracy)}
+              />
             </div>
           </SpoilerSection>
         </div>

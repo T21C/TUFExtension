@@ -8,7 +8,6 @@ import {
 import { PassHero } from "./components/pass-hero";
 import { PassJudgementsPanel } from "./components/pass-judgements-panel";
 import { PassPlayerCard } from "./components/pass-player-card";
-import { PassStatsPanel } from "./components/pass-stats-panel";
 import { SpoilerControlsProvider } from "./components/spoiler-text";
 
 interface PassDetailViewProps {
@@ -31,6 +30,18 @@ export function PassDetailView({ onRetry, state }: PassDetailViewProps) {
 function LoadedPassDetail({ data }: { data: PassPageData }) {
   const [hideAllVersion, setHideAllVersion] = useState(0);
   const [revealAllVersion, setRevealAllVersion] = useState(0);
+  const [areSpoilersRevealed, setAreSpoilersRevealed] = useState(false);
+
+  function toggleSpoilers() {
+    if (areSpoilersRevealed) {
+      setAreSpoilersRevealed(false);
+      setHideAllVersion((value) => value + 1);
+      return;
+    }
+
+    setAreSpoilersRevealed(true);
+    setRevealAllVersion((value) => value + 1);
+  }
 
   return (
     <SpoilerControlsProvider
@@ -45,12 +56,11 @@ function LoadedPassDetail({ data }: { data: PassPageData }) {
         ) : null}
         <PassHero data={data} />
         <PassActionStrip
+          areSpoilersRevealed={areSpoilersRevealed}
           data={data}
-          onHideSpoilers={() => setHideAllVersion((value) => value + 1)}
-          onRevealSpoilers={() => setRevealAllVersion((value) => value + 1)}
+          onToggleSpoilers={toggleSpoilers}
         />
         <PassPlayerCard pass={data.pass} />
-        <PassStatsPanel pass={data.pass} />
         <PassJudgementsPanel judgements={data.pass.judgements} />
       </article>
     </SpoilerControlsProvider>
