@@ -60,5 +60,5 @@ jobs:
           generate_release_notes: true
           prerelease: ${{ steps.version.outputs.prerelease }}
           files: |
-            .output/tufe-${{ steps.version.outputs.tag }}-chrome.zip
-            .output/tufe-${{ steps.version.outputs.tag }}-firefox.zip
+            .output/tufe-*-chrome.zip
+            .output/tufe-*-firefox.zip
