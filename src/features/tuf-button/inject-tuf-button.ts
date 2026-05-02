@@ -16,6 +16,7 @@ import {
   moveHostIntoYouTubeActionBar,
   waitForYouTubeActionBar,
 } from "~/platform/content-script/youtube-action-bar";
+import { t } from "~/platform/chrome/i18n";
 import type { ResolvedTufContext } from "~/domain/tuf/types";
 import type { VideoPlatform } from "~/domain/video/types";
 
@@ -43,7 +44,10 @@ export function injectTufButton(
       itemKey: item.itemKey,
     });
     existingButton.dataset.tufItemKey = item.itemKey;
-    existingButton.setAttribute("aria-label", `Open TUF: ${item.title}`);
+    existingButton.setAttribute(
+      "aria-label",
+      t("openTufWithTitle", item.title),
+    );
     applyButtonPlatform(existingButton, platform);
     moveHostIntoActionBar(
       platform,
@@ -63,7 +67,7 @@ export function injectTufButton(
   const button = document.createElement("button");
   button.id = TUF_BUTTON_ID;
   button.type = "button";
-  button.setAttribute("aria-label", `Open TUF: ${item.title}`);
+  button.setAttribute("aria-label", t("openTufWithTitle", item.title));
   button.dataset.tufItemKey = item.itemKey;
   button.addEventListener("click", onClick);
   applyButtonPlatform(button, platform);

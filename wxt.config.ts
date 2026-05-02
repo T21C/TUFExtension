@@ -12,8 +12,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
   }),
   manifest: {
-    name: "TUFExtension",
-    description: "A browser extension for The Universal Forums.",
+    default_locale: "en",
+    name: "__MSG_extensionName__",
+    description: "__MSG_extensionDescription__",
     version: manifestVersion,
     version_name: packageJson.version,
     icons: {

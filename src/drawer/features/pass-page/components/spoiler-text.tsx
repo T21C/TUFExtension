@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type ReactNode,
 } from "react";
+import { t } from "~/platform/chrome/i18n";
 
 interface SpoilerContextValue {
   isRevealed: boolean;
@@ -165,7 +166,7 @@ export function SpoilerText({
       role="button"
       style={{ ...truncateStyle, ...style }}
       tabIndex={0}
-      title={title ?? "Click to reveal"}
+      title={title ?? t("clickToReveal")}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();

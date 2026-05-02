@@ -1,3 +1,5 @@
+import { t } from "~/platform/chrome/i18n";
+
 interface CloseButtonProps {
   onClick: () => void;
 }
@@ -5,10 +7,10 @@ interface CloseButtonProps {
 export function CloseButton({ onClick }: CloseButtonProps) {
   return (
     <button
-      aria-label="Close TUF drawer"
+      aria-label={t("drawerClose")}
       className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-transparent text-white/80 transition-colors hover:bg-white/10 hover:text-white"
       onClick={onClick}
-      title="Close"
+      title={t("drawerCloseTitle")}
       type="button"
     >
       <CloseIcon />

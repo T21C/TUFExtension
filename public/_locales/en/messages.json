@@ -1,0 +1,311 @@
+{
+  "extensionName": {
+    "message": "TUFExtension"
+  },
+  "extensionDescription": {
+    "message": "A browser extension for The Universal Forums."
+  },
+  "drawerClose": {
+    "message": "Close TUF drawer"
+  },
+  "drawerCloseTitle": {
+    "message": "Close"
+  },
+  "drawerPin": {
+    "message": "Pin TUF drawer"
+  },
+  "drawerUnpin": {
+    "message": "Unpin TUF drawer"
+  },
+  "drawerPinTitle": {
+    "message": "Pin drawer"
+  },
+  "drawerUnpinTitle": {
+    "message": "Unpin drawer"
+  },
+  "drawerNavigation": {
+    "message": "TUF drawer navigation"
+  },
+  "drawerControlsExpand": {
+    "message": "Show drawer controls"
+  },
+  "drawerControlsCollapse": {
+    "message": "Hide drawer controls"
+  },
+  "spoilerProtectionEnable": {
+    "message": "Enable spoiler protection"
+  },
+  "spoilerProtectionDisable": {
+    "message": "Disable spoiler protection"
+  },
+  "spoilerProtectionDisabled": {
+    "message": "Spoiler protection is disabled"
+  },
+  "languageSwitchToEnglish": {
+    "message": "Switch language to English"
+  },
+  "languageSwitchToKorean": {
+    "message": "Switch language to Korean"
+  },
+  "languageSwitchToChinese": {
+    "message": "Switch language to Chinese"
+  },
+  "openTufWithTitle": {
+    "message": "Open TUF: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "tufExtension": {
+    "message": "TUFExtension"
+  },
+  "tufResults": {
+    "message": "TUF results"
+  },
+  "retry": {
+    "message": "Retry"
+  },
+  "download": {
+    "message": "Download"
+  },
+  "downloadUnavailable": {
+    "message": "Download unavailable"
+  },
+  "failedLoadLevelData": {
+    "message": "Failed to load level data."
+  },
+  "failedLoadPassData": {
+    "message": "Failed to load pass data."
+  },
+  "failedLoadLoginState": {
+    "message": "Failed to load TUF login state."
+  },
+  "failedUpdateLike": {
+    "message": "Failed to update like."
+  },
+  "checkingTufLogin": {
+    "message": "Checking TUF login"
+  },
+  "updatingLike": {
+    "message": "Updating like"
+  },
+  "couldNotCheckTufLogin": {
+    "message": "Could not check TUF login"
+  },
+  "refreshing": {
+    "message": "Refreshing"
+  },
+  "noResult": {
+    "message": "No result"
+  },
+  "lookingForTufData": {
+    "message": "Looking for TUF data"
+  },
+  "noTufResult": {
+    "message": "No TUF result"
+  },
+  "pinnedRefreshDescription": {
+    "message": "The drawer is pinned, so it will update as soon as this video resolves."
+  },
+  "noMatchedResultDescription": {
+    "message": "This video does not have a matched TUF level or pass."
+  },
+  "difficultyFallback": {
+    "message": "Difficulty"
+  },
+  "estimatedDifficultyFallback": {
+    "message": "Estimated difficulty"
+  },
+  "openInTuf": {
+    "message": "Open in TUF"
+  },
+  "openWorkshop": {
+    "message": "Open Workshop"
+  },
+  "workshopUnavailable": {
+    "message": "Workshop unavailable"
+  },
+  "loginToLikeLevel": {
+    "message": "Login to TUF to like this level"
+  },
+  "unlikeLevel": {
+    "message": "Unlike this level"
+  },
+  "likeLevel": {
+    "message": "Like this level"
+  },
+  "likes": {
+    "message": "Likes"
+  },
+  "downloads": {
+    "message": "Downloads"
+  },
+  "clears": {
+    "message": "Clears"
+  },
+  "noClearsYet": {
+    "message": "No clears yet"
+  },
+  "couldNotLoadLevel": {
+    "message": "Could not load level"
+  },
+  "levelApiUnreadable": {
+    "message": "The TUF API did not return a readable response."
+  },
+  "leaderboard": {
+    "message": "Leaderboard"
+  },
+  "clearsCount": {
+    "message": "$COUNT$ clears",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "sortByLabel": {
+    "message": "Sort by $LABEL$",
+    "placeholders": {
+      "label": {
+        "content": "$1"
+      }
+    }
+  },
+  "sortTitle": {
+    "message": "$LABEL$ $DIRECTION$",
+    "placeholders": {
+      "label": {
+        "content": "$1"
+      },
+      "direction": {
+        "content": "$2"
+      }
+    }
+  },
+  "sortDescending": {
+    "message": "desc"
+  },
+  "sortAscending": {
+    "message": "asc"
+  },
+  "clearDate": {
+    "message": "Clear date"
+  },
+  "accuracy": {
+    "message": "Accuracy"
+  },
+  "speed": {
+    "message": "Speed"
+  },
+  "score": {
+    "message": "Score"
+  },
+  "date": {
+    "message": "Date"
+  },
+  "acc": {
+    "message": "Acc"
+  },
+  "feeling": {
+    "message": "Feeling"
+  },
+  "passPageForPlayer": {
+    "message": "$PLAYER$ pass page",
+    "placeholders": {
+      "player": {
+        "content": "$1"
+      }
+    }
+  },
+  "clearVideoForPlayer": {
+    "message": "$PLAYER$ clear video",
+    "placeholders": {
+      "player": {
+        "content": "$1"
+      }
+    }
+  },
+  "passedClear": {
+    "message": "Passed Clear"
+  },
+  "passDataUnavailable": {
+    "message": "Pass data unavailable"
+  },
+  "unknownCredits": {
+    "message": "Unknown credits"
+  },
+  "tufPlayer": {
+    "message": "TUF player"
+  },
+  "none": {
+    "message": "None"
+  },
+  "worldsFirst": {
+    "message": "World's First"
+  },
+  "twelveK": {
+    "message": "12K"
+  },
+  "sixteenK": {
+    "message": "16K"
+  },
+  "noHoldTap": {
+    "message": "No Hold Tap"
+  },
+  "hidden": {
+    "message": "Hidden"
+  },
+  "deleted": {
+    "message": "Deleted"
+  },
+  "openPassInTuf": {
+    "message": "Open Pass in TUF"
+  },
+  "openLevel": {
+    "message": "Open Level"
+  },
+  "hideAllPassSpoilers": {
+    "message": "Hide all pass spoilers"
+  },
+  "revealAllPassSpoilers": {
+    "message": "Reveal all pass spoilers"
+  },
+  "passDeleted": {
+    "message": "This pass has been deleted."
+  },
+  "passHidden": {
+    "message": "This pass is hidden."
+  },
+  "judgements": {
+    "message": "Judgements"
+  },
+  "clearDetails": {
+    "message": "Clear details"
+  },
+  "tooEarly": {
+    "message": "Too Early"
+  },
+  "early": {
+    "message": "Early"
+  },
+  "ePerfect": {
+    "message": "E-Perfect"
+  },
+  "perfect": {
+    "message": "Perfect"
+  },
+  "lPerfect": {
+    "message": "L-Perfect"
+  },
+  "late": {
+    "message": "Late"
+  },
+  "tooLate": {
+    "message": "Too Late"
+  },
+  "clickToReveal": {
+    "message": "Click to reveal"
+  }
+}

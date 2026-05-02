@@ -18,6 +18,7 @@ import {
   mutedSurfaceClassName,
   panelSurfaceClassName,
 } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 export function PassHero({ data }: { data: PassPageData }) {
@@ -43,7 +44,7 @@ export function PassHero({ data }: { data: PassPageData }) {
         <div className="flex w-20 shrink-0 flex-col items-center gap-2">
           {difficulty?.icon ? (
             <img
-              alt={difficulty.name ?? "Difficulty"}
+              alt={difficulty.name ?? t("difficultyFallback")}
               className="h-16 w-16 rounded-full object-contain drop-shadow-[0_0_16px_rgba(168,85,247,0.38)]"
               src={difficulty.icon}
             />
@@ -64,7 +65,7 @@ export function PassHero({ data }: { data: PassPageData }) {
 
         <div className="min-w-0 flex-1 pt-1">
           <p className="text-xs font-black uppercase tracking-[0.14em] text-violet-200/55">
-            Passed Clear
+            {t("passedClear")}
           </p>
           <h1 className="mt-1 break-words text-3xl font-black leading-[0.98] text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.55)]">
             {pass.level.song}
@@ -144,5 +145,5 @@ function getCreditsText(data: PassPageData["pass"]): string {
     Boolean,
   );
 
-  return parts.length > 0 ? parts.join(" | ") : "Unknown credits";
+  return parts.length > 0 ? parts.join(" | ") : t("unknownCredits");
 }

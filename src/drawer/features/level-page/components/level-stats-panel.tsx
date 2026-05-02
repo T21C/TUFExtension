@@ -1,5 +1,6 @@
 import type { LevelPageData } from "~/domain/tuf/types";
 import type { LevelLikeController } from "~/features/drawer/use-level-like";
+import { t } from "~/platform/chrome/i18n";
 import { formatInteger } from "~/drawer/shared/formatters";
 import {
   glowDividerStyle,
@@ -22,14 +23,17 @@ export function LevelStatsPanel({
     >
       <div aria-hidden="true" className="mb-3 h-px" style={glowDividerStyle} />
       <div className="flex justify-between">
-        <GridStat label="Likes" value={formatInteger(likeController.likes)} />
+        <GridStat
+          label={t("likes")}
+          value={formatInteger(likeController.likes)}
+        />
         <div
           aria-hidden="true"
           className="mx-2 w-px shrink-0"
           style={verticalGlowDividerStyle}
         />
         <GridStat
-          label="Downloads"
+          label={t("downloads")}
           value={formatInteger(data.level.downloadCount ?? 0)}
         />
         <div
@@ -37,7 +41,10 @@ export function LevelStatsPanel({
           className="mx-2 w-px shrink-0"
           style={verticalGlowDividerStyle}
         />
-        <GridStat label="Clears" value={formatInteger(stats.totalClears)} />
+        <GridStat
+          label={t("clears")}
+          value={formatInteger(stats.totalClears)}
+        />
       </div>
       <div aria-hidden="true" className="mt-3 h-px" style={glowDividerStyle} />
     </section>

@@ -9,6 +9,7 @@ import { PassHero } from "./components/pass-hero";
 import { PassJudgementsPanel } from "./components/pass-judgements-panel";
 import { PassPlayerCard } from "./components/pass-player-card";
 import { SpoilerControlsProvider } from "./components/spoiler-text";
+import { t } from "~/platform/chrome/i18n";
 
 interface PassDetailViewProps {
   isSpoilerProtectionDisabled: boolean;
@@ -67,9 +68,9 @@ function LoadedPassDetail({
     >
       <article className="space-y-2.5 pb-4 pt-2 text-white">
         {data.pass.isDeleted ? (
-          <PassStatusBanner text="This pass has been deleted." />
+          <PassStatusBanner text={t("passDeleted")} />
         ) : data.pass.isHidden ? (
-          <PassStatusBanner text="This pass is hidden." />
+          <PassStatusBanner text={t("passHidden")} />
         ) : null}
         <PassHero data={data} />
         <PassActionStrip

@@ -1,0 +1,311 @@
+{
+  "extensionName": {
+    "message": "TUFExtension"
+  },
+  "extensionDescription": {
+    "message": "The Universal Forums용 브라우저 확장 프로그램입니다."
+  },
+  "drawerClose": {
+    "message": "TUF drawer 닫기"
+  },
+  "drawerCloseTitle": {
+    "message": "닫기"
+  },
+  "drawerPin": {
+    "message": "TUF drawer 고정"
+  },
+  "drawerUnpin": {
+    "message": "TUF drawer 고정 해제"
+  },
+  "drawerPinTitle": {
+    "message": "drawer 고정"
+  },
+  "drawerUnpinTitle": {
+    "message": "drawer 고정 해제"
+  },
+  "drawerNavigation": {
+    "message": "TUF drawer 내비게이션"
+  },
+  "drawerControlsExpand": {
+    "message": "drawer 컨트롤 펼치기"
+  },
+  "drawerControlsCollapse": {
+    "message": "drawer 컨트롤 접기"
+  },
+  "spoilerProtectionEnable": {
+    "message": "스포일러 보호 켜기"
+  },
+  "spoilerProtectionDisable": {
+    "message": "스포일러 보호 끄기"
+  },
+  "spoilerProtectionDisabled": {
+    "message": "스포일러 보호가 꺼져 있습니다"
+  },
+  "languageSwitchToEnglish": {
+    "message": "영어로 전환"
+  },
+  "languageSwitchToKorean": {
+    "message": "한국어로 전환"
+  },
+  "languageSwitchToChinese": {
+    "message": "중국어로 전환"
+  },
+  "openTufWithTitle": {
+    "message": "TUF 열기: $TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "tufExtension": {
+    "message": "TUFExtension"
+  },
+  "tufResults": {
+    "message": "TUF 결과"
+  },
+  "retry": {
+    "message": "다시 시도"
+  },
+  "download": {
+    "message": "다운로드"
+  },
+  "downloadUnavailable": {
+    "message": "다운로드 없음"
+  },
+  "failedLoadLevelData": {
+    "message": "레벨 데이터를 불러오지 못했습니다."
+  },
+  "failedLoadPassData": {
+    "message": "클리어 데이터를 불러오지 못했습니다."
+  },
+  "failedLoadLoginState": {
+    "message": "TUF 로그인 상태를 불러오지 못했습니다."
+  },
+  "failedUpdateLike": {
+    "message": "좋아요를 업데이트하지 못했습니다."
+  },
+  "checkingTufLogin": {
+    "message": "TUF 로그인 확인 중"
+  },
+  "updatingLike": {
+    "message": "좋아요 업데이트 중"
+  },
+  "couldNotCheckTufLogin": {
+    "message": "TUF 로그인을 확인하지 못했습니다"
+  },
+  "refreshing": {
+    "message": "새로고침 중"
+  },
+  "noResult": {
+    "message": "결과 없음"
+  },
+  "lookingForTufData": {
+    "message": "TUF 데이터를 찾는 중"
+  },
+  "noTufResult": {
+    "message": "TUF 결과 없음"
+  },
+  "pinnedRefreshDescription": {
+    "message": "drawer가 고정되어 있어 영상이 확인되는 즉시 내용이 갱신됩니다."
+  },
+  "noMatchedResultDescription": {
+    "message": "이 영상에 매칭된 TUF 레벨 또는 클리어가 없습니다."
+  },
+  "difficultyFallback": {
+    "message": "난이도"
+  },
+  "estimatedDifficultyFallback": {
+    "message": "예상 난이도"
+  },
+  "openInTuf": {
+    "message": "TUF에서 열기"
+  },
+  "openWorkshop": {
+    "message": "Workshop 열기"
+  },
+  "workshopUnavailable": {
+    "message": "Workshop 없음"
+  },
+  "loginToLikeLevel": {
+    "message": "좋아요를 누르려면 TUF에 로그인하세요"
+  },
+  "unlikeLevel": {
+    "message": "레벨 좋아요 취소"
+  },
+  "likeLevel": {
+    "message": "레벨 좋아요"
+  },
+  "likes": {
+    "message": "좋아요"
+  },
+  "downloads": {
+    "message": "다운로드"
+  },
+  "clears": {
+    "message": "클리어"
+  },
+  "noClearsYet": {
+    "message": "아직 클리어가 없습니다"
+  },
+  "couldNotLoadLevel": {
+    "message": "레벨을 불러오지 못했습니다"
+  },
+  "levelApiUnreadable": {
+    "message": "TUF API가 읽을 수 있는 응답을 반환하지 않았습니다."
+  },
+  "leaderboard": {
+    "message": "리더보드"
+  },
+  "clearsCount": {
+    "message": "클리어 $COUNT$개",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "sortByLabel": {
+    "message": "$LABEL$ 기준 정렬",
+    "placeholders": {
+      "label": {
+        "content": "$1"
+      }
+    }
+  },
+  "sortTitle": {
+    "message": "$LABEL$ $DIRECTION$",
+    "placeholders": {
+      "label": {
+        "content": "$1"
+      },
+      "direction": {
+        "content": "$2"
+      }
+    }
+  },
+  "sortDescending": {
+    "message": "내림차순"
+  },
+  "sortAscending": {
+    "message": "오름차순"
+  },
+  "clearDate": {
+    "message": "클리어 날짜"
+  },
+  "accuracy": {
+    "message": "정확도"
+  },
+  "speed": {
+    "message": "속도"
+  },
+  "score": {
+    "message": "점수"
+  },
+  "date": {
+    "message": "날짜"
+  },
+  "acc": {
+    "message": "정확도"
+  },
+  "feeling": {
+    "message": "체감"
+  },
+  "passPageForPlayer": {
+    "message": "$PLAYER$ 클리어 페이지",
+    "placeholders": {
+      "player": {
+        "content": "$1"
+      }
+    }
+  },
+  "clearVideoForPlayer": {
+    "message": "$PLAYER$ 클리어 영상",
+    "placeholders": {
+      "player": {
+        "content": "$1"
+      }
+    }
+  },
+  "passedClear": {
+    "message": "인증된 클리어"
+  },
+  "passDataUnavailable": {
+    "message": "클리어 데이터 없음"
+  },
+  "unknownCredits": {
+    "message": "알 수 없는 제작진"
+  },
+  "tufPlayer": {
+    "message": "TUF 플레이어"
+  },
+  "none": {
+    "message": "없음"
+  },
+  "worldsFirst": {
+    "message": "World's First"
+  },
+  "twelveK": {
+    "message": "12K"
+  },
+  "sixteenK": {
+    "message": "16K"
+  },
+  "noHoldTap": {
+    "message": "No Hold Tap"
+  },
+  "hidden": {
+    "message": "숨김"
+  },
+  "deleted": {
+    "message": "삭제됨"
+  },
+  "openPassInTuf": {
+    "message": "TUF에서 클리어 열기"
+  },
+  "openLevel": {
+    "message": "레벨 열기"
+  },
+  "hideAllPassSpoilers": {
+    "message": "클리어 스포일러 모두 숨기기"
+  },
+  "revealAllPassSpoilers": {
+    "message": "클리어 스포일러 모두 보기"
+  },
+  "passDeleted": {
+    "message": "이 클리어는 삭제되었습니다."
+  },
+  "passHidden": {
+    "message": "이 클리어는 숨김 처리되었습니다."
+  },
+  "judgements": {
+    "message": "판정"
+  },
+  "clearDetails": {
+    "message": "클리어 상세"
+  },
+  "tooEarly": {
+    "message": "매우 빠름"
+  },
+  "early": {
+    "message": "빠름"
+  },
+  "ePerfect": {
+    "message": "E-Perfect"
+  },
+  "perfect": {
+    "message": "Perfect"
+  },
+  "lPerfect": {
+    "message": "L-Perfect"
+  },
+  "late": {
+    "message": "늦음"
+  },
+  "tooLate": {
+    "message": "매우 늦음"
+  },
+  "clickToReveal": {
+    "message": "클릭해서 보기"
+  }
+}

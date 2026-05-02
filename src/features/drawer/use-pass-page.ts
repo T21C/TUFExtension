@@ -3,6 +3,7 @@ import {
   sendRuntimeMessage,
   type GetPassPageDataResult,
 } from "~/platform/chrome/runtime-message";
+import { t } from "~/platform/chrome/i18n";
 import type {
   PassPageLoadState,
   ResolvedPassContext,
@@ -74,7 +75,7 @@ export function usePassPage({ activePassId, passes }: UsePassPageParams): {
         setLoadStates((states) => ({
           ...states,
           [passId]: {
-            error: response?.error ?? "Failed to load pass data.",
+            error: response?.error ?? t("failedLoadPassData"),
             isLoading: false,
           },
         }));

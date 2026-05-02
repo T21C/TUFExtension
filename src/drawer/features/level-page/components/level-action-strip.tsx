@@ -7,6 +7,7 @@ import {
 } from "~/drawer/shared/level-icons";
 import type { LevelPageData } from "~/domain/tuf/types";
 import type { LevelLikeController } from "~/features/drawer/use-level-like";
+import { t } from "~/platform/chrome/i18n";
 import {
   interactiveSurfaceClassName,
   mutedSurfaceClassName,
@@ -22,24 +23,24 @@ export function LevelActionStrip({
 }) {
   return (
     <div className="grid grid-cols-4 gap-2">
-      <ActionLink href={data.levelUrl} label="Open in TUF">
+      <ActionLink href={data.levelUrl} label={t("openInTuf")}>
         <TufIcon size={24} />
       </ActionLink>
       {data.level.downloadLink ? (
-        <ActionLink href={data.level.downloadLink} label="Download">
+        <ActionLink href={data.level.downloadLink} label={t("download")}>
           <DownloadIcon size={22} />
         </ActionLink>
       ) : (
-        <DisabledAction label="Download unavailable">
+        <DisabledAction label={t("downloadUnavailable")}>
           <DownloadIcon size={22} />
         </DisabledAction>
       )}
       {data.level.workshopLink ? (
-        <ActionLink href={data.level.workshopLink} label="Open Workshop">
+        <ActionLink href={data.level.workshopLink} label={t("openWorkshop")}>
           <SteamIcon size={22} />
         </ActionLink>
       ) : (
-        <DisabledAction label="Workshop unavailable">
+        <DisabledAction label={t("workshopUnavailable")}>
           <SteamIcon size={22} />
         </DisabledAction>
       )}
@@ -117,20 +118,20 @@ function DisabledAction({
 
 function getLikeButtonLabel(likeController: LevelLikeController): string {
   if (likeController.isLoading) {
-    return "Checking TUF login";
+    return t("checkingTufLogin");
   }
 
   if (likeController.isPending) {
-    return "Updating like";
+    return t("updatingLike");
   }
 
   if (likeController.authStatus === "unauthenticated") {
-    return "Login to TUF to like this level";
+    return t("loginToLikeLevel");
   }
 
   if (likeController.authStatus === "error") {
-    return likeController.error ?? "Could not check TUF login";
+    return likeController.error ?? t("couldNotCheckTufLogin");
   }
 
-  return likeController.liked ? "Unlike this level" : "Like this level";
+  return likeController.liked ? t("unlikeLevel") : t("likeLevel");
 }

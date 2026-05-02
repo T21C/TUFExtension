@@ -1,4 +1,5 @@
 import { panelSurfaceClassName } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 
 export function PassDetailSkeleton() {
   return (
@@ -21,17 +22,17 @@ export function PassDetailError({
     <article className="pb-4 text-white">
       <section className={`${panelSurfaceClassName} p-4`}>
         <p className="text-sm font-black uppercase tracking-[0.08em] text-white/45">
-          Pass data unavailable
+          {t("passDataUnavailable")}
         </p>
         <p className="mt-2 text-sm text-white/75">
-          {message ?? "Failed to load pass data."}
+          {message ?? t("failedLoadPassData")}
         </p>
         <button
           className="mt-4 rounded-md border border-white/10 bg-black/35 px-4 py-2 text-sm font-extrabold text-white transition hover:bg-black/20"
           onClick={onRetry}
           type="button"
         >
-          Retry
+          {t("retry")}
         </button>
       </section>
     </article>

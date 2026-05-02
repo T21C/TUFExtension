@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { IconImage } from "~/drawer/components/icon-image";
 import type { ResolvedTufContext } from "~/domain/tuf/types";
 import { glowDividerStyle } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 
 interface LevelTabsProps {
   activeItemKey: string;
@@ -73,7 +74,7 @@ export function LevelTabs({
       {scrollHint.canScrollLeft ? <ScrollChevron direction="left" /> : null}
       {scrollHint.canScrollRight ? <ScrollChevron direction="right" /> : null}
       <div
-        aria-label="TUF results"
+        aria-label={t("tufResults")}
         className="flex h-11 min-w-0 flex-1 list-none items-center gap-1.5 overflow-x-auto overflow-y-hidden p-1 pr-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         data-tuf-tabs-scroll="true"
         ref={tabsRef}

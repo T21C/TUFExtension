@@ -3,6 +3,7 @@ import {
   sendRuntimeMessage,
   type GetLevelPageDataResult,
 } from "~/platform/chrome/runtime-message";
+import { t } from "~/platform/chrome/i18n";
 import type {
   LevelPageLoadState,
   ResolvedLevelContext,
@@ -74,7 +75,7 @@ export function useLevelPage({ activeLevelId, levels }: UseLevelPageParams): {
         setLoadStates((states) => ({
           ...states,
           [levelId]: {
-            error: response?.error ?? "Failed to load level data.",
+            error: response?.error ?? t("failedLoadLevelData"),
             isLoading: false,
           },
         }));

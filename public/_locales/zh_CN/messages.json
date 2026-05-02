@@ -1,0 +1,311 @@
+{
+  "extensionName": {
+    "message": "TUFExtension"
+  },
+  "extensionDescription": {
+    "message": "The Universal Forums 的浏览器扩展。"
+  },
+  "drawerClose": {
+    "message": "关闭 TUF 抽屉"
+  },
+  "drawerCloseTitle": {
+    "message": "关闭"
+  },
+  "drawerPin": {
+    "message": "固定 TUF 抽屉"
+  },
+  "drawerUnpin": {
+    "message": "取消固定 TUF 抽屉"
+  },
+  "drawerPinTitle": {
+    "message": "固定抽屉"
+  },
+  "drawerUnpinTitle": {
+    "message": "取消固定抽屉"
+  },
+  "drawerNavigation": {
+    "message": "TUF 抽屉导航"
+  },
+  "drawerControlsExpand": {
+    "message": "展开抽屉控制"
+  },
+  "drawerControlsCollapse": {
+    "message": "收起抽屉控制"
+  },
+  "spoilerProtectionEnable": {
+    "message": "启用剧透保护"
+  },
+  "spoilerProtectionDisable": {
+    "message": "禁用剧透保护"
+  },
+  "spoilerProtectionDisabled": {
+    "message": "剧透保护已禁用"
+  },
+  "languageSwitchToEnglish": {
+    "message": "切换到英语"
+  },
+  "languageSwitchToKorean": {
+    "message": "切换到韩语"
+  },
+  "languageSwitchToChinese": {
+    "message": "切换到中文"
+  },
+  "openTufWithTitle": {
+    "message": "打开 TUF：$TITLE$",
+    "placeholders": {
+      "title": {
+        "content": "$1"
+      }
+    }
+  },
+  "tufExtension": {
+    "message": "TUFExtension"
+  },
+  "tufResults": {
+    "message": "TUF 结果"
+  },
+  "retry": {
+    "message": "重试"
+  },
+  "download": {
+    "message": "下载"
+  },
+  "downloadUnavailable": {
+    "message": "下载不可用"
+  },
+  "failedLoadLevelData": {
+    "message": "加载关卡数据失败。"
+  },
+  "failedLoadPassData": {
+    "message": "加载通关数据失败。"
+  },
+  "failedLoadLoginState": {
+    "message": "加载 TUF 登录状态失败。"
+  },
+  "failedUpdateLike": {
+    "message": "更新点赞失败。"
+  },
+  "checkingTufLogin": {
+    "message": "正在检查 TUF 登录"
+  },
+  "updatingLike": {
+    "message": "正在更新点赞"
+  },
+  "couldNotCheckTufLogin": {
+    "message": "无法检查 TUF 登录"
+  },
+  "refreshing": {
+    "message": "刷新中"
+  },
+  "noResult": {
+    "message": "无结果"
+  },
+  "lookingForTufData": {
+    "message": "正在查找 TUF 数据"
+  },
+  "noTufResult": {
+    "message": "没有 TUF 结果"
+  },
+  "pinnedRefreshDescription": {
+    "message": "抽屉已固定，视频解析完成后会立即更新。"
+  },
+  "noMatchedResultDescription": {
+    "message": "此视频没有匹配的 TUF 关卡或通关记录。"
+  },
+  "difficultyFallback": {
+    "message": "难度"
+  },
+  "estimatedDifficultyFallback": {
+    "message": "预计难度"
+  },
+  "openInTuf": {
+    "message": "在 TUF 中打开"
+  },
+  "openWorkshop": {
+    "message": "打开 Workshop"
+  },
+  "workshopUnavailable": {
+    "message": "Workshop 不可用"
+  },
+  "loginToLikeLevel": {
+    "message": "登录 TUF 后才能点赞此关卡"
+  },
+  "unlikeLevel": {
+    "message": "取消点赞此关卡"
+  },
+  "likeLevel": {
+    "message": "点赞此关卡"
+  },
+  "likes": {
+    "message": "点赞"
+  },
+  "downloads": {
+    "message": "下载"
+  },
+  "clears": {
+    "message": "通关"
+  },
+  "noClearsYet": {
+    "message": "暂无通关记录"
+  },
+  "couldNotLoadLevel": {
+    "message": "无法加载关卡"
+  },
+  "levelApiUnreadable": {
+    "message": "TUF API 未返回可读取的响应。"
+  },
+  "leaderboard": {
+    "message": "排行榜"
+  },
+  "clearsCount": {
+    "message": "$COUNT$ 条通关记录",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "sortByLabel": {
+    "message": "按 $LABEL$ 排序",
+    "placeholders": {
+      "label": {
+        "content": "$1"
+      }
+    }
+  },
+  "sortTitle": {
+    "message": "$LABEL$ $DIRECTION$",
+    "placeholders": {
+      "label": {
+        "content": "$1"
+      },
+      "direction": {
+        "content": "$2"
+      }
+    }
+  },
+  "sortDescending": {
+    "message": "降序"
+  },
+  "sortAscending": {
+    "message": "升序"
+  },
+  "clearDate": {
+    "message": "通关日期"
+  },
+  "accuracy": {
+    "message": "准确率"
+  },
+  "speed": {
+    "message": "速度"
+  },
+  "score": {
+    "message": "分数"
+  },
+  "date": {
+    "message": "日期"
+  },
+  "acc": {
+    "message": "准确率"
+  },
+  "feeling": {
+    "message": "体感"
+  },
+  "passPageForPlayer": {
+    "message": "$PLAYER$ 的通关页面",
+    "placeholders": {
+      "player": {
+        "content": "$1"
+      }
+    }
+  },
+  "clearVideoForPlayer": {
+    "message": "$PLAYER$ 的通关视频",
+    "placeholders": {
+      "player": {
+        "content": "$1"
+      }
+    }
+  },
+  "passedClear": {
+    "message": "已认证通关"
+  },
+  "passDataUnavailable": {
+    "message": "通关数据不可用"
+  },
+  "unknownCredits": {
+    "message": "未知制作信息"
+  },
+  "tufPlayer": {
+    "message": "TUF 玩家"
+  },
+  "none": {
+    "message": "无"
+  },
+  "worldsFirst": {
+    "message": "World's First"
+  },
+  "twelveK": {
+    "message": "12K"
+  },
+  "sixteenK": {
+    "message": "16K"
+  },
+  "noHoldTap": {
+    "message": "No Hold Tap"
+  },
+  "hidden": {
+    "message": "隐藏"
+  },
+  "deleted": {
+    "message": "已删除"
+  },
+  "openPassInTuf": {
+    "message": "在 TUF 中打开通关"
+  },
+  "openLevel": {
+    "message": "打开关卡"
+  },
+  "hideAllPassSpoilers": {
+    "message": "隐藏所有通关剧透"
+  },
+  "revealAllPassSpoilers": {
+    "message": "显示所有通关剧透"
+  },
+  "passDeleted": {
+    "message": "此通关记录已被删除。"
+  },
+  "passHidden": {
+    "message": "此通关记录已被隐藏。"
+  },
+  "judgements": {
+    "message": "判定"
+  },
+  "clearDetails": {
+    "message": "通关详情"
+  },
+  "tooEarly": {
+    "message": "过早"
+  },
+  "early": {
+    "message": "偏早"
+  },
+  "ePerfect": {
+    "message": "E-Perfect"
+  },
+  "perfect": {
+    "message": "Perfect"
+  },
+  "lPerfect": {
+    "message": "L-Perfect"
+  },
+  "late": {
+    "message": "偏晚"
+  },
+  "tooLate": {
+    "message": "过晚"
+  },
+  "clickToReveal": {
+    "message": "点击显示"
+  }
+}

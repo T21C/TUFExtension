@@ -1,3 +1,5 @@
+import { t } from "~/platform/chrome/i18n";
+
 interface PinButtonProps {
   isPinned: boolean;
   onClick: () => void;
@@ -6,7 +8,7 @@ interface PinButtonProps {
 export function PinButton({ isPinned, onClick }: PinButtonProps) {
   return (
     <button
-      aria-label={isPinned ? "Unpin TUF drawer" : "Pin TUF drawer"}
+      aria-label={isPinned ? t("drawerUnpin") : t("drawerPin")}
       aria-pressed={isPinned}
       className={[
         "grid h-10 w-10 shrink-0 place-items-center rounded-lg transition-colors",
@@ -15,7 +17,7 @@ export function PinButton({ isPinned, onClick }: PinButtonProps) {
           : "bg-transparent text-white/60 hover:bg-white/10 hover:text-white",
       ].join(" ")}
       onClick={onClick}
-      title={isPinned ? "Unpin drawer" : "Pin drawer"}
+      title={isPinned ? t("drawerUnpinTitle") : t("drawerPinTitle")}
       type="button"
     >
       <PinIcon isPinned={isPinned} />

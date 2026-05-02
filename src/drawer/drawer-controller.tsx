@@ -10,6 +10,14 @@ import {
   saveSpoilerProtectionDisabled,
   watchSpoilerProtectionDisabled,
 } from "~/platform/chrome/spoiler-preference";
+import {
+  getActiveLanguage,
+  getNextLanguageFrom,
+  hydrateLanguagePreference,
+  saveLanguagePreference,
+  watchLanguagePreference,
+  type SupportedLanguage,
+} from "~/platform/chrome/i18n";
 import { logDebug, logInfo } from "~/platform/content-script/logger";
 import type { ResolvedTufContext } from "~/domain/tuf/types";
 
@@ -25,9 +33,12 @@ let isDrawerOpen = false;
 let isDrawerPinned = false;
 let isDrawerResolving = false;
 let isSpoilerProtectionDisabled = false;
+let activeLanguage: SupportedLanguage = getActiveLanguage();
 let drawerEmptyReason: string | null = null;
 let listenersInstalled = false;
 let drawerScrollListenersInstalled = false;
+let languagePreferenceHydrationStarted = false;
+let languagePreferenceListenerInstalled = false;
 let spoilerPreferenceHydrationStarted = false;
 let spoilerPreferenceListenerInstalled = false;
 
@@ -136,9 +147,11 @@ function renderDrawer(): void {
   activeItemKey =
     currentItems.length > 0 ? getNextActiveItemKey(currentItems) : null;
   hydrateSpoilerPreference();
+  hydrateLanguage();
   ensureDrawerRoot();
   installGlobalListeners();
   installSpoilerPreferenceListener();
+  installLanguagePreferenceListener();
   updateDrawerHostInteraction();
 
   root?.render(
@@ -149,9 +162,11 @@ function renderDrawer(): void {
       isPinned={isDrawerPinned}
       isResolving={isDrawerResolving}
       isSpoilerProtectionDisabled={isSpoilerProtectionDisabled}
+      language={activeLanguage}
       items={currentItems}
       onClose={closeDrawer}
       onSelectItem={selectDrawerItem}
+      onToggleLanguage={toggleLanguage}
       onTogglePinned={togglePinned}
       onToggleSpoilerProtection={toggleSpoilerProtection}
     />,
@@ -190,6 +205,65 @@ function toggleSpoilerProtection(): void {
       logInfo("Failed to save TUF drawer spoiler preference", error);
     },
   );
+}
+
+function toggleLanguage(): void {
+  const nextLanguage = getNextLanguageFrom(activeLanguage);
+
+  logInfo("Toggled TUF drawer language", {
+    language: nextLanguage,
+  });
+
+  void saveLanguagePreference(nextLanguage)
+    .then(() => {
+      activeLanguage = nextLanguage;
+      renderDrawer();
+    })
+    .catch((error: unknown) => {
+      logInfo("Failed to save TUF drawer language preference", error);
+    });
+}
+
+function hydrateLanguage(): void {
+  if (languagePreferenceHydrationStarted) {
+    return;
+  }
+
+  languagePreferenceHydrationStarted = true;
+  void hydrateLanguagePreference()
+    .then((language) => {
+      if (activeLanguage === language) {
+        return;
+      }
+
+      activeLanguage = language;
+      logInfo("Hydrated TUF drawer language preference", {
+        language: activeLanguage,
+      });
+      renderDrawer();
+    })
+    .catch((error: unknown) => {
+      logInfo("Failed to load TUF drawer language preference", error);
+    });
+}
+
+function installLanguagePreferenceListener(): void {
+  if (languagePreferenceListenerInstalled) {
+    return;
+  }
+
+  languagePreferenceListenerInstalled = true;
+  watchLanguagePreference((language) => {
+    if (activeLanguage === language) {
+      return;
+    }
+
+    activeLanguage = language;
+    logInfo("Synced TUF drawer language preference", {
+      language: activeLanguage,
+    });
+    renderDrawer();
+  });
 }
 
 function hydrateSpoilerPreference(): void {

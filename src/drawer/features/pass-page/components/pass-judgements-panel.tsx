@@ -4,16 +4,17 @@ import {
   panelSurfaceClassName,
   softGlowBorderStyle,
 } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 const JUDGEMENT_CELLS = [
-  { key: "earlyDouble", className: "text-red-500", label: "Too Early" },
-  { key: "earlySingle", className: "text-orange-400", label: "Early" },
-  { key: "ePerfect", className: "text-yellow-300", label: "E-Perfect" },
-  { key: "perfect", className: "text-lime-300", label: "Perfect" },
-  { key: "lPerfect", className: "text-yellow-300", label: "L-Perfect" },
-  { key: "lateSingle", className: "text-orange-400", label: "Late" },
-  { key: "lateDouble", className: "text-red-500", label: "Too Late" },
+  { key: "earlyDouble", className: "text-red-500", labelKey: "tooEarly" },
+  { key: "earlySingle", className: "text-orange-400", labelKey: "early" },
+  { key: "ePerfect", className: "text-yellow-300", labelKey: "ePerfect" },
+  { key: "perfect", className: "text-lime-300", labelKey: "perfect" },
+  { key: "lPerfect", className: "text-yellow-300", labelKey: "lPerfect" },
+  { key: "lateSingle", className: "text-orange-400", labelKey: "late" },
+  { key: "lateDouble", className: "text-red-500", labelKey: "tooLate" },
 ] as const;
 
 export function PassJudgementsPanel({
@@ -27,9 +28,9 @@ export function PassJudgementsPanel({
       style={softGlowBorderStyle}
     >
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-lg font-black text-white">Judgements</h2>
+        <h2 className="text-lg font-black text-white">{t("judgements")}</h2>
         <span className="text-xs font-black uppercase tracking-[0.12em] text-white/35">
-          Clear details
+          {t("clearDetails")}
         </span>
       </div>
       <div className="my-3 h-px" style={glowDividerStyle} />
@@ -50,7 +51,7 @@ export function PassJudgementsPanel({
                   getJudgementTextSize(value),
                 ].join(" ")}
                 key={cell.key}
-                title={cell.label}
+                title={t(cell.labelKey)}
               >
                 {value}
               </SpoilerText>

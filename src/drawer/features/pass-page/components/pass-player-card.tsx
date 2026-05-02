@@ -9,6 +9,7 @@ import {
   panelSurfaceClassName,
   softGlowBorderStyle,
 } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 export function PassPlayerCard({ pass }: { pass: PassDetail }) {
@@ -59,7 +60,7 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
           <p className="truncate text-xs font-bold text-white/45">
             {pass.player.discordUsername
               ? `@${pass.player.discordUsername}`
-              : "TUF player"}
+              : t("tufPlayer")}
           </p>
         </div>
         <PlayerScoreSummary pass={pass} />
@@ -80,11 +81,15 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
 
       <SpoilerSection>
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <InfoLine isSpoiler label="Score" value={formatScore(pass.score)} />
           <InfoLine
             isSpoiler
-            label="Feeling"
-            value={pass.feelingRating ?? "None"}
+            label={t("score")}
+            value={formatScore(pass.score)}
+          />
+          <InfoLine
+            isSpoiler
+            label={t("feeling")}
+            value={pass.feelingRating ?? t("none")}
           />
         </div>
         <PassFlags pass={pass} />
@@ -224,22 +229,22 @@ function getRankColor(rank: number | undefined): string {
 function getFlags(pass: PassDetail): string[] {
   const flags: string[] = [];
   if (pass.isWorldsFirst) {
-    flags.push("World's First");
+    flags.push(t("worldsFirst"));
   }
   if (pass.is12K) {
-    flags.push("12K");
+    flags.push(t("twelveK"));
   }
   if (pass.is16K) {
-    flags.push("16K");
+    flags.push(t("sixteenK"));
   }
   if (pass.isNoHoldTap) {
-    flags.push("No Hold Tap");
+    flags.push(t("noHoldTap"));
   }
   if (pass.isHidden) {
-    flags.push("Hidden");
+    flags.push(t("hidden"));
   }
   if (pass.isDeleted) {
-    flags.push("Deleted");
+    flags.push(t("deleted"));
   }
   return flags;
 }

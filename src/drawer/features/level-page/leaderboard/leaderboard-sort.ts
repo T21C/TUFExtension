@@ -15,16 +15,17 @@ import {
   formatScore,
   formatSpeed,
 } from "~/drawer/shared/formatters";
+import { t } from "~/platform/chrome/i18n";
 
 export const SORT_OPTIONS: Array<{
   icon: typeof CalendarIcon;
   key: LeaderboardSortKey;
   label: string;
 }> = [
-  { icon: CalendarIcon, key: "TIME", label: "Clear date" },
-  { icon: PercentIcon, key: "ACC", label: "Accuracy" },
-  { icon: SpeedIcon, key: "SPEED", label: "Speed" },
-  { icon: ScoreIcon, key: "SCR", label: "Score" },
+  { icon: CalendarIcon, key: "TIME", label: t("clearDate") },
+  { icon: PercentIcon, key: "ACC", label: t("accuracy") },
+  { icon: SpeedIcon, key: "SPEED", label: t("speed") },
+  { icon: ScoreIcon, key: "SCR", label: t("score") },
 ];
 
 export function sortPasses(
@@ -65,27 +66,27 @@ export function getPassMetric(
 ): { label: string; value: string } {
   if (sortKey === "TIME") {
     return {
-      label: "Date",
+      label: t("date"),
       value: pass.date ? formatDate(pass.date).slice(5) : "-",
     };
   }
 
   if (sortKey === "ACC") {
     return {
-      label: "Acc",
+      label: t("acc"),
       value: formatAccuracy(pass.accuracy),
     };
   }
 
   if (sortKey === "SPEED") {
     return {
-      label: "Speed",
+      label: t("speed"),
       value: formatSpeed(pass.speed),
     };
   }
 
   return {
-    label: "Score",
+    label: t("score"),
     value: formatScore(pass.score),
   };
 }

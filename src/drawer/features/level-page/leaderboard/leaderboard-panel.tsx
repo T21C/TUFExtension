@@ -13,6 +13,7 @@ import {
   interactiveSurfaceClassName,
   panelSurfaceClassName,
 } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 
 export function LeaderboardPanel({
   isOpen,
@@ -42,10 +43,10 @@ export function LeaderboardPanel({
       >
         <div className="min-w-0">
           <h2 className="text-lg font-bold leading-none text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.45)]">
-            Leaderboard
+            {t("leaderboard")}
           </h2>
           <p className="mt-1 truncate text-xs font-medium uppercase tracking-[0.08em] text-white/45">
-            {formatInteger(passes.length)} clears
+            {t("clearsCount", formatInteger(passes.length))}
           </p>
         </div>
         <ChevronIcon
@@ -72,7 +73,7 @@ export function LeaderboardPanel({
 
                   return (
                     <button
-                      aria-label={`Sort by ${option.label}`}
+                      aria-label={t("sortByLabel", option.label)}
                       aria-pressed={isActive}
                       className={[
                         "relative grid h-8 w-8 place-items-center rounded border text-white shadow-[0_0_12px_rgba(139,0,255,0.16)] backdrop-blur-md transition",
@@ -82,7 +83,12 @@ export function LeaderboardPanel({
                       ].join(" ")}
                       key={option.key}
                       onClick={() => onSort(option.key)}
-                      title={`${option.label} ${sortDirection === "desc" ? "desc" : "asc"}`}
+                      title={t("sortTitle", [
+                        option.label,
+                        sortDirection === "desc"
+                          ? t("sortDescending")
+                          : t("sortAscending"),
+                      ])}
                       type="button"
                     >
                       <Icon size={15} />
@@ -129,7 +135,7 @@ export function LeaderboardPanel({
                 interactiveSurfaceClassName,
               ].join(" ")}
             >
-              No clears yet
+              {t("noClearsYet")}
             </p>
           )}
         </div>

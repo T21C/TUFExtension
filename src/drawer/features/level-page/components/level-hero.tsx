@@ -7,6 +7,7 @@ import {
 } from "~/drawer/shared/level-icons";
 import type { LevelPageData } from "~/domain/tuf/types";
 import type { LevelLikeController } from "~/features/drawer/use-level-like";
+import { t } from "~/platform/chrome/i18n";
 import {
   formatBaseScore,
   formatDuration,
@@ -49,7 +50,7 @@ export function LevelHero({
             <div className="relative">
               {data.difficulty.icon ? (
                 <img
-                  alt={data.difficulty.name ?? "Difficulty"}
+                  alt={data.difficulty.name ?? t("difficultyFallback")}
                   className="h-16 w-16 object-contain drop-shadow-[0_3px_10px_rgba(0,0,0,0.8)]"
                   decoding="async"
                   src={data.difficulty.icon}
@@ -61,7 +62,9 @@ export function LevelHero({
               )}
               {ratingDifficulty?.icon ? (
                 <img
-                  alt={ratingDifficulty.name ?? "Estimated difficulty"}
+                  alt={
+                    ratingDifficulty.name ?? t("estimatedDifficultyFallback")
+                  }
                   className="absolute h-8 w-8 rounded-full border border-white/35 bg-black/40 object-contain backdrop-blur-md drop-shadow-[0_3px_10px_rgba(0,0,0,0.8)]"
                   decoding="async"
                   src={ratingDifficulty.icon}

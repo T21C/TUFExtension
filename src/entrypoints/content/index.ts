@@ -14,6 +14,7 @@ import {
   sendRuntimeMessage,
   type ResolveVideoResult,
 } from "~/platform/chrome/runtime-message";
+import { t } from "~/platform/chrome/i18n";
 import { watchUrlChanges } from "~/platform/content-script/url-watcher";
 import { logDebug, logInfo, logWarn } from "~/platform/content-script/logger";
 import type { ResolvedTufContext } from "~/domain/tuf/types";
@@ -122,7 +123,7 @@ export default defineContentScript({
 
         if (isDrawerPinnedOpen()) {
           mountOrUpdateDrawer([], {
-            emptyReason: "No TUF result for this video.",
+            emptyReason: t("noMatchedResultDescription"),
             isResolving: false,
             open: true,
           });
