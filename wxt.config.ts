@@ -38,5 +38,13 @@ export default defineConfig({
       "https://tuforums.com/*",
       "https://*.tuforums.com/*",
     ],
+    browser_specific_settings: {
+      gecko: {
+        id: "tufextension@tuforums.com",
+        data_collection_permissions: {
+          required: ["none"],
+        },
+      },
+    },
   },
 });
