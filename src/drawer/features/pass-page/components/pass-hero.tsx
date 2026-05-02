@@ -111,12 +111,14 @@ function HeroMetric({
 }) {
   return (
     <div
-      className={`${mutedSurfaceClassName} flex min-w-0 items-center justify-center gap-1.5 px-2 py-2 text-sm font-black text-white`}
+      className={`${mutedSurfaceClassName} flex min-w-0 items-center justify-center gap-1.5 px-2 py-2 text-sm font-black text-white/90 [&_svg]:text-white/75`}
       style={fullWidth ? { gridColumn: "1 / -1" } : undefined}
     >
       {icon}
       {isSpoiler ? (
-        <SpoilerText className="min-w-0 truncate">{label || "-"}</SpoilerText>
+        <SpoilerText className="min-w-0 truncate text-white/90">
+          {label || "-"}
+        </SpoilerText>
       ) : (
         <span className="min-w-0 truncate">{label || "-"}</span>
       )}

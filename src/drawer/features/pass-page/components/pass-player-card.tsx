@@ -45,7 +45,7 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             />
           ) : null}
         </div>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 max-w-[12rem] shrink">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className="truncate text-lg font-black text-white">
               {pass.player.name}
@@ -62,9 +62,10 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
               : "TUF player"}
           </p>
         </div>
+        <PlayerScoreSummary pass={pass} />
         {typeof pass.player.rankedScoreRank === "number" ? (
           <span
-            className="rounded-md px-2 py-1 text-xs font-black"
+            className="ml-auto rounded-md px-2 py-1 text-xs font-black"
             style={{
               backgroundColor: `${rankColor}24`,
               color: rankColor,
@@ -85,24 +86,63 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             label="Feeling"
             value={pass.feelingRating ?? "None"}
           />
-          {typeof pass.scoreInfo?.currentRankedScore === "number" ? (
-            <InfoLine
-              isSpoiler
-              label="Ranked Score"
-              value={formatNumber(pass.scoreInfo.currentRankedScore)}
-            />
-          ) : null}
-          {typeof pass.scoreInfo?.impact === "number" ? (
-            <InfoLine
-              isSpoiler
-              label="Impact"
-              value={formatImpact(pass.scoreInfo.impact)}
-            />
-          ) : null}
         </div>
         <PassFlags pass={pass} />
       </SpoilerSection>
     </section>
+  );
+}
+
+function PlayerScoreSummary({ pass }: { pass: PassDetail }) {
+  const rankedScore = pass.scoreInfo?.currentRankedScore;
+  const impact = pass.scoreInfo?.impact;
+
+  if (typeof rankedScore !== "number" && typeof impact !== "number") {
+    return null;
+  }
+
+  return (
+    <div className="flex min-w-0 shrink-0 items-center justify-start gap-1">
+      {typeof rankedScore === "number" ? (
+        <ProfileMetric value={formatNumber(rankedScore)} variant="ranked" />
+      ) : null}
+      {typeof impact === "number" ? (
+        <ProfileMetric value={formatImpact(impact)} />
+      ) : null}
+    </div>
+  );
+}
+
+function ProfileMetric({
+  value,
+  variant = "impact",
+}: {
+  value: string;
+  variant?: "impact" | "ranked";
+}) {
+  const isImpact = variant === "impact";
+
+  return (
+    <div
+      className={[
+        "min-w-0 rounded-md border px-2 py-1 text-right shadow-[0_0_14px_rgba(0,0,0,0.22)] backdrop-blur-md",
+        isImpact
+          ? "border-emerald-300/15 bg-emerald-400/18"
+          : "border-violet-300/15 bg-black/30",
+      ].join(" ")}
+    >
+      <SpoilerText
+        as="p"
+        className={[
+          "min-w-0 truncate font-black leading-none tabular-nums",
+          isImpact
+            ? "text-xs text-emerald-300 drop-shadow-[0_0_8px_rgba(74,222,128,0.55)]"
+            : "text-md text-violet-100",
+        ].join(" ")}
+      >
+        {value}
+      </SpoilerText>
+    </div>
   );
 }
 
