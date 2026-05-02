@@ -53,6 +53,20 @@ jobs:
       - name: Produce Firefox artifact
         run: bun run zip:firefox
 
+      - name: Normalize Chrome artifact name
+        run: |
+          EXPECTED_FILE=".output/tufe-${{ steps.version.outputs.tag }}-chrome.zip"
+          SOURCE_FILE="$(find .output -maxdepth 1 -type f -name 'tufe-*-chrome.zip' | head -n 1)"
+
+          if [ -z "${SOURCE_FILE}" ]; then
+            echo "Unable to find Chrome artifact in .output"
+            exit 1
+          fi
+
+          if [ "${SOURCE_FILE}" != "${EXPECTED_FILE}" ]; then
+            mv "${SOURCE_FILE}" "${EXPECTED_FILE}"
+          fi
+
       - name: Normalize Firefox artifact name
         run: |
           EXPECTED_FILE=".output/tufe-${{ steps.version.outputs.tag }}-firefox.zip"
