@@ -1,17 +1,18 @@
-import { asRecord, readString } from "@shared/object";
+import { asRecord, readString } from "~/shared/object";
 import { getTabIcon, type DifficultyEntry } from "./difficulty-icons";
-import type { VideoReference } from "@domain/video/types";
+import type { VideoReference } from "~/domain/video/types";
 import type { ResolvedLevelContext, TufRecord } from "./types";
 
 export function mapLevel(
   video: VideoReference,
   candidate: TufRecord,
-  difficultyCatalog?: Map<string, DifficultyEntry>
+  difficultyCatalog?: Map<string, DifficultyEntry>,
 ): ResolvedLevelContext {
   const levelId =
     readString(candidate, ["id", "levelId", "_id", "uuid"]) ?? video.externalId;
   const title =
-    readString(candidate, ["song", "title", "name", "levelName"]) ?? "TUF Level";
+    readString(candidate, ["song", "title", "name", "levelName"]) ??
+    "TUF Level";
   const tabIcon = getTabIcon(candidate, difficultyCatalog);
 
   return {
@@ -23,7 +24,7 @@ export function mapLevel(
     tabIconUrl: tabIcon?.url,
     title,
     url: `https://tuforums.com/levels/${levelId}`,
-    raw: candidate
+    raw: candidate,
   };
 }
 
@@ -47,7 +48,9 @@ export function getLevelCandidates(payload: unknown): TufRecord[] {
   return [];
 }
 
-export function dedupeLevels(levels: ResolvedLevelContext[]): ResolvedLevelContext[] {
+export function dedupeLevels(
+  levels: ResolvedLevelContext[],
+): ResolvedLevelContext[] {
   const seen = new Set<string>();
   return levels.filter((level) => {
     if (seen.has(level.levelId)) {

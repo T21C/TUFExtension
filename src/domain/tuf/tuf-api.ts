@@ -1,18 +1,23 @@
 import axios from "axios";
-import { asRecord, readNumber, readString, type UnknownRecord } from "@shared/object";
-import { logDebug, logError, logInfo, logWarn } from "@shared/logger";
+import {
+  asRecord,
+  readNumber,
+  readString,
+  type UnknownRecord,
+} from "~/shared/object";
+import { logDebug, logError, logInfo, logWarn } from "~/shared/logger";
 import {
   createDifficultyCatalog,
   needsDifficultyCatalog,
-  type DifficultyEntry
+  type DifficultyEntry,
 } from "./difficulty-icons";
 import {
   dedupeLevels,
   describePayload,
   getLevelCandidates,
-  mapLevel
+  mapLevel,
 } from "./level-mapper";
-import type { VideoReference } from "@domain/video/types";
+import type { VideoReference } from "~/domain/video/types";
 import type {
   AuthUser,
   LevelAuthState,
@@ -32,12 +37,13 @@ import type {
   LevelTag,
   ResolvedLevelContext,
   ResolvedPassContext,
-  TufRecord
+  TufRecord,
 } from "./types";
 
 const TUF_API_BASE_URL = "https://api.tuforums.com";
 
-let difficultyCatalogPromise: Promise<Map<string, DifficultyEntry>> | null = null;
+let difficultyCatalogPromise: Promise<Map<string, DifficultyEntry>> | null =
+  null;
 
 const tufApi = axios.create({
   baseURL: TUF_API_BASE_URL,
@@ -46,28 +52,28 @@ const tufApi = axios.create({
     Accept: "application/json",
     "Cache-Control": "no-cache",
     Pragma: "no-cache",
-    Expires: "0"
-  }
+    Expires: "0",
+  },
 });
 
 export async function resolveLevelByVideoUrl(
-  video: VideoReference
+  video: VideoReference,
 ): Promise<ResolvedLevelContext[]> {
   const query = `videoLink:${video.externalId}`;
 
   try {
     logInfo("Calling TUF level lookup API", {
       path: "/v2/database/levels",
-      query
+      query,
     });
 
     const lookupResponse = await tufApi.get<unknown>("/v2/database/levels", {
-      params: { query }
+      params: { query },
     });
 
     logDebug("Received TUF level lookup response", {
       status: lookupResponse.status,
-      payloadShape: describePayload(lookupResponse.data)
+      payloadShape: describePayload(lookupResponse.data),
     });
 
     const candidates = getLevelCandidates(lookupResponse.data);
@@ -83,13 +89,13 @@ export async function resolveLevelByVideoUrl(
 
     const levels = dedupeLevels(
       candidates.map((candidate) =>
-        mapLevel(video, candidate, difficultyCatalog)
-      )
+        mapLevel(video, candidate, difficultyCatalog),
+      ),
     );
 
     logInfo("Mapped TUF level contexts", {
       count: levels.length,
-      levelIds: levels.map((level) => level.levelId)
+      levelIds: levels.map((level) => level.levelId),
     });
 
     return levels;
@@ -99,16 +105,19 @@ export async function resolveLevelByVideoUrl(
       logWarn("TUF level lookup Axios error", {
         status,
         message: error.message,
-        responseData: error.response?.data
+        responseData: error.response?.data,
       });
 
       if (status === 401 || status === 404) {
         return [];
       }
 
-      throw new Error(`TUF API lookup failed with ${status ?? "unknown status"}`, {
-        cause: error
-      });
+      throw new Error(
+        `TUF API lookup failed with ${status ?? "unknown status"}`,
+        {
+          cause: error,
+        },
+      );
     }
 
     logError("TUF level lookup failed with non-Axios error", error);
@@ -117,23 +126,23 @@ export async function resolveLevelByVideoUrl(
 }
 
 export async function resolvePassesByVideoUrl(
-  video: VideoReference
+  video: VideoReference,
 ): Promise<ResolvedPassContext[]> {
   const query = `video:${video.externalId}`;
 
   try {
     logInfo("Calling TUF pass lookup API", {
       path: "/v2/database/passes",
-      query
+      query,
     });
 
     const lookupResponse = await tufApi.get<unknown>("/v2/database/passes", {
-      params: { query }
+      params: { query },
     });
 
     logDebug("Received TUF pass lookup response", {
       status: lookupResponse.status,
-      payloadShape: describePayload(lookupResponse.data)
+      payloadShape: describePayload(lookupResponse.data),
     });
 
     const candidates = getPassCandidates(lookupResponse.data);
@@ -146,13 +155,13 @@ export async function resolvePassesByVideoUrl(
     const difficultyCatalog = await getDifficultyCatalog();
     const passes = dedupePasses(
       candidates.map((candidate) =>
-        mapResolvedPass(video, candidate, difficultyCatalog)
-      )
+        mapResolvedPass(video, candidate, difficultyCatalog),
+      ),
     );
 
     logInfo("Mapped TUF pass contexts", {
       count: passes.length,
-      passIds: passes.map((pass) => pass.passId)
+      passIds: passes.map((pass) => pass.passId),
     });
 
     return passes;
@@ -162,16 +171,19 @@ export async function resolvePassesByVideoUrl(
       logWarn("TUF pass lookup Axios error", {
         status,
         message: error.message,
-        responseData: error.response?.data
+        responseData: error.response?.data,
       });
 
       if (status === 401 || status === 404) {
         return [];
       }
 
-      throw new Error(`TUF pass lookup failed with ${status ?? "unknown status"}`, {
-        cause: error
-      });
+      throw new Error(
+        `TUF pass lookup failed with ${status ?? "unknown status"}`,
+        {
+          cause: error,
+        },
+      );
     }
 
     logError("TUF pass lookup failed with non-Axios error", error);
@@ -179,7 +191,9 @@ export async function resolvePassesByVideoUrl(
   }
 }
 
-export async function getLevelPageData(levelId: string): Promise<LevelPageData> {
+export async function getLevelPageData(
+  levelId: string,
+): Promise<LevelPageData> {
   logInfo("Calling TUF level page APIs", { levelId });
 
   try {
@@ -188,14 +202,16 @@ export async function getLevelPageData(levelId: string): Promise<LevelPageData> 
         tufApi.get<unknown>(`/v2/database/levels/${levelId}`),
         getOptionalApiData(`/v2/database/levels/${levelId}/cdnData`),
         getOptionalApiData(`/v2/database/passes/level/${levelId}`),
-        getOptionalApiData(`/v2/database/levels/${levelId}/ratings`)
+        getOptionalApiData(`/v2/database/levels/${levelId}/ratings`),
       ]);
 
     const detailRecord = asRecord(detailResponse.data);
     const rawLevel = asRecord(detailRecord?.level) ?? detailRecord;
 
     if (!rawLevel) {
-      throw new Error("TUF level detail response did not include a level object");
+      throw new Error(
+        "TUF level detail response did not include a level object",
+      );
     }
 
     const cdnRecord = asRecord(cdnResponse);
@@ -206,7 +222,8 @@ export async function getLevelPageData(levelId: string): Promise<LevelPageData> 
     const ratings = asRecord(ratingsResponse);
     const ratingDifficulty = mapRatingDifficulty(ratings, difficultyCatalog);
     const videoDetails = await getVideoDetails(level.videoLink);
-    const thumbnailUrl = videoDetails?.image ?? getYoutubeThumbnailUrl(level.videoLink);
+    const thumbnailUrl =
+      videoDetails?.image ?? getYoutubeThumbnailUrl(level.videoLink);
     const embedUrl = videoDetails?.embed ?? getYoutubeEmbedUrl(level.videoLink);
     const curation = mapCuration(rawLevel);
     const stats = getLevelStats(passes);
@@ -226,13 +243,13 @@ export async function getLevelPageData(levelId: string): Promise<LevelPageData> 
         : [],
       stats,
       thumbnailUrl,
-      transformOptions: asRecord(cdnRecord?.transformOptions)
+      transformOptions: asRecord(cdnRecord?.transformOptions),
     };
 
     logInfo("Mapped TUF level page data", {
       levelId: data.level.id,
       passCount: data.passes.length,
-      title: data.level.song
+      title: data.level.song,
     });
 
     return data;
@@ -242,11 +259,11 @@ export async function getLevelPageData(levelId: string): Promise<LevelPageData> 
         levelId,
         message: error.message,
         responseData: error.response?.data,
-        status: error.response?.status
+        status: error.response?.status,
       });
       throw new Error(
         `TUF level page API failed with ${error.response?.status ?? "unknown status"}`,
-        { cause: error }
+        { cause: error },
       );
     }
 
@@ -268,17 +285,19 @@ export async function getPassPageData(passId: string): Promise<PassPageData> {
 
     const difficultyCatalog = await getDifficultyCatalog();
     const pass = mapPassDetail(rawPass, passId, difficultyCatalog);
-    const thumbnailUrl = getYoutubeThumbnailUrl(pass.level.videoLink ?? pass.videoLink);
+    const thumbnailUrl = getYoutubeThumbnailUrl(
+      pass.level.videoLink ?? pass.videoLink,
+    );
     const data: PassPageData = {
       pass,
       passUrl: `https://tuforums.com/passes/${pass.id}`,
-      thumbnailUrl
+      thumbnailUrl,
     };
 
     logInfo("Mapped TUF pass page data", {
       passId: data.pass.id,
       player: data.pass.player.name,
-      title: data.pass.level.song
+      title: data.pass.level.song,
     });
 
     return data;
@@ -288,11 +307,11 @@ export async function getPassPageData(passId: string): Promise<PassPageData> {
         passId,
         message: error.message,
         responseData: error.response?.data,
-        status: error.response?.status
+        status: error.response?.status,
       });
       throw new Error(
         `TUF pass page API failed with ${error.response?.status ?? "unknown status"}`,
-        { cause: error }
+        { cause: error },
       );
     }
 
@@ -307,7 +326,7 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
   } catch (error) {
     if (!isAxiosStatus(error, 401)) {
       logWarn("Failed to load current TUF user", {
-        message: error instanceof Error ? error.message : String(error)
+        message: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -323,20 +342,22 @@ export async function getCurrentUser(): Promise<AuthUser | null> {
     }
 
     logWarn("Failed to refresh TUF auth session", {
-      message: error instanceof Error ? error.message : String(error)
+      message: error instanceof Error ? error.message : String(error),
     });
     throw error;
   }
 }
 
-export async function getLevelAuthState(levelId: string): Promise<LevelAuthState> {
+export async function getLevelAuthState(
+  levelId: string,
+): Promise<LevelAuthState> {
   try {
     const user = await getCurrentUser();
 
     if (!user) {
       return {
         authStatus: "unauthenticated",
-        liked: false
+        liked: false,
       };
     }
 
@@ -346,34 +367,34 @@ export async function getLevelAuthState(levelId: string): Promise<LevelAuthState
       authStatus: "authenticated",
       liked: likedStatus.liked,
       likes: likedStatus.likes,
-      user
+      user,
     };
   } catch (error) {
     return {
       authStatus: "error",
       error: error instanceof Error ? error.message : String(error),
-      liked: false
+      liked: false,
     };
   }
 }
 
 export async function getLevelLikedStatus(
-  levelId: string
+  levelId: string,
 ): Promise<{ liked: boolean; likes?: number }> {
   try {
     const response = await tufApi.get<unknown>(
-      `/v2/database/levels/${levelId}/isLiked`
+      `/v2/database/levels/${levelId}/isLiked`,
     );
     const payload = asRecord(response.data);
 
     return {
       liked: Boolean(payload?.isLiked),
-      likes: readNumber(payload, ["likes"])
+      likes: readNumber(payload, ["likes"]),
     };
   } catch (error) {
     if (isAxiosStatus(error, 401)) {
       return {
-        liked: false
+        liked: false,
       };
     }
 
@@ -383,19 +404,19 @@ export async function getLevelLikedStatus(
 
 export async function setLevelLiked(
   levelId: string,
-  liked: boolean
+  liked: boolean,
 ): Promise<{ liked: boolean; likes?: number }> {
   const response = await tufApi.put<unknown>(
     `/v2/database/levels/${levelId}/like`,
     {
-      action: liked ? "like" : "unlike"
-    }
+      action: liked ? "like" : "unlike",
+    },
   );
   const payload = asRecord(response.data);
 
   return {
     liked,
-    likes: readNumber(payload, ["likes"])
+    likes: readNumber(payload, ["likes"]),
   };
 }
 
@@ -406,7 +427,7 @@ async function getDifficultyCatalog(): Promise<Map<string, DifficultyEntry>> {
       .then((response) => {
         const catalog = createDifficultyCatalog(response.data);
         logDebug("Loaded TUF difficulty catalog for tab icons", {
-          count: catalog.size
+          count: catalog.size,
         });
 
         return catalog;
@@ -414,7 +435,7 @@ async function getDifficultyCatalog(): Promise<Map<string, DifficultyEntry>> {
       .catch((error) => {
         difficultyCatalogPromise = null;
         logWarn("Failed to load TUF difficulty catalog for tab icons", {
-          message: error instanceof Error ? error.message : String(error)
+          message: error instanceof Error ? error.message : String(error),
         });
         return new Map<string, DifficultyEntry>();
       });
@@ -444,7 +465,7 @@ async function requestCurrentUser(): Promise<AuthUser | null> {
       selectIconSize(readString(user, ["icon"]), "small"),
     id,
     name: readString(user, ["name", "username", "displayName"]),
-    raw: user
+    raw: user,
   };
 }
 
@@ -457,10 +478,13 @@ async function getOptionalApiData(path: string): Promise<unknown> {
     const response = await tufApi.get<unknown>(path);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error) && [401, 403, 404].includes(error.response?.status ?? 0)) {
+    if (
+      axios.isAxiosError(error) &&
+      [401, 403, 404].includes(error.response?.status ?? 0)
+    ) {
       logWarn("Optional TUF API request returned an ignorable status", {
         path,
-        status: error.response?.status
+        status: error.response?.status,
       });
       return null;
     }
@@ -470,7 +494,7 @@ async function getOptionalApiData(path: string): Promise<unknown> {
 }
 
 async function getVideoDetails(
-  videoLink: string | undefined
+  videoLink: string | undefined,
 ): Promise<{ embed?: string; image?: string } | null> {
   if (!videoLink) {
     return null;
@@ -478,18 +502,18 @@ async function getVideoDetails(
 
   try {
     const response = await tufApi.get<unknown>(
-      `/v2/media/video-details/${encodeURIComponent(videoLink)}`
+      `/v2/media/video-details/${encodeURIComponent(videoLink)}`,
     );
     const record = asRecord(response.data);
 
     return {
       embed: readString(record, ["embed"]),
-      image: readString(record, ["image"])
+      image: readString(record, ["image"]),
     };
   } catch (error) {
     logWarn("Failed to load TUF media video details; using local fallback", {
       message: error instanceof Error ? error.message : String(error),
-      videoLink
+      videoLink,
     });
     return null;
   }
@@ -498,16 +522,20 @@ async function getVideoDetails(
 function mapLevelDetail(
   rawLevel: TufRecord,
   fallbackId: string,
-  difficultyCatalog?: Map<string, DifficultyEntry>
+  difficultyCatalog?: Map<string, DifficultyEntry>,
 ): LevelDetail {
   const songObject = asRecord(rawLevel.songObject);
   const artists = Array.isArray(rawLevel.artists)
     ? rawLevel.artists.map(asRecord).filter(isRecord)
     : [];
   const song = getSongDisplayName(rawLevel, songObject);
-  const artist = artists.length > 0
-    ? artists.map((artistRecord) => readString(artistRecord, ["name"])).filter(Boolean).join(", ")
-    : readString(rawLevel, ["artist"]);
+  const artist =
+    artists.length > 0
+      ? artists
+          .map((artistRecord) => readString(artistRecord, ["name"]))
+          .filter(Boolean)
+          .join(", ")
+      : readString(rawLevel, ["artist"]);
   const difficulty =
     mapDifficultyFromCatalog(rawLevel, difficultyCatalog) ??
     mapDifficulty(asRecord(rawLevel.difficulty));
@@ -528,14 +556,14 @@ function mapLevelDetail(
     tags,
     tilecount: readNumber(rawLevel, ["tilecount", "tileCount"]),
     videoLink: readString(rawLevel, ["videoLink"]),
-    workshopLink: readString(rawLevel, ["workshopLink"])
+    workshopLink: readString(rawLevel, ["workshopLink"]),
   };
 }
 
 function mapResolvedPass(
   video: VideoReference,
   pass: TufRecord,
-  difficultyCatalog?: Map<string, DifficultyEntry>
+  difficultyCatalog?: Map<string, DifficultyEntry>,
 ): ResolvedPassContext {
   const passId =
     readString(pass, ["id", "passId", "_id", "uuid"]) ?? video.externalId;
@@ -546,8 +574,10 @@ function mapResolvedPass(
   const levelTitle = level
     ? getSongDisplayName(level, asRecord(level.songObject))
     : "TUF Pass";
-  const difficulty =
-    level ? mapDifficultyFromCatalog(level, difficultyCatalog) ?? mapDifficulty(asRecord(level.difficulty)) : undefined;
+  const difficulty = level
+    ? (mapDifficultyFromCatalog(level, difficultyCatalog) ??
+      mapDifficulty(asRecord(level.difficulty)))
+    : undefined;
 
   return {
     kind: "pass",
@@ -560,14 +590,14 @@ function mapResolvedPass(
     tabIconUrl: difficulty?.icon,
     title: `${playerName} clear - ${levelTitle}`,
     url: `https://tuforums.com/passes/${passId}`,
-    video
+    video,
   };
 }
 
 function mapPassDetail(
   rawPass: TufRecord,
   fallbackId: string,
-  difficultyCatalog?: Map<string, DifficultyEntry>
+  difficultyCatalog?: Map<string, DifficultyEntry>,
 ): PassDetail {
   const player = mapPassPlayer(rawPass);
   const level = mapPassLevelSummary(rawPass, difficultyCatalog);
@@ -589,7 +619,7 @@ function mapPassDetail(
     score: readNumber(rawPass, ["scoreV2", "score"]) ?? 0,
     scoreInfo: mapPassScoreInfo(rawPass),
     speed: readNumber(rawPass, ["speed"]) ?? 1,
-    videoLink: readString(rawPass, ["videoLink"])
+    videoLink: readString(rawPass, ["videoLink"]),
   };
 }
 
@@ -597,7 +627,8 @@ function mapPassPlayer(rawPass: TufRecord): PassPlayer {
   const player = asRecord(rawPass.player);
   const user = asRecord(player?.user);
   const ranks = asRecord(rawPass.ranks);
-  const playerId = readString(player, ["id"]) ?? readString(rawPass, ["playerId"]);
+  const playerId =
+    readString(player, ["id"]) ?? readString(rawPass, ["playerId"]);
 
   return {
     avatarUrl:
@@ -608,20 +639,22 @@ function mapPassPlayer(rawPass: TufRecord): PassPlayer {
     discordUsername: readString(player, ["discordUsername", "discordTag"]),
     id: playerId,
     name: readString(player, ["name"]) ?? "Unknown Player",
-    profileUrl: playerId ? `https://tuforums.com/profile/${playerId}` : undefined,
-    rankedScoreRank: readNumber(ranks, ["rankedScoreRank"])
+    profileUrl: playerId
+      ? `https://tuforums.com/profile/${playerId}`
+      : undefined,
+    rankedScoreRank: readNumber(ranks, ["rankedScoreRank"]),
   };
 }
 
 function mapPassLevelSummary(
   rawPass: TufRecord,
-  difficultyCatalog?: Map<string, DifficultyEntry>
+  difficultyCatalog?: Map<string, DifficultyEntry>,
 ): PassLevelSummary {
   const level = asRecord(rawPass.level);
 
   if (!level) {
     return {
-      song: "TUF Level"
+      song: "TUF Level",
     };
   }
 
@@ -639,7 +672,7 @@ function mapPassLevelSummary(
     song: getSongDisplayName(level, asRecord(level.songObject)),
     team: readString(level, ["team"]),
     videoLink: readString(level, ["videoLink"]),
-    vfxer: readString(level, ["vfxer"])
+    vfxer: readString(level, ["vfxer"]),
   };
 }
 
@@ -653,11 +686,13 @@ function mapPassScoreInfo(rawPass: TufRecord): PassDetail["scoreInfo"] {
   return {
     currentRankedScore: readNumber(scoreInfo, ["currentRankedScore"]),
     impact: readNumber(scoreInfo, ["impact"]),
-    previousRankedScore: readNumber(scoreInfo, ["previousRankedScore"])
+    previousRankedScore: readNumber(scoreInfo, ["previousRankedScore"]),
   };
 }
 
-function mapDifficulty(rawDifficulty: UnknownRecord | null): LevelDifficulty | undefined {
+function mapDifficulty(
+  rawDifficulty: UnknownRecord | null,
+): LevelDifficulty | undefined {
   if (!rawDifficulty) {
     return undefined;
   }
@@ -667,13 +702,13 @@ function mapDifficulty(rawDifficulty: UnknownRecord | null): LevelDifficulty | u
     icon: selectIconSize(readString(rawDifficulty, ["icon"]), "medium"),
     id: readString(rawDifficulty, ["id"]),
     name: readString(rawDifficulty, ["name"]),
-    type: readString(rawDifficulty, ["type"])
+    type: readString(rawDifficulty, ["type"]),
   };
 }
 
 function mapDifficultyFromCatalog(
   rawLevel: TufRecord,
-  difficultyCatalog: Map<string, DifficultyEntry> | undefined
+  difficultyCatalog: Map<string, DifficultyEntry> | undefined,
 ): LevelDifficulty | undefined {
   const diffId = readString(rawLevel, ["diffId", "difficultyId"]);
   const difficulty = diffId ? difficultyCatalog?.get(diffId) : undefined;
@@ -687,13 +722,13 @@ function mapDifficultyFromCatalog(
     icon: difficulty.icon,
     id: difficulty.id,
     name: difficulty.name,
-    type: difficulty.type
+    type: difficulty.type,
   };
 }
 
 function mapRatingDifficulty(
   ratings: TufRecord | null,
-  difficultyCatalog: Map<string, DifficultyEntry> | undefined
+  difficultyCatalog: Map<string, DifficultyEntry> | undefined,
 ): LevelDifficulty | undefined {
   const averageDifficultyId = readString(ratings, ["averageDifficultyId"]);
   const difficulty = averageDifficultyId
@@ -709,14 +744,14 @@ function mapRatingDifficulty(
     icon: difficulty.icon,
     id: difficulty.id,
     name: difficulty.name,
-    type: difficulty.type
+    type: difficulty.type,
   };
 }
 
 function getDisplayBaseScore(
   rawLevel: TufRecord,
   difficulty: LevelDifficulty | undefined,
-  tags: LevelTag[]
+  tags: LevelTag[],
 ): number | undefined {
   const editedBaseScore = readNumber(rawLevel, ["baseScore"]);
   const defaultBaseScore = difficulty?.baseScore;
@@ -741,12 +776,15 @@ function mapTags(value: unknown): LevelTag[] {
     return [];
   }
 
-  return value.map(asRecord).filter(isRecord).map((tag, index) => ({
-    color: readString(tag, ["color"]),
-    icon: selectIconSize(readString(tag, ["icon"]), "small"),
-    id: readString(tag, ["id"]) ?? `tag-${index}`,
-    name: readString(tag, ["name"]) ?? "Tag"
-  }));
+  return value
+    .map(asRecord)
+    .filter(isRecord)
+    .map((tag, index) => ({
+      color: readString(tag, ["color"]),
+      icon: selectIconSize(readString(tag, ["icon"]), "small"),
+      id: readString(tag, ["id"]) ?? `tag-${index}`,
+      name: readString(tag, ["name"]) ?? "Tag",
+    }));
 }
 
 function mapCuration(rawLevel: TufRecord): LevelCuration | undefined {
@@ -763,7 +801,7 @@ function mapCuration(rawLevel: TufRecord): LevelCuration | undefined {
   return {
     description: readString(curation, ["description"]),
     id: readString(curation, ["id"]) ?? "curation",
-    types
+    types,
   };
 }
 
@@ -772,12 +810,13 @@ function getCurationTypes(curation: UnknownRecord): LevelCurationType[] {
     ? curation.types.map(asRecord).filter(isRecord)
     : [];
   const singleType = asRecord(curation.type);
-  const types = directTypes.length > 0 ? directTypes : singleType ? [singleType] : [];
+  const types =
+    directTypes.length > 0 ? directTypes : singleType ? [singleType] : [];
 
   return types.map((type, index) => ({
     icon: selectIconSize(readString(type, ["icon"]), "small"),
     id: readString(type, ["id"]) ?? `curation-type-${index}`,
-    name: readString(type, ["name"]) ?? "Curation"
+    name: readString(type, ["name"]) ?? "Curation",
   }));
 }
 
@@ -793,7 +832,10 @@ function mapPasses(payload: unknown): LevelPass[] {
       const judgements = asRecord(pass.judgements);
 
       return {
-        accuracy: readNumber(pass, ["accuracy"]) ?? readNumber(judgements, ["accuracy"]) ?? 0,
+        accuracy:
+          readNumber(pass, ["accuracy"]) ??
+          readNumber(judgements, ["accuracy"]) ??
+          0,
         country: readString(player, ["country"]),
         date: readString(pass, ["vidUploadTime", "date", "createdAt"]),
         feelingRating: readString(pass, ["feelingRating"]),
@@ -806,7 +848,7 @@ function mapPasses(payload: unknown): LevelPass[] {
         playerName: readString(player, ["name"]) ?? "Unknown Player",
         score: readNumber(pass, ["scoreV2", "score"]) ?? 0,
         speed: readNumber(pass, ["speed"]) ?? 1,
-        videoLink: readString(pass, ["videoLink"])
+        videoLink: readString(pass, ["videoLink"]),
       };
     })
     .sort((a, b) => b.score - a.score);
@@ -852,7 +894,7 @@ function mapJudgements(judgements: UnknownRecord | null): LevelPassJudgements {
     perfect: readNumber(judgements, ["perfect"]) ?? 0,
     lPerfect: readNumber(judgements, ["lPerfect"]) ?? 0,
     lateSingle: readNumber(judgements, ["lateSingle"]) ?? 0,
-    lateDouble: readNumber(judgements, ["lateDouble"]) ?? 0
+    lateDouble: readNumber(judgements, ["lateDouble"]) ?? 0,
   };
 }
 
@@ -864,7 +906,7 @@ function mapPassJudgements(judgements: UnknownRecord | null): PassJudgements {
     perfect: readNumber(judgements, ["perfect"]) ?? 0,
     lPerfect: readNumber(judgements, ["lPerfect"]) ?? 0,
     lateSingle: readNumber(judgements, ["lateSingle"]) ?? 0,
-    lateDouble: readNumber(judgements, ["lateDouble"]) ?? 0
+    lateDouble: readNumber(judgements, ["lateDouble"]) ?? 0,
   };
 }
 
@@ -872,32 +914,39 @@ function getLevelStats(passes: LevelPass[]): LevelStats {
   if (passes.length === 0) {
     return {
       totalClears: 0,
-      uniqueClears: 0
+      uniqueClears: 0,
     };
   }
 
   const withDates = passes.filter((pass) => Boolean(pass.date));
   const byOldestDate = [...withDates].sort(
-    (a, b) => Date.parse(a.date ?? "") - Date.parse(b.date ?? "")
+    (a, b) => Date.parse(a.date ?? "") - Date.parse(b.date ?? ""),
   );
 
   const uniquePlayers = new Set(
-    passes.map((pass) => pass.playerId ?? pass.playerName).filter(Boolean)
+    passes.map((pass) => pass.playerId ?? pass.playerName).filter(Boolean),
   );
 
   return {
     firstClear: byOldestDate[0] ?? passes[0],
     highestAccuracy: passes.reduce((best, pass) =>
-      pass.accuracy > best.accuracy ? pass : best
+      pass.accuracy > best.accuracy ? pass : best,
     ),
-    highestScore: passes.reduce((best, pass) => (pass.score > best.score ? pass : best)),
-    highestSpeed: passes.reduce((best, pass) => (pass.speed > best.speed ? pass : best)),
+    highestScore: passes.reduce((best, pass) =>
+      pass.score > best.score ? pass : best,
+    ),
+    highestSpeed: passes.reduce((best, pass) =>
+      pass.speed > best.speed ? pass : best,
+    ),
     totalClears: passes.length,
-    uniqueClears: uniquePlayers.size
+    uniqueClears: uniquePlayers.size,
   };
 }
 
-function getSongDisplayName(rawLevel: TufRecord, songObject: UnknownRecord | null): string {
+function getSongDisplayName(
+  rawLevel: TufRecord,
+  songObject: UnknownRecord | null,
+): string {
   const songName =
     readString(songObject, ["name"]) ??
     readString(rawLevel, ["song", "title", "name", "levelName"]) ??
@@ -922,7 +971,9 @@ function getCreatorDisplayName(rawLevel: TufRecord): string | undefined {
   }
 
   const charters = credits
-    .filter((credit) => readString(credit, ["role"])?.toLowerCase() === "charter")
+    .filter(
+      (credit) => readString(credit, ["role"])?.toLowerCase() === "charter",
+    )
     .map(getCreditCreatorName)
     .filter(Boolean);
   const vfxers = credits
@@ -933,10 +984,18 @@ function getCreatorDisplayName(rawLevel: TufRecord): string | undefined {
   if (credits.length >= 3) {
     const parts: string[] = [];
     if (charters.length > 0) {
-      parts.push(charters.length === 1 ? charters[0] : `${charters[0]} & ${charters.length - 1} more`);
+      parts.push(
+        charters.length === 1
+          ? charters[0]
+          : `${charters[0]} & ${charters.length - 1} more`,
+      );
     }
     if (vfxers.length > 0) {
-      parts.push(vfxers.length === 1 ? vfxers[0] : `${vfxers[0]} & ${vfxers.length - 1} more`);
+      parts.push(
+        vfxers.length === 1
+          ? vfxers[0]
+          : `${vfxers[0]} & ${vfxers.length - 1} more`,
+      );
     }
     return parts.join(" | ");
   }
@@ -959,7 +1018,9 @@ function getCreditCreatorName(credit: UnknownRecord): string {
   return firstAlias ?? readString(creator, ["name"]) ?? "No credits";
 }
 
-function getYoutubeThumbnailUrl(videoLink: string | undefined): string | undefined {
+function getYoutubeThumbnailUrl(
+  videoLink: string | undefined,
+): string | undefined {
   const id = getYoutubeVideoId(videoLink);
   return id ? `https://i.ytimg.com/vi/${id}/maxresdefault.jpg` : undefined;
 }
@@ -986,7 +1047,10 @@ function getYoutubeVideoId(value: string | undefined): string | undefined {
   }
 }
 
-function readBoolean(record: UnknownRecord | null | undefined, keys: string[]): boolean {
+function readBoolean(
+  record: UnknownRecord | null | undefined,
+  keys: string[],
+): boolean {
   if (!record) {
     return false;
   }
@@ -1016,7 +1080,10 @@ function readBoolean(record: UnknownRecord | null | undefined, keys: string[]): 
   return false;
 }
 
-function selectIconSize(url: string | undefined, size: "medium" | "small"): string | undefined {
+function selectIconSize(
+  url: string | undefined,
+  size: "medium" | "small",
+): string | undefined {
   return url?.replace("/original", `/${size}`);
 }
 

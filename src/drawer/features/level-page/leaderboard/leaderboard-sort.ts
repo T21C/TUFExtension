@@ -3,18 +3,18 @@ import {
   PercentIcon,
   ScoreIcon,
   SpeedIcon,
-} from "@drawer/shared/level-icons";
+} from "~/drawer/shared/level-icons";
 import type {
   LeaderboardSortKey,
   LevelPass,
   SortDirection,
-} from "@domain/tuf/types";
+} from "~/domain/tuf/types";
 import {
   formatAccuracy,
   formatDate,
   formatScore,
   formatSpeed,
-} from "@drawer/shared/formatters";
+} from "~/drawer/shared/formatters";
 
 export const SORT_OPTIONS: Array<{
   icon: typeof CalendarIcon;

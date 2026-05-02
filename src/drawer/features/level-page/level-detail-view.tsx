@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import { LevelActionStrip } from "./components/level-action-strip";
-import { LevelDetailError, LevelDetailSkeleton } from "./components/level-detail-state";
+import {
+  LevelDetailError,
+  LevelDetailSkeleton,
+} from "./components/level-detail-state";
 import { LevelHero } from "./components/level-hero";
 import { LevelStatsPanel } from "./components/level-stats-panel";
 import { LeaderboardPanel } from "./leaderboard/leaderboard-panel";
@@ -10,8 +13,8 @@ import type {
   LevelPageData,
   LevelPageLoadState,
   SortDirection,
-} from "@domain/tuf/types";
-import { useLevelLike } from "@features/drawer/use-level-like";
+} from "~/domain/tuf/types";
+import { useLevelLike } from "~/features/drawer/use-level-like";
 
 interface LevelDetailViewProps {
   state: LevelPageLoadState;
@@ -36,7 +39,7 @@ function LoadedLevelDetail({ data }: { data: LevelPageData }) {
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState(true);
   const likeController = useLevelLike({
     initialLikes: data.level.likes,
-    levelId: data.level.id
+    levelId: data.level.id,
   });
   const sortedPasses = useMemo(
     () => sortPasses(data.passes, sortKey, sortDirection),

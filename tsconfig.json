@@ -1,4 +1,5 @@
 {
+  "extends": "./.wxt/tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
     "useDefineForClassFields": true,
@@ -11,19 +12,10 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "paths": {
-      "@domain/*": ["./src/domain/*"],
-      "@drawer/*": ["./src/drawer/*"],
-      "@entrypoints/*": ["./src/entrypoints/*"],
-      "@features/*": ["./src/features/*"],
-      "@platform/*": ["./src/platform/*"],
-      "@shared/*": ["./src/shared/*"]
-    },
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
     "types": ["chrome", "node"]
-  },
-  "include": ["src", "vite.config.ts"]
+  }
 }

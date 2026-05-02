@@ -1,9 +1,9 @@
-import type { PassJudgements } from "@domain/tuf/types";
+import type { PassJudgements } from "~/domain/tuf/types";
 import {
   glowDividerStyle,
   panelSurfaceClassName,
-  softGlowBorderStyle
-} from "@drawer/shared/level-surface";
+  softGlowBorderStyle,
+} from "~/drawer/shared/level-surface";
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 const JUDGEMENT_CELLS = [
@@ -13,16 +13,19 @@ const JUDGEMENT_CELLS = [
   { key: "perfect", color: "#82ff68", label: "Perfect" },
   { key: "lPerfect", color: "#fff131", label: "L-Perfect" },
   { key: "lateSingle", color: "#ff9b19", label: "Late" },
-  { key: "lateDouble", color: "#ff3045", label: "Too Late" }
+  { key: "lateDouble", color: "#ff3045", label: "Too Late" },
 ] as const;
 
 export function PassJudgementsPanel({
-  judgements
+  judgements,
 }: {
   judgements: PassJudgements;
 }) {
   return (
-    <section className={`${panelSurfaceClassName} p-3`} style={softGlowBorderStyle}>
+    <section
+      className={`${panelSurfaceClassName} p-3`}
+      style={softGlowBorderStyle}
+    >
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-lg font-black text-white">Judgements</h2>
         <span className="text-xs font-black uppercase tracking-[0.12em] text-white/35">

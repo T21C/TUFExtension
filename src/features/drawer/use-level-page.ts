@@ -1,31 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   sendRuntimeMessage,
-  type GetLevelPageDataResult
-} from "@platform/chrome/runtime-message";
+  type GetLevelPageDataResult,
+} from "~/platform/chrome/runtime-message";
 import type {
   LevelPageLoadState,
-  ResolvedLevelContext
-} from "@domain/tuf/types";
+  ResolvedLevelContext,
+} from "~/domain/tuf/types";
 
 interface UseLevelPageParams {
   activeLevelId: string;
   levels: ResolvedLevelContext[];
 }
 
-export function useLevelPage({
-  activeLevelId,
-  levels
-}: UseLevelPageParams): {
+export function useLevelPage({ activeLevelId, levels }: UseLevelPageParams): {
   activeLevel: ResolvedLevelContext;
   activeState: LevelPageLoadState;
   retryActiveLevel: () => void;
 } {
-  const [loadStates, setLoadStates] = useState<Record<string, LevelPageLoadState>>({});
+  const [loadStates, setLoadStates] = useState<
+    Record<string, LevelPageLoadState>
+  >({});
   const [retryNonce, setRetryNonce] = useState(0);
   const activeLevel = useMemo(
     () => levels.find((level) => level.levelId === activeLevelId) ?? levels[0],
-    [activeLevelId, levels]
+    [activeLevelId, levels],
   );
   const activeState = loadStates[activeLevel.levelId] ?? { isLoading: true };
 
@@ -59,13 +58,13 @@ export function useLevelPage({
       [levelId]: {
         data: states[levelId]?.data,
         error: undefined,
-        isLoading: true
-      }
+        isLoading: true,
+      },
     }));
 
     void sendRuntimeMessage<GetLevelPageDataResult>({
       levelId,
-      type: "GET_LEVEL_PAGE_DATA"
+      type: "GET_LEVEL_PAGE_DATA",
     }).then((response) => {
       if (isCancelled) {
         return;
@@ -76,8 +75,8 @@ export function useLevelPage({
           ...states,
           [levelId]: {
             error: response?.error ?? "Failed to load level data.",
-            isLoading: false
-          }
+            isLoading: false,
+          },
         }));
         return;
       }
@@ -86,8 +85,8 @@ export function useLevelPage({
         ...states,
         [levelId]: {
           data: response.data,
-          isLoading: false
-        }
+          isLoading: false,
+        },
       }));
     });
 
@@ -99,6 +98,6 @@ export function useLevelPage({
   return {
     activeLevel,
     activeState,
-    retryActiveLevel: () => setRetryNonce((value) => value + 1)
+    retryActiveLevel: () => setRetryNonce((value) => value + 1),
   };
 }

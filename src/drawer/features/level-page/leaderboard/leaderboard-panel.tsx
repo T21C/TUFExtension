@@ -3,8 +3,8 @@ import type {
   LeaderboardSortKey,
   LevelPass,
   SortDirection,
-} from "@domain/tuf/types";
-import { formatInteger } from "@drawer/shared/formatters";
+} from "~/domain/tuf/types";
+import { formatInteger } from "~/drawer/shared/formatters";
 import { LeaderboardRow } from "./leaderboard-row";
 import { SORT_OPTIONS } from "./leaderboard-sort";
 import {
@@ -12,7 +12,7 @@ import {
   glowDividerStyle,
   interactiveSurfaceClassName,
   panelSurfaceClassName,
-} from "@drawer/shared/level-surface";
+} from "~/drawer/shared/level-surface";
 
 export function LeaderboardPanel({
   isOpen,
@@ -58,7 +58,11 @@ export function LeaderboardPanel({
 
       {isOpen ? (
         <div className="px-3 pb-3 pt-3" id={contentId}>
-          <div aria-hidden="true" className="mb-3 h-px" style={glowDividerStyle} />
+          <div
+            aria-hidden="true"
+            className="mb-3 h-px"
+            style={glowDividerStyle}
+          />
           {passes.length > 0 ? (
             <>
               <div className="flex justify-start gap-2.5">
@@ -119,7 +123,12 @@ export function LeaderboardPanel({
               </div>
             </>
           ) : (
-            <p className={["p-3 text-center text-sm font-medium text-white/65", interactiveSurfaceClassName].join(" ")}>
+            <p
+              className={[
+                "p-3 text-center text-sm font-medium text-white/65",
+                interactiveSurfaceClassName,
+              ].join(" ")}
+            >
               No clears yet
             </p>
           )}

@@ -1,31 +1,30 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   sendRuntimeMessage,
-  type GetPassPageDataResult
-} from "@platform/chrome/runtime-message";
+  type GetPassPageDataResult,
+} from "~/platform/chrome/runtime-message";
 import type {
   PassPageLoadState,
-  ResolvedPassContext
-} from "@domain/tuf/types";
+  ResolvedPassContext,
+} from "~/domain/tuf/types";
 
 interface UsePassPageParams {
   activePassId: string;
   passes: ResolvedPassContext[];
 }
 
-export function usePassPage({
-  activePassId,
-  passes
-}: UsePassPageParams): {
+export function usePassPage({ activePassId, passes }: UsePassPageParams): {
   activePass: ResolvedPassContext;
   activeState: PassPageLoadState;
   retryActivePass: () => void;
 } {
-  const [loadStates, setLoadStates] = useState<Record<string, PassPageLoadState>>({});
+  const [loadStates, setLoadStates] = useState<
+    Record<string, PassPageLoadState>
+  >({});
   const [retryNonce, setRetryNonce] = useState(0);
   const activePass = useMemo(
     () => passes.find((pass) => pass.passId === activePassId) ?? passes[0],
-    [activePassId, passes]
+    [activePassId, passes],
   );
   const activeState = loadStates[activePass.passId] ?? { isLoading: true };
 
@@ -59,13 +58,13 @@ export function usePassPage({
       [passId]: {
         data: states[passId]?.data,
         error: undefined,
-        isLoading: true
-      }
+        isLoading: true,
+      },
     }));
 
     void sendRuntimeMessage<GetPassPageDataResult>({
       passId,
-      type: "GET_PASS_PAGE_DATA"
+      type: "GET_PASS_PAGE_DATA",
     }).then((response) => {
       if (isCancelled) {
         return;
@@ -76,8 +75,8 @@ export function usePassPage({
           ...states,
           [passId]: {
             error: response?.error ?? "Failed to load pass data.",
-            isLoading: false
-          }
+            isLoading: false,
+          },
         }));
         return;
       }
@@ -86,8 +85,8 @@ export function usePassPage({
         ...states,
         [passId]: {
           data: response.data,
-          isLoading: false
-        }
+          isLoading: false,
+        },
       }));
     });
 
@@ -99,6 +98,6 @@ export function usePassPage({
   return {
     activePass,
     activeState,
-    retryActivePass: () => setRetryNonce((value) => value + 1)
+    retryActivePass: () => setRetryNonce((value) => value + 1),
   };
 }

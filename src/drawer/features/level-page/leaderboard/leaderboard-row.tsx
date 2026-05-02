@@ -1,17 +1,17 @@
-import { FlagIcon, YoutubeIcon } from "@drawer/shared/level-icons";
-import type { LeaderboardSortKey, LevelPass } from "@domain/tuf/types";
+import { FlagIcon, YoutubeIcon } from "~/drawer/shared/level-icons";
+import type { LeaderboardSortKey, LevelPass } from "~/domain/tuf/types";
 import {
   countryToEmoji,
   formatAccuracy,
   formatDate,
   formatScore,
   formatSpeed,
-} from "@drawer/shared/formatters";
+} from "~/drawer/shared/formatters";
 import { getPassMetric } from "./leaderboard-sort";
 import {
   interactiveSurfaceClassName,
   softGlowBorderStyle,
-} from "@drawer/shared/level-surface";
+} from "~/drawer/shared/level-surface";
 
 export function LeaderboardRow({
   index,
@@ -108,7 +108,10 @@ export function LeaderboardRow({
         </div>
         <a
           aria-label={`${pass.playerName} pass page`}
-          className={["grid h-8 w-8 shrink-0 place-items-center", interactiveSurfaceClassName].join(" ")}
+          className={[
+            "grid h-8 w-8 shrink-0 place-items-center",
+            interactiveSurfaceClassName,
+          ].join(" ")}
           href={`https://tuforums.com/passes/${pass.id}`}
           rel="noreferrer"
           style={softGlowBorderStyle}
@@ -119,7 +122,10 @@ export function LeaderboardRow({
         {pass.videoLink ? (
           <a
             aria-label={`${pass.playerName} clear video`}
-            className={["grid h-8 w-8 shrink-0 place-items-center", interactiveSurfaceClassName].join(" ")}
+            className={[
+              "grid h-8 w-8 shrink-0 place-items-center",
+              interactiveSurfaceClassName,
+            ].join(" ")}
             href={pass.videoLink}
             rel="noreferrer"
             style={softGlowBorderStyle}
