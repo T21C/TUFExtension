@@ -1,9 +1,5 @@
 import type { PassDetail } from "~/domain/tuf/types";
-import {
-  countryToEmoji,
-  formatDate,
-  formatNumber,
-} from "~/drawer/shared/formatters";
+import { countryToEmoji, formatScore } from "~/drawer/shared/formatters";
 import {
   glowDividerStyle,
   panelSurfaceClassName,
@@ -79,26 +75,12 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
 
       <SpoilerSection>
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <InfoLine label="Clear Date" value={formatDate(pass.date ?? "")} />
+          <InfoLine isSpoiler label="Score" value={formatScore(pass.score)} />
           <InfoLine
             isSpoiler
             label="Feeling"
             value={pass.feelingRating ?? "None"}
           />
-          {pass.scoreInfo?.currentRankedScore ? (
-            <InfoLine
-              isSpoiler
-              label="Ranked Score"
-              value={formatNumber(pass.scoreInfo.currentRankedScore)}
-            />
-          ) : null}
-          {pass.scoreInfo?.impact ? (
-            <InfoLine
-              isSpoiler
-              label="Impact"
-              value={`+${formatNumber(pass.scoreInfo.impact)}`}
-            />
-          ) : null}
         </div>
         <PassFlags pass={pass} />
       </SpoilerSection>

@@ -11,11 +11,16 @@ import { PassPlayerCard } from "./components/pass-player-card";
 import { SpoilerControlsProvider } from "./components/spoiler-text";
 
 interface PassDetailViewProps {
+  isSpoilerProtectionDisabled: boolean;
   state: PassPageLoadState;
   onRetry: () => void;
 }
 
-export function PassDetailView({ onRetry, state }: PassDetailViewProps) {
+export function PassDetailView({
+  isSpoilerProtectionDisabled,
+  onRetry,
+  state,
+}: PassDetailViewProps) {
   if (state.isLoading && !state.data) {
     return <PassDetailSkeleton />;
   }
@@ -24,10 +29,21 @@ export function PassDetailView({ onRetry, state }: PassDetailViewProps) {
     return <PassDetailError message={state.error} onRetry={onRetry} />;
   }
 
-  return <LoadedPassDetail data={state.data} />;
+  return (
+    <LoadedPassDetail
+      data={state.data}
+      isSpoilerProtectionDisabled={isSpoilerProtectionDisabled}
+    />
+  );
 }
 
-function LoadedPassDetail({ data }: { data: PassPageData }) {
+function LoadedPassDetail({
+  data,
+  isSpoilerProtectionDisabled,
+}: {
+  data: PassPageData;
+  isSpoilerProtectionDisabled: boolean;
+}) {
   const [hideAllVersion, setHideAllVersion] = useState(0);
   const [revealAllVersion, setRevealAllVersion] = useState(0);
   const [areSpoilersRevealed, setAreSpoilersRevealed] = useState(false);
@@ -46,6 +62,7 @@ function LoadedPassDetail({ data }: { data: PassPageData }) {
   return (
     <SpoilerControlsProvider
       hideAllVersion={hideAllVersion}
+      isProtectionDisabled={isSpoilerProtectionDisabled}
       revealAllVersion={revealAllVersion}
     >
       <article className="space-y-2.5 pb-4 pt-2 text-white">
@@ -58,6 +75,7 @@ function LoadedPassDetail({ data }: { data: PassPageData }) {
         <PassActionStrip
           areSpoilersRevealed={areSpoilersRevealed}
           data={data}
+          isSpoilerProtectionDisabled={isSpoilerProtectionDisabled}
           onToggleSpoilers={toggleSpoilers}
         />
         <PassPlayerCard pass={data.pass} />

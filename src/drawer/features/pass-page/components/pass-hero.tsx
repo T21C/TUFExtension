@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 import type { PassPageData } from "~/domain/tuf/types";
 import {
   CalendarIcon,
-  ChartIcon,
   PercentIcon,
   SpeedIcon,
   TufIcon,
@@ -11,7 +10,6 @@ import {
   formatAccuracy,
   formatBaseScore,
   formatDate,
-  formatScore,
   formatSpeed,
 } from "~/drawer/shared/formatters";
 import {
@@ -78,10 +76,7 @@ export function PassHero({ data }: { data: PassPageData }) {
           <SpoilerSection>
             <div className="mt-4 grid grid-cols-2 gap-2">
               <HeroMetric
-                icon={<ChartIcon size={16} />}
-                label={formatScore(pass.score)}
-              />
-              <HeroMetric
+                fullWidth
                 icon={<CalendarIcon size={16} />}
                 label={formatDate(pass.date ?? "")}
               />
@@ -104,10 +99,12 @@ export function PassHero({ data }: { data: PassPageData }) {
 }
 
 function HeroMetric({
+  fullWidth = false,
   icon,
   isSpoiler = false,
   label,
 }: {
+  fullWidth?: boolean;
   icon?: ReactNode;
   isSpoiler?: boolean;
   label: string;
@@ -115,6 +112,7 @@ function HeroMetric({
   return (
     <div
       className={`${mutedSurfaceClassName} flex min-w-0 items-center justify-center gap-1.5 px-2 py-2 text-sm font-black text-white`}
+      style={fullWidth ? { gridColumn: "1 / -1" } : undefined}
     >
       {icon}
       {isSpoiler ? (

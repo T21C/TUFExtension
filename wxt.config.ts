@@ -30,6 +30,7 @@ export default defineConfig({
         128: "icons/icon128.png",
       },
     },
+    permissions: ["storage"],
     host_permissions: [
       "https://www.youtube.com/*",
       "https://i.ytimg.com/*",
