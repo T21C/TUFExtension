@@ -7,13 +7,13 @@ import {
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 const JUDGEMENT_CELLS = [
-  { key: "earlyDouble", color: "#ff3045", label: "Too Early" },
-  { key: "earlySingle", color: "#ff9b19", label: "Early" },
-  { key: "ePerfect", color: "#fff131", label: "E-Perfect" },
-  { key: "perfect", color: "#82ff68", label: "Perfect" },
-  { key: "lPerfect", color: "#fff131", label: "L-Perfect" },
-  { key: "lateSingle", color: "#ff9b19", label: "Late" },
-  { key: "lateDouble", color: "#ff3045", label: "Too Late" },
+  { key: "earlyDouble", className: "text-red-500", label: "Too Early" },
+  { key: "earlySingle", className: "text-orange-400", label: "Early" },
+  { key: "ePerfect", className: "text-yellow-300", label: "E-Perfect" },
+  { key: "perfect", className: "text-lime-300", label: "Perfect" },
+  { key: "lPerfect", className: "text-yellow-300", label: "L-Perfect" },
+  { key: "lateSingle", className: "text-orange-400", label: "Late" },
+  { key: "lateDouble", className: "text-red-500", label: "Too Late" },
 ] as const;
 
 export function PassJudgementsPanel({
@@ -34,26 +34,26 @@ export function PassJudgementsPanel({
       </div>
       <div className="my-3 h-px" style={glowDividerStyle} />
       <SpoilerSection>
-        <div className="grid grid-cols-7 gap-1.5 rounded-md bg-violet-500/45 p-1.5">
+        <div
+          className="grid min-h-9 grid-cols-7 items-center rounded border bg-black/35 px-1 py-1 text-md font-medium tabular-nums backdrop-blur-md"
+          style={softGlowBorderStyle}
+        >
           {JUDGEMENT_CELLS.map((cell) => {
             const value = String(judgements[cell.key]);
 
             return (
-              <div
-                className="grid min-h-9 min-w-0 place-items-center rounded bg-black/18 px-0.5 text-center"
+              <SpoilerText
+                as="div"
+                className={[
+                  "grid min-h-6 min-w-0 place-items-center leading-none",
+                  cell.className,
+                  getJudgementTextSize(value),
+                ].join(" ")}
                 key={cell.key}
                 title={cell.label}
               >
-                <SpoilerText
-                  className={[
-                    "max-w-full tabular-nums leading-none font-black drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]",
-                    getJudgementTextSize(value),
-                  ].join(" ")}
-                  style={{ color: cell.color }}
-                >
-                  {value}
-                </SpoilerText>
-              </div>
+                {value}
+              </SpoilerText>
             );
           })}
         </div>

@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import type { PassPageData } from "~/domain/tuf/types";
 import {
   CalendarIcon,
@@ -11,6 +11,7 @@ import {
   formatBaseScore,
   formatDate,
   formatSpeed,
+  isPerfectAccuracy,
 } from "~/drawer/shared/formatters";
 import {
   glowBorderStyle,
@@ -89,6 +90,11 @@ export function PassHero({ data }: { data: PassPageData }) {
                 icon={<PercentIcon size={16} />}
                 isSpoiler
                 label={formatAccuracy(pass.accuracy)}
+                valueStyle={
+                  isPerfectAccuracy(pass.accuracy)
+                    ? { color: "#FFDA00" }
+                    : undefined
+                }
               />
             </div>
           </SpoilerSection>
@@ -103,11 +109,13 @@ function HeroMetric({
   icon,
   isSpoiler = false,
   label,
+  valueStyle,
 }: {
   fullWidth?: boolean;
   icon?: ReactNode;
   isSpoiler?: boolean;
   label: string;
+  valueStyle?: CSSProperties;
 }) {
   return (
     <div
@@ -116,11 +124,16 @@ function HeroMetric({
     >
       {icon}
       {isSpoiler ? (
-        <SpoilerText className="min-w-0 truncate text-white/90">
+        <SpoilerText
+          className="min-w-0 truncate text-white/90"
+          style={valueStyle}
+        >
           {label || "-"}
         </SpoilerText>
       ) : (
-        <span className="min-w-0 truncate">{label || "-"}</span>
+        <span className="min-w-0 truncate" style={valueStyle}>
+          {label || "-"}
+        </span>
       )}
     </div>
   );

@@ -6,6 +6,7 @@ import {
   formatDate,
   formatScore,
   formatSpeed,
+  isPerfectAccuracy,
 } from "~/drawer/shared/formatters";
 import { getPassMetric } from "./leaderboard-sort";
 import {
@@ -64,7 +65,15 @@ export function LeaderboardRow({
         </span>
         <span>
           <span className="text-white/45">Acc: </span>
-          {formatAccuracy(pass.accuracy)}
+          <span
+            style={
+              isPerfectAccuracy(pass.accuracy)
+                ? { color: "#FFDA00" }
+                : undefined
+            }
+          >
+            {formatAccuracy(pass.accuracy)}
+          </span>
         </span>
         <span>
           <span className="text-white/45">Speed: </span>
@@ -123,8 +132,7 @@ export function LeaderboardRow({
           <a
             aria-label={`${pass.playerName} clear video`}
             className={[
-              "grid h-8 w-8 shrink-0 place-items-center",
-              interactiveSurfaceClassName,
+              "relative z-10 grid h-8 w-8 shrink-0 place-items-center rounded-md border border-white/20 bg-black/85 text-white shadow-[0_0_18px_rgba(255,255,255,0.1)] backdrop-blur-md transition hover:bg-black/70",
             ].join(" ")}
             href={pass.videoLink}
             rel="noreferrer"

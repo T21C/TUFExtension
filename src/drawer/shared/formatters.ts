@@ -52,6 +52,11 @@ export function formatAccuracy(value: number): string {
   return `${percentage.toFixed(2)}%`;
 }
 
+export function isPerfectAccuracy(value: number): boolean {
+  const percentage = value <= 1 ? value * 100 : value;
+  return Math.abs(percentage - 100) < 0.005;
+}
+
 export function formatSpeed(value: number): string {
   return `${value || 1}x`;
 }
