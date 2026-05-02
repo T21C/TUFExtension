@@ -5,6 +5,11 @@ import {
   TUF_BUTTON_HOST_ID,
   TUF_BUTTON_ID,
 } from "~/platform/content-script/tuf-button-elements";
+import {
+  loadSpoilerProtectionDisabled,
+  saveSpoilerProtectionDisabled,
+  watchSpoilerProtectionDisabled,
+} from "~/platform/chrome/spoiler-preference";
 import { logDebug, logInfo } from "~/platform/content-script/logger";
 import type { ResolvedTufContext } from "~/domain/tuf/types";
 
@@ -19,9 +24,12 @@ let activeItemKey: string | null = null;
 let isDrawerOpen = false;
 let isDrawerPinned = false;
 let isDrawerResolving = false;
+let isSpoilerProtectionDisabled = false;
 let drawerEmptyReason: string | null = null;
 let listenersInstalled = false;
 let drawerScrollListenersInstalled = false;
+let spoilerPreferenceHydrationStarted = false;
+let spoilerPreferenceListenerInstalled = false;
 
 export function mountOrUpdateDrawer(
   items: ResolvedTufContext[],
@@ -127,8 +135,10 @@ function renderDrawer(): void {
 
   activeItemKey =
     currentItems.length > 0 ? getNextActiveItemKey(currentItems) : null;
+  hydrateSpoilerPreference();
   ensureDrawerRoot();
   installGlobalListeners();
+  installSpoilerPreferenceListener();
   updateDrawerHostInteraction();
 
   root?.render(
@@ -138,10 +148,12 @@ function renderDrawer(): void {
       isOpen={isDrawerOpen}
       isPinned={isDrawerPinned}
       isResolving={isDrawerResolving}
+      isSpoilerProtectionDisabled={isSpoilerProtectionDisabled}
       items={currentItems}
       onClose={closeDrawer}
       onSelectItem={selectDrawerItem}
       onTogglePinned={togglePinned}
+      onToggleSpoilerProtection={toggleSpoilerProtection}
     />,
   );
 }
@@ -163,6 +175,63 @@ function togglePinned(): void {
     pinned: isDrawerPinned,
   });
   renderDrawer();
+}
+
+function toggleSpoilerProtection(): void {
+  isSpoilerProtectionDisabled = !isSpoilerProtectionDisabled;
+
+  logInfo("Toggled TUF drawer spoiler protection", {
+    disabled: isSpoilerProtectionDisabled,
+  });
+  renderDrawer();
+
+  void saveSpoilerProtectionDisabled(isSpoilerProtectionDisabled).catch(
+    (error: unknown) => {
+      logInfo("Failed to save TUF drawer spoiler preference", error);
+    },
+  );
+}
+
+function hydrateSpoilerPreference(): void {
+  if (spoilerPreferenceHydrationStarted) {
+    return;
+  }
+
+  spoilerPreferenceHydrationStarted = true;
+  void loadSpoilerProtectionDisabled()
+    .then((value) => {
+      if (isSpoilerProtectionDisabled === value) {
+        return;
+      }
+
+      isSpoilerProtectionDisabled = value;
+      logInfo("Hydrated TUF drawer spoiler preference", {
+        disabled: isSpoilerProtectionDisabled,
+      });
+      renderDrawer();
+    })
+    .catch((error: unknown) => {
+      logInfo("Failed to load TUF drawer spoiler preference", error);
+    });
+}
+
+function installSpoilerPreferenceListener(): void {
+  if (spoilerPreferenceListenerInstalled) {
+    return;
+  }
+
+  spoilerPreferenceListenerInstalled = true;
+  watchSpoilerProtectionDisabled((value) => {
+    if (isSpoilerProtectionDisabled === value) {
+      return;
+    }
+
+    isSpoilerProtectionDisabled = value;
+    logInfo("Synced TUF drawer spoiler preference", {
+      disabled: isSpoilerProtectionDisabled,
+    });
+    renderDrawer();
+  });
 }
 
 function getNextActiveItemKey(

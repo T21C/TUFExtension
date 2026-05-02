@@ -16,12 +16,14 @@ interface SpoilerContextValue {
 const SpoilerContext = createContext<SpoilerContextValue | null>(null);
 const SpoilerControlsContext = createContext<{
   hideAllVersion: number;
+  isProtectionDisabled: boolean;
   revealAllVersion: number;
 } | null>(null);
 
 export function SpoilerSection({ children }: { children: ReactNode }) {
   const spoilerControls = useContext(SpoilerControlsContext);
   const [isRevealed, setIsRevealed] = useState(false);
+  const isProtectionDisabled = spoilerControls?.isProtectionDisabled ?? false;
 
   useEffect(() => {
     if ((spoilerControls?.revealAllVersion ?? 0) > 0) {
@@ -37,10 +39,10 @@ export function SpoilerSection({ children }: { children: ReactNode }) {
 
   const value = useMemo(
     () => ({
-      isRevealed,
+      isRevealed: isProtectionDisabled || isRevealed,
       reveal: () => setIsRevealed(true),
     }),
-    [isRevealed],
+    [isProtectionDisabled, isRevealed],
   );
 
   return (
@@ -51,18 +53,21 @@ export function SpoilerSection({ children }: { children: ReactNode }) {
 export function SpoilerControlsProvider({
   children,
   hideAllVersion,
+  isProtectionDisabled = false,
   revealAllVersion,
 }: {
   children: ReactNode;
   hideAllVersion: number;
+  isProtectionDisabled?: boolean;
   revealAllVersion: number;
 }) {
   const value = useMemo(
     () => ({
       hideAllVersion,
+      isProtectionDisabled,
       revealAllVersion,
     }),
-    [hideAllVersion, revealAllVersion],
+    [hideAllVersion, isProtectionDisabled, revealAllVersion],
   );
 
   return (
@@ -90,7 +95,9 @@ export function SpoilerText({
   const spoilerGroup = useContext(SpoilerContext);
   const spoilerControls = useContext(SpoilerControlsContext);
   const [isLocallyRevealed, setIsLocallyRevealed] = useState(false);
-  const isRevealed = spoilerGroup?.isRevealed ?? isLocallyRevealed;
+  const isProtectionDisabled = spoilerControls?.isProtectionDisabled ?? false;
+  const isRevealed =
+    isProtectionDisabled || (spoilerGroup?.isRevealed ?? isLocallyRevealed);
   const shouldTruncate = className?.split(/\s+/).includes("truncate") ?? false;
   const truncateStyle: CSSProperties | undefined = shouldTruncate
     ? {
@@ -116,12 +123,28 @@ export function SpoilerText({
   }, [spoilerGroup, spoilerControls?.hideAllVersion]);
 
   function reveal() {
+    if (isProtectionDisabled) {
+      return;
+    }
+
     if (spoilerGroup) {
       spoilerGroup.reveal();
       return;
     }
 
     setIsLocallyRevealed(true);
+  }
+
+  if (isProtectionDisabled) {
+    return (
+      <Component
+        className={className}
+        style={{ ...truncateStyle, ...style }}
+        title={title}
+      >
+        {children}
+      </Component>
+    );
   }
 
   return (

@@ -12,10 +12,12 @@ interface PassAction {
 export function PassActionStrip({
   areSpoilersRevealed,
   data,
+  isSpoilerProtectionDisabled,
   onToggleSpoilers,
 }: {
   areSpoilersRevealed: boolean;
   data: PassPageData;
+  isSpoilerProtectionDisabled: boolean;
   onToggleSpoilers: () => void;
 }) {
   const candidates: Array<PassAction | null> = [
@@ -36,15 +38,23 @@ export function PassActionStrip({
   const spoilerLabel = areSpoilersRevealed
     ? "Hide all pass spoilers"
     : "Reveal all pass spoilers";
+  const effectiveSpoilerLabel = isSpoilerProtectionDisabled
+    ? "Spoiler protection is disabled"
+    : spoilerLabel;
 
   return (
     <div className="grid grid-cols-3 gap-2">
       <button
         aria-pressed={areSpoilersRevealed}
-        aria-label={spoilerLabel}
-        className={`${interactiveSurfaceClassName} grid h-11 place-items-center`}
+        aria-label={effectiveSpoilerLabel}
+        className={[
+          interactiveSurfaceClassName,
+          "grid h-11 place-items-center",
+          isSpoilerProtectionDisabled ? "cursor-not-allowed opacity-50" : "",
+        ].join(" ")}
+        disabled={isSpoilerProtectionDisabled}
         onClick={onToggleSpoilers}
-        title={spoilerLabel}
+        title={effectiveSpoilerLabel}
         type="button"
       >
         {areSpoilersRevealed ? <EyeSlashIcon /> : <EyeIcon />}

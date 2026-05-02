@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { CloseButton } from "~/drawer/components/close-button";
 import { DrawerShell } from "~/drawer/drawer-shell";
 import { PinButton } from "~/drawer/components/pin-button";
+import { SpoilerToggleButton } from "~/drawer/components/spoiler-toggle-button";
 import { useLevelPage } from "~/features/drawer/use-level-page";
 import { usePassPage } from "~/features/drawer/use-pass-page";
 import { PassDetailView } from "~/drawer/features/pass-page/pass-detail-view";
@@ -20,10 +21,12 @@ interface LevelPageProps {
   isOpen: boolean;
   isPinned: boolean;
   isResolving: boolean;
+  isSpoilerProtectionDisabled: boolean;
   items: ResolvedTufContext[];
   onClose: () => void;
   onSelectItem: (itemKey: string) => void;
   onTogglePinned: () => void;
+  onToggleSpoilerProtection: () => void;
 }
 
 export function LevelPage({
@@ -32,10 +35,12 @@ export function LevelPage({
   isOpen,
   isPinned,
   isResolving,
+  isSpoilerProtectionDisabled,
   items,
   onClose,
   onSelectItem,
   onTogglePinned,
+  onToggleSpoilerProtection,
 }: LevelPageProps) {
   const activeItem =
     items.find((item) => item.itemKey === activeItemKey) ?? items[0];
@@ -50,7 +55,11 @@ export function LevelPage({
               isResolving={isResolving}
             />
           ) : activeItem.kind === "pass" ? (
-            <PassDetailContainer item={activeItem} items={items} />
+            <PassDetailContainer
+              isSpoilerProtectionDisabled={isSpoilerProtectionDisabled}
+              item={activeItem}
+              items={items}
+            />
           ) : (
             <LevelDetailContainer item={activeItem} items={items} />
           )}
@@ -80,6 +89,10 @@ export function LevelPage({
             </div>
             <div className="flex shrink-0 items-center gap-1">
               <PinButton isPinned={isPinned} onClick={onTogglePinned} />
+              <SpoilerToggleButton
+                isDisabled={isSpoilerProtectionDisabled}
+                onClick={onToggleSpoilerProtection}
+              />
               <CloseButton onClick={onClose} />
             </div>
           </div>
@@ -106,9 +119,11 @@ function LevelDetailContainer({
 }
 
 function PassDetailContainer({
+  isSpoilerProtectionDisabled,
   item,
   items,
 }: {
+  isSpoilerProtectionDisabled: boolean;
   item: ResolvedPassContext;
   items: ResolvedTufContext[];
 }) {
@@ -118,7 +133,13 @@ function PassDetailContainer({
     passes,
   });
 
-  return <PassDetailView onRetry={retryActivePass} state={activeState} />;
+  return (
+    <PassDetailView
+      isSpoilerProtectionDisabled={isSpoilerProtectionDisabled}
+      onRetry={retryActivePass}
+      state={activeState}
+    />
+  );
 }
 
 function DrawerStatusView({

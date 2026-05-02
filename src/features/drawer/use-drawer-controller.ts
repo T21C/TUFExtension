@@ -7,10 +7,12 @@ interface UseDrawerControllerParams {
   isOpen: boolean;
   isPinned: boolean;
   isResolving: boolean;
+  isSpoilerProtectionDisabled: boolean;
   items: ResolvedTufContext[];
   onClose: () => void;
   onSelectItem: (itemKey: string) => void;
   onTogglePinned: () => void;
+  onToggleSpoilerProtection: () => void;
 }
 
 export function useDrawerController({
@@ -19,10 +21,12 @@ export function useDrawerController({
   isOpen,
   isPinned,
   isResolving,
+  isSpoilerProtectionDisabled,
   items,
   onClose,
   onSelectItem,
   onTogglePinned,
+  onToggleSpoilerProtection,
 }: UseDrawerControllerParams): UseDrawerControllerParams {
   const safeActiveItemKey = useMemo(() => {
     if (items.length === 0) {
@@ -42,9 +46,11 @@ export function useDrawerController({
     isOpen,
     isPinned,
     isResolving,
+    isSpoilerProtectionDisabled,
     items,
     onClose,
     onSelectItem,
     onTogglePinned,
+    onToggleSpoilerProtection,
   };
 }

@@ -8,10 +8,12 @@ interface DrawerRootProps {
   isOpen: boolean;
   isPinned: boolean;
   isResolving: boolean;
+  isSpoilerProtectionDisabled: boolean;
   items: ResolvedTufContext[];
   onClose: () => void;
   onSelectItem: (itemKey: string) => void;
   onTogglePinned: () => void;
+  onToggleSpoilerProtection: () => void;
 }
 
 export function DrawerRoot(props: DrawerRootProps) {
