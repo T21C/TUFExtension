@@ -12,8 +12,9 @@ export default defineConfig({
     plugins: [tailwindcss()],
   }),
   manifest: {
-    name: "TUFExtension",
-    description: "A browser extension for The Universal Forums.",
+    default_locale: "en",
+    name: "__MSG_extensionName__",
+    description: "__MSG_extensionDescription__",
     version: manifestVersion,
     version_name: packageJson.version,
     icons: {
@@ -38,5 +39,13 @@ export default defineConfig({
       "https://tuforums.com/*",
       "https://*.tuforums.com/*",
     ],
+    browser_specific_settings: {
+      gecko: {
+        id: "tufextension@tuforums.com",
+        data_collection_permissions: {
+          required: ["none"],
+        },
+      },
+    },
   },
 });

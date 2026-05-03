@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import type { PassPageData } from "~/domain/tuf/types";
 import { TufIcon } from "~/drawer/shared/level-icons";
 import { interactiveSurfaceClassName } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 
 interface PassAction {
   href: string;
@@ -24,22 +25,22 @@ export function PassActionStrip({
     {
       href: data.passUrl,
       icon: <PassIcon />,
-      label: "Open Pass in TUF",
+      label: t("openPassInTuf"),
     },
     data.pass.level.id
       ? {
           href: `https://tuforums.com/levels/${data.pass.level.id}`,
           icon: <TufIcon size={22} />,
-          label: "Open Level",
+          label: t("openLevel"),
         }
       : null,
   ];
   const actions = candidates.filter(isPassAction);
   const spoilerLabel = areSpoilersRevealed
-    ? "Hide all pass spoilers"
-    : "Reveal all pass spoilers";
+    ? t("hideAllPassSpoilers")
+    : t("revealAllPassSpoilers");
   const effectiveSpoilerLabel = isSpoilerProtectionDisabled
-    ? "Spoiler protection is disabled"
+    ? t("spoilerProtectionDisabled")
     : spoilerLabel;
 
   return (

@@ -6,12 +6,14 @@ import {
   formatDate,
   formatScore,
   formatSpeed,
+  isPerfectAccuracy,
 } from "~/drawer/shared/formatters";
 import { getPassMetric } from "./leaderboard-sort";
 import {
   interactiveSurfaceClassName,
   softGlowBorderStyle,
 } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 
 export function LeaderboardRow({
   index,
@@ -52,22 +54,30 @@ export function LeaderboardRow({
             ) : null}
           </div>
           <div className="truncate text-xs font-medium text-white/55">
-            Feeling: {pass.feelingRating ?? "-"}
+            {t("feeling")}: {pass.feelingRating ?? "-"}
           </div>
         </div>
       </div>
 
       <div className="relative mt-3 grid grid-cols-3 gap-2 text-sm text-white/70">
         <span>
-          <span className="text-white/45">Score: </span>
+          <span className="text-white/45">{t("score")}: </span>
           <b className="text-white">{formatScore(pass.score)}</b>
         </span>
         <span>
-          <span className="text-white/45">Acc: </span>
-          {formatAccuracy(pass.accuracy)}
+          <span className="text-white/45">{t("acc")}: </span>
+          <span
+            style={
+              isPerfectAccuracy(pass.accuracy)
+                ? { color: "#FFDA00" }
+                : undefined
+            }
+          >
+            {formatAccuracy(pass.accuracy)}
+          </span>
         </span>
         <span>
-          <span className="text-white/45">Speed: </span>
+          <span className="text-white/45">{t("speed")}: </span>
           {formatSpeed(pass.speed)}
         </span>
       </div>
@@ -107,7 +117,7 @@ export function LeaderboardRow({
           />
         </div>
         <a
-          aria-label={`${pass.playerName} pass page`}
+          aria-label={t("passPageForPlayer", pass.playerName)}
           className={[
             "grid h-8 w-8 shrink-0 place-items-center",
             interactiveSurfaceClassName,
@@ -121,10 +131,9 @@ export function LeaderboardRow({
         </a>
         {pass.videoLink ? (
           <a
-            aria-label={`${pass.playerName} clear video`}
+            aria-label={t("clearVideoForPlayer", pass.playerName)}
             className={[
-              "grid h-8 w-8 shrink-0 place-items-center",
-              interactiveSurfaceClassName,
+              "relative z-10 grid h-8 w-8 shrink-0 place-items-center rounded-md border border-white/20 bg-black/85 text-white shadow-[0_0_18px_rgba(255,255,255,0.1)] backdrop-blur-md transition hover:bg-black/70",
             ].join(" ")}
             href={pass.videoLink}
             rel="noreferrer"
@@ -139,7 +148,9 @@ export function LeaderboardRow({
       </div>
 
       <div className="relative mt-2 flex items-center justify-between gap-2 text-xs font-semibold text-white/60">
-        <span>Feeling: {pass.feelingRating ?? "-"}</span>
+        <span>
+          {t("feeling")}: {pass.feelingRating ?? "-"}
+        </span>
         <span>{pass.date ? formatDate(pass.date) : "-"}</span>
       </div>
     </div>

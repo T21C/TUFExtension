@@ -11,20 +11,21 @@ import type {
 } from "~/domain/tuf/types";
 import {
   formatAccuracy,
-  formatDate,
+  formatShortDate,
   formatScore,
   formatSpeed,
 } from "~/drawer/shared/formatters";
+import { getActiveLocale, t } from "~/platform/chrome/i18n";
 
 export const SORT_OPTIONS: Array<{
   icon: typeof CalendarIcon;
   key: LeaderboardSortKey;
-  label: string;
+  labelKey: string;
 }> = [
-  { icon: CalendarIcon, key: "TIME", label: "Clear date" },
-  { icon: PercentIcon, key: "ACC", label: "Accuracy" },
-  { icon: SpeedIcon, key: "SPEED", label: "Speed" },
-  { icon: ScoreIcon, key: "SCR", label: "Score" },
+  { icon: CalendarIcon, key: "TIME", labelKey: "clearDate" },
+  { icon: PercentIcon, key: "ACC", labelKey: "accuracy" },
+  { icon: SpeedIcon, key: "SPEED", labelKey: "speed" },
+  { icon: ScoreIcon, key: "SCR", labelKey: "score" },
 ];
 
 export function sortPasses(
@@ -55,7 +56,7 @@ export function sortPasses(
       return b.score - a.score;
     }
 
-    return a.playerName.localeCompare(b.playerName);
+    return a.playerName.localeCompare(b.playerName, getActiveLocale());
   });
 }
 
@@ -65,27 +66,27 @@ export function getPassMetric(
 ): { label: string; value: string } {
   if (sortKey === "TIME") {
     return {
-      label: "Date",
-      value: pass.date ? formatDate(pass.date).slice(5) : "-",
+      label: t("date"),
+      value: pass.date ? formatShortDate(pass.date) : "-",
     };
   }
 
   if (sortKey === "ACC") {
     return {
-      label: "Acc",
+      label: t("acc"),
       value: formatAccuracy(pass.accuracy),
     };
   }
 
   if (sortKey === "SPEED") {
     return {
-      label: "Speed",
+      label: t("speed"),
       value: formatSpeed(pass.speed),
     };
   }
 
   return {
-    label: "Score",
+    label: t("score"),
     value: formatScore(pass.score),
   };
 }

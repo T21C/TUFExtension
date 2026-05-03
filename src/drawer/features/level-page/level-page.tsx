@@ -1,6 +1,8 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CloseButton } from "~/drawer/components/close-button";
 import { DrawerShell } from "~/drawer/drawer-shell";
+import { DrawerControlsToggleButton } from "~/drawer/components/drawer-controls-toggle-button";
+import { LanguageToggleButton } from "~/drawer/components/language-toggle-button";
 import { PinButton } from "~/drawer/components/pin-button";
 import { SpoilerToggleButton } from "~/drawer/components/spoiler-toggle-button";
 import { useLevelPage } from "~/features/drawer/use-level-page";
@@ -14,6 +16,7 @@ import type {
   ResolvedTufContext,
 } from "~/domain/tuf/types";
 import { glowDividerStyle } from "~/drawer/shared/level-surface";
+import { t, type SupportedLanguage } from "~/platform/chrome/i18n";
 
 interface LevelPageProps {
   activeItemKey: string | null;
@@ -22,9 +25,11 @@ interface LevelPageProps {
   isPinned: boolean;
   isResolving: boolean;
   isSpoilerProtectionDisabled: boolean;
+  language: SupportedLanguage;
   items: ResolvedTufContext[];
   onClose: () => void;
   onSelectItem: (itemKey: string) => void;
+  onToggleLanguage: () => void;
   onTogglePinned: () => void;
   onToggleSpoilerProtection: () => void;
 }
@@ -36,12 +41,15 @@ export function LevelPage({
   isPinned,
   isResolving,
   isSpoilerProtectionDisabled,
+  language,
   items,
   onClose,
   onSelectItem,
+  onToggleLanguage,
   onTogglePinned,
   onToggleSpoilerProtection,
 }: LevelPageProps) {
+  const [areDrawerControlsOpen, setAreDrawerControlsOpen] = useState(false);
   const activeItem =
     items.find((item) => item.itemKey === activeItemKey) ?? items[0];
 
@@ -65,7 +73,7 @@ export function LevelPage({
           )}
         </main>
         <nav
-          aria-label="TUF drawer navigation"
+          aria-label={t("drawerNavigation")}
           className="absolute left-0 right-0 top-0 z-10 w-auto overflow-visible bg-[#08030f]/95 font-medium text-white shadow-[0_8px_24px_rgba(0,0,0,0.28)]"
         >
           <div
@@ -83,16 +91,35 @@ export function LevelPage({
                 />
               ) : (
                 <div className="px-1 text-xs font-bold text-white/35">
-                  TUFExtension
+                  {t("tufExtension")}
                 </div>
               )}
             </div>
             <div className="flex shrink-0 items-center gap-1">
-              <PinButton isPinned={isPinned} onClick={onTogglePinned} />
-              <SpoilerToggleButton
-                isDisabled={isSpoilerProtectionDisabled}
-                onClick={onToggleSpoilerProtection}
-              />
+              <div className="flex items-center">
+                <div
+                  className={[
+                    "flex items-center gap-1 overflow-hidden transition-all duration-200",
+                    areDrawerControlsOpen
+                      ? "mr-1 w-32 opacity-100"
+                      : "w-0 opacity-0",
+                  ].join(" ")}
+                >
+                  <PinButton isPinned={isPinned} onClick={onTogglePinned} />
+                  <LanguageToggleButton
+                    language={language}
+                    onClick={onToggleLanguage}
+                  />
+                  <SpoilerToggleButton
+                    isDisabled={isSpoilerProtectionDisabled}
+                    onClick={onToggleSpoilerProtection}
+                  />
+                </div>
+                <DrawerControlsToggleButton
+                  isOpen={areDrawerControlsOpen}
+                  onClick={() => setAreDrawerControlsOpen((isOpen) => !isOpen)}
+                />
+              </div>
               <CloseButton onClick={onClose} />
             </div>
           </div>
@@ -153,16 +180,16 @@ function DrawerStatusView({
     <section className="grid flex-1 place-items-center px-4 py-8 text-center">
       <div className="flex max-w-sm flex-col items-center justify-center">
         <p className="text-xs font-black uppercase tracking-[0.24em] text-violet-200/60">
-          {isResolving ? "Refreshing" : "No result"}
+          {isResolving ? t("refreshing") : t("noResult")}
         </p>
         <h2 className="mt-2 text-xl font-black text-white">
-          {isResolving ? "Looking for TUF data" : "No TUF result"}
+          {isResolving ? t("lookingForTufData") : t("noTufResult")}
         </h2>
         <p className="mt-2 text-sm font-semibold text-white/45">
           {description ??
             (isResolving
-              ? "The drawer is pinned, so it will update as soon as this video resolves."
-              : "This video does not have a matched TUF level or pass.")}
+              ? t("pinnedRefreshDescription")
+              : t("noMatchedResultDescription"))}
         </p>
       </div>
     </section>

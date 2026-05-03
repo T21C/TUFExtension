@@ -1,3 +1,5 @@
+import { t } from "~/platform/chrome/i18n";
+
 interface SpoilerToggleButtonProps {
   isDisabled: boolean;
   onClick: () => void;
@@ -8,8 +10,8 @@ export function SpoilerToggleButton({
   onClick,
 }: SpoilerToggleButtonProps) {
   const label = isDisabled
-    ? "Enable spoiler protection"
-    : "Disable spoiler protection";
+    ? t("spoilerProtectionEnable")
+    : t("spoilerProtectionDisable");
 
   return (
     <button

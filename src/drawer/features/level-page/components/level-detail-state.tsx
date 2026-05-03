@@ -2,6 +2,7 @@ import {
   glowDividerStyle,
   panelSurfaceClassName,
 } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 
 export function LevelDetailSkeleton() {
   return (
@@ -34,16 +35,16 @@ export function LevelDetailError({
           className="mb-4 h-px"
           style={glowDividerStyle}
         />
-        <h2 className="text-2xl font-extrabold">Could not load level</h2>
+        <h2 className="text-2xl font-extrabold">{t("couldNotLoadLevel")}</h2>
         <p className="mt-2 text-sm font-medium text-white/60">
-          {message ?? "The TUF API did not return a readable response."}
+          {message ?? t("levelApiUnreadable")}
         </p>
         <button
           className="mt-5 rounded bg-[#5339b2] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#674ce0]"
           onClick={onRetry}
           type="button"
         >
-          Retry
+          {t("retry")}
         </button>
       </div>
     </div>

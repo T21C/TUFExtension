@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { ResolvedTufContext } from "~/domain/tuf/types";
+import type { SupportedLanguage } from "~/platform/chrome/i18n";
 
 interface UseDrawerControllerParams {
   activeItemKey: string | null;
@@ -8,9 +9,11 @@ interface UseDrawerControllerParams {
   isPinned: boolean;
   isResolving: boolean;
   isSpoilerProtectionDisabled: boolean;
+  language: SupportedLanguage;
   items: ResolvedTufContext[];
   onClose: () => void;
   onSelectItem: (itemKey: string) => void;
+  onToggleLanguage: () => void;
   onTogglePinned: () => void;
   onToggleSpoilerProtection: () => void;
 }
@@ -22,9 +25,11 @@ export function useDrawerController({
   isPinned,
   isResolving,
   isSpoilerProtectionDisabled,
+  language,
   items,
   onClose,
   onSelectItem,
+  onToggleLanguage,
   onTogglePinned,
   onToggleSpoilerProtection,
 }: UseDrawerControllerParams): UseDrawerControllerParams {
@@ -47,9 +52,11 @@ export function useDrawerController({
     isPinned,
     isResolving,
     isSpoilerProtectionDisabled,
+    language,
     items,
     onClose,
     onSelectItem,
+    onToggleLanguage,
     onTogglePinned,
     onToggleSpoilerProtection,
   };

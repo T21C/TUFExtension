@@ -1,10 +1,15 @@
 import type { PassDetail } from "~/domain/tuf/types";
-import { countryToEmoji, formatScore } from "~/drawer/shared/formatters";
+import {
+  countryToEmoji,
+  formatNumber,
+  formatScore,
+} from "~/drawer/shared/formatters";
 import {
   glowDividerStyle,
   panelSurfaceClassName,
   softGlowBorderStyle,
 } from "~/drawer/shared/level-surface";
+import { t } from "~/platform/chrome/i18n";
 import { SpoilerSection, SpoilerText } from "./spoiler-text";
 
 export function PassPlayerCard({ pass }: { pass: PassDetail }) {
@@ -41,7 +46,7 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             />
           ) : null}
         </div>
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 max-w-[12rem] shrink">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className="truncate text-lg font-black text-white">
               {pass.player.name}
@@ -55,12 +60,13 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
           <p className="truncate text-xs font-bold text-white/45">
             {pass.player.discordUsername
               ? `@${pass.player.discordUsername}`
-              : "TUF player"}
+              : t("tufPlayer")}
           </p>
         </div>
+        <PlayerScoreSummary pass={pass} />
         {typeof pass.player.rankedScoreRank === "number" ? (
           <span
-            className="rounded-md px-2 py-1 text-xs font-black"
+            className="ml-auto rounded-md px-2 py-1 text-xs font-black"
             style={{
               backgroundColor: `${rankColor}24`,
               color: rankColor,
@@ -75,16 +81,73 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
 
       <SpoilerSection>
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <InfoLine isSpoiler label="Score" value={formatScore(pass.score)} />
           <InfoLine
             isSpoiler
-            label="Feeling"
-            value={pass.feelingRating ?? "None"}
+            label={t("score")}
+            value={formatScore(pass.score)}
+          />
+          <InfoLine
+            isSpoiler
+            label={t("feeling")}
+            value={pass.feelingRating ?? t("none")}
           />
         </div>
         <PassFlags pass={pass} />
       </SpoilerSection>
     </section>
+  );
+}
+
+function PlayerScoreSummary({ pass }: { pass: PassDetail }) {
+  const rankedScore = pass.scoreInfo?.currentRankedScore;
+  const impact = pass.scoreInfo?.impact;
+
+  if (typeof rankedScore !== "number" && typeof impact !== "number") {
+    return null;
+  }
+
+  return (
+    <div className="flex min-w-0 shrink-0 items-center justify-start gap-1">
+      {typeof rankedScore === "number" ? (
+        <ProfileMetric value={formatNumber(rankedScore)} variant="ranked" />
+      ) : null}
+      {typeof impact === "number" ? (
+        <ProfileMetric value={formatImpact(impact)} />
+      ) : null}
+    </div>
+  );
+}
+
+function ProfileMetric({
+  value,
+  variant = "impact",
+}: {
+  value: string;
+  variant?: "impact" | "ranked";
+}) {
+  const isImpact = variant === "impact";
+
+  return (
+    <div
+      className={[
+        "min-w-0 rounded-md border px-2 py-1 text-right shadow-[0_0_14px_rgba(0,0,0,0.22)] backdrop-blur-md",
+        isImpact
+          ? "border-emerald-300/15 bg-emerald-400/18"
+          : "border-violet-300/15 bg-black/30",
+      ].join(" ")}
+    >
+      <SpoilerText
+        as="p"
+        className={[
+          "min-w-0 truncate font-black leading-none tabular-nums",
+          isImpact
+            ? "text-xs text-emerald-300 drop-shadow-[0_0_8px_rgba(74,222,128,0.55)]"
+            : "text-md text-violet-100",
+        ].join(" ")}
+      >
+        {value}
+      </SpoilerText>
+    </div>
   );
 }
 
@@ -142,6 +205,14 @@ function InfoLine({
   );
 }
 
+function formatImpact(impact: number): string {
+  if (impact === 0) {
+    return "-";
+  }
+
+  return `${impact > 0 ? "+" : ""}${formatNumber(impact)}`;
+}
+
 function getRankColor(rank: number | undefined): string {
   switch (rank) {
     case 1:
@@ -158,22 +229,22 @@ function getRankColor(rank: number | undefined): string {
 function getFlags(pass: PassDetail): string[] {
   const flags: string[] = [];
   if (pass.isWorldsFirst) {
-    flags.push("World's First");
+    flags.push(t("worldsFirst"));
   }
   if (pass.is12K) {
-    flags.push("12K");
+    flags.push(t("twelveK"));
   }
   if (pass.is16K) {
-    flags.push("16K");
+    flags.push(t("sixteenK"));
   }
   if (pass.isNoHoldTap) {
-    flags.push("No Hold Tap");
+    flags.push(t("noHoldTap"));
   }
   if (pass.isHidden) {
-    flags.push("Hidden");
+    flags.push(t("hidden"));
   }
   if (pass.isDeleted) {
-    flags.push("Deleted");
+    flags.push(t("deleted"));
   }
   return flags;
 }

@@ -1,6 +1,7 @@
 import { useDrawerController } from "~/features/drawer/use-drawer-controller";
 import { LevelPage } from "./features/level-page/level-page";
 import type { ResolvedTufContext } from "~/domain/tuf/types";
+import type { SupportedLanguage } from "~/platform/chrome/i18n";
 
 interface DrawerRootProps {
   activeItemKey: string | null;
@@ -9,9 +10,11 @@ interface DrawerRootProps {
   isPinned: boolean;
   isResolving: boolean;
   isSpoilerProtectionDisabled: boolean;
+  language: SupportedLanguage;
   items: ResolvedTufContext[];
   onClose: () => void;
   onSelectItem: (itemKey: string) => void;
+  onToggleLanguage: () => void;
   onTogglePinned: () => void;
   onToggleSpoilerProtection: () => void;
 }

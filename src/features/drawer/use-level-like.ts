@@ -5,6 +5,7 @@ import {
   type OpenTufLoginResult,
   type SetLevelLikeResult,
 } from "~/platform/chrome/runtime-message";
+import { t } from "~/platform/chrome/i18n";
 import type { AuthStatus, AuthUser } from "~/domain/tuf/types";
 
 interface UseLevelLikeParams {
@@ -57,7 +58,7 @@ export function useLevelLike({
 
       if (!response?.state) {
         setAuthStatus("error");
-        setError(response?.error ?? "Failed to load TUF login state.");
+        setError(response?.error ?? t("failedLoadLoginState"));
         return;
       }
 
@@ -115,7 +116,7 @@ export function useLevelLike({
             typeof response.liked !== "boolean"
           ) {
             setAuthStatus(response?.error ? "error" : authStatus);
-            setError(response?.error ?? "Failed to update like.");
+            setError(response?.error ?? t("failedUpdateLike"));
             return;
           }
 
