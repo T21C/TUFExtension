@@ -11,21 +11,21 @@ import type {
 } from "~/domain/tuf/types";
 import {
   formatAccuracy,
-  formatDate,
+  formatShortDate,
   formatScore,
   formatSpeed,
 } from "~/drawer/shared/formatters";
-import { t } from "~/platform/chrome/i18n";
+import { getActiveLocale, t } from "~/platform/chrome/i18n";
 
 export const SORT_OPTIONS: Array<{
   icon: typeof CalendarIcon;
   key: LeaderboardSortKey;
-  label: string;
+  labelKey: string;
 }> = [
-  { icon: CalendarIcon, key: "TIME", label: t("clearDate") },
-  { icon: PercentIcon, key: "ACC", label: t("accuracy") },
-  { icon: SpeedIcon, key: "SPEED", label: t("speed") },
-  { icon: ScoreIcon, key: "SCR", label: t("score") },
+  { icon: CalendarIcon, key: "TIME", labelKey: "clearDate" },
+  { icon: PercentIcon, key: "ACC", labelKey: "accuracy" },
+  { icon: SpeedIcon, key: "SPEED", labelKey: "speed" },
+  { icon: ScoreIcon, key: "SCR", labelKey: "score" },
 ];
 
 export function sortPasses(
@@ -56,7 +56,7 @@ export function sortPasses(
       return b.score - a.score;
     }
 
-    return a.playerName.localeCompare(b.playerName);
+    return a.playerName.localeCompare(b.playerName, getActiveLocale());
   });
 }
 
@@ -67,7 +67,7 @@ export function getPassMetric(
   if (sortKey === "TIME") {
     return {
       label: t("date"),
-      value: pass.date ? formatDate(pass.date).slice(5) : "-",
+      value: pass.date ? formatShortDate(pass.date) : "-",
     };
   }
 

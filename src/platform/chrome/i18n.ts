@@ -38,6 +38,18 @@ export function getActiveLanguage(): SupportedLanguage {
   return activeLanguage;
 }
 
+export function getActiveLocale(): string {
+  if (activeLanguage === "ko") {
+    return "ko-KR";
+  }
+
+  if (activeLanguage === "zh_CN") {
+    return "zh-CN";
+  }
+
+  return "en-US";
+}
+
 export function getNextLanguage(): SupportedLanguage {
   return getNextLanguageFrom(activeLanguage);
 }

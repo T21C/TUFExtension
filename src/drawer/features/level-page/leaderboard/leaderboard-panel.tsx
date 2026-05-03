@@ -70,10 +70,11 @@ export function LeaderboardPanel({
                 {SORT_OPTIONS.map((option) => {
                   const Icon = option.icon;
                   const isActive = option.key === sortKey;
+                  const label = t(option.labelKey);
 
                   return (
                     <button
-                      aria-label={t("sortByLabel", option.label)}
+                      aria-label={t("sortByLabel", label)}
                       aria-pressed={isActive}
                       className={[
                         "relative grid h-8 w-8 place-items-center rounded border text-white shadow-[0_0_12px_rgba(139,0,255,0.16)] backdrop-blur-md transition",
@@ -84,7 +85,7 @@ export function LeaderboardPanel({
                       key={option.key}
                       onClick={() => onSort(option.key)}
                       title={t("sortTitle", [
-                        option.label,
+                        label,
                         sortDirection === "desc"
                           ? t("sortDescending")
                           : t("sortAscending"),
