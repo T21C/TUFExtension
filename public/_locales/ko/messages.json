@@ -6,31 +6,31 @@
     "message": "The Universal Forums용 브라우저 확장 프로그램입니다."
   },
   "drawerClose": {
-    "message": "TUF drawer 닫기"
+    "message": "TUF 패널 닫기"
   },
   "drawerCloseTitle": {
     "message": "닫기"
   },
   "drawerPin": {
-    "message": "TUF drawer 고정"
+    "message": "TUF 패널 고정"
   },
   "drawerUnpin": {
-    "message": "TUF drawer 고정 해제"
+    "message": "TUF 패널 고정 해제"
   },
   "drawerPinTitle": {
-    "message": "drawer 고정"
+    "message": "패널 고정"
   },
   "drawerUnpinTitle": {
-    "message": "drawer 고정 해제"
+    "message": "패널 고정 해제"
   },
   "drawerNavigation": {
-    "message": "TUF drawer 내비게이션"
+    "message": "TUF 패널 내비게이션"
   },
   "drawerControlsExpand": {
-    "message": "drawer 컨트롤 펼치기"
+    "message": "패널 컨트롤 펼치기"
   },
   "drawerControlsCollapse": {
-    "message": "drawer 컨트롤 접기"
+    "message": "패널 컨트롤 접기"
   },
   "spoilerProtectionEnable": {
     "message": "스포일러 보호 켜기"
@@ -107,7 +107,7 @@
     "message": "TUF 결과 없음"
   },
   "pinnedRefreshDescription": {
-    "message": "drawer가 고정되어 있어 영상이 확인되는 즉시 내용이 갱신됩니다."
+    "message": "패널이 고정되어 있어 영상이 확인되는 즉시 내용이 갱신됩니다."
   },
   "noMatchedResultDescription": {
     "message": "이 영상에 매칭된 TUF 레벨 또는 클리어가 없습니다."
@@ -122,10 +122,10 @@
     "message": "TUF에서 열기"
   },
   "openWorkshop": {
-    "message": "Workshop 열기"
+    "message": "창작마당 열기"
   },
   "workshopUnavailable": {
-    "message": "Workshop 없음"
+    "message": "창작마당 없음"
   },
   "loginToLikeLevel": {
     "message": "좋아요를 누르려면 TUF에 로그인하세요"
@@ -227,8 +227,8 @@
       }
     }
   },
-  "passedClear": {
-    "message": "인증된 클리어"
+  "levelClear": {
+    "message": "레벨 클리어"
   },
   "passDataUnavailable": {
     "message": "클리어 데이터 없음"
@@ -288,22 +288,22 @@
     "message": "매우 빠름"
   },
   "early": {
-    "message": "빠름"
+    "message": "빠름!"
   },
   "ePerfect": {
-    "message": "E-Perfect"
+    "message": "빠름"
   },
   "perfect": {
-    "message": "Perfect"
+    "message": "정확"
   },
   "lPerfect": {
-    "message": "L-Perfect"
+    "message": "느림"
   },
   "late": {
-    "message": "늦음"
+    "message": "느림!"
   },
   "tooLate": {
-    "message": "매우 늦음"
+    "message": "매우 느림"
   },
   "clickToReveal": {
     "message": "클릭해서 보기"

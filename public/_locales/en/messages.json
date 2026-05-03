@@ -6,31 +6,31 @@
     "message": "A browser extension for The Universal Forums."
   },
   "drawerClose": {
-    "message": "Close TUF drawer"
+    "message": "Close TUF panel"
   },
   "drawerCloseTitle": {
     "message": "Close"
   },
   "drawerPin": {
-    "message": "Pin TUF drawer"
+    "message": "Pin TUF panel"
   },
   "drawerUnpin": {
-    "message": "Unpin TUF drawer"
+    "message": "Unpin TUF panel"
   },
   "drawerPinTitle": {
-    "message": "Pin drawer"
+    "message": "Pin panel"
   },
   "drawerUnpinTitle": {
-    "message": "Unpin drawer"
+    "message": "Unpin panel"
   },
   "drawerNavigation": {
-    "message": "TUF drawer navigation"
+    "message": "TUF panel navigation"
   },
   "drawerControlsExpand": {
-    "message": "Show drawer controls"
+    "message": "Show panel controls"
   },
   "drawerControlsCollapse": {
-    "message": "Hide drawer controls"
+    "message": "Hide panel controls"
   },
   "spoilerProtectionEnable": {
     "message": "Enable spoiler protection"
@@ -107,7 +107,7 @@
     "message": "No TUF result"
   },
   "pinnedRefreshDescription": {
-    "message": "The drawer is pinned, so it will update as soon as this video resolves."
+    "message": "Panel pinned, refreshing data with video updates."
   },
   "noMatchedResultDescription": {
     "message": "This video does not have a matched TUF level or pass."
@@ -227,8 +227,8 @@
       }
     }
   },
-  "passedClear": {
-    "message": "Passed Clear"
+  "levelClear": {
+    "message": "Level Clear"
   },
   "passDataUnavailable": {
     "message": "Pass data unavailable"
@@ -291,13 +291,13 @@
     "message": "Early"
   },
   "ePerfect": {
-    "message": "E-Perfect"
+    "message": "EPerfect"
   },
   "perfect": {
     "message": "Perfect"
   },
   "lPerfect": {
-    "message": "L-Perfect"
+    "message": "LPerfect"
   },
   "late": {
     "message": "Late"

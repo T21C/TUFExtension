@@ -6,31 +6,31 @@
     "message": "The Universal Forums 的浏览器扩展。"
   },
   "drawerClose": {
-    "message": "关闭 TUF 抽屉"
+    "message": "关闭 TUF 面板"
   },
   "drawerCloseTitle": {
     "message": "关闭"
   },
   "drawerPin": {
-    "message": "固定 TUF 抽屉"
+    "message": "固定 TUF 面板"
   },
   "drawerUnpin": {
-    "message": "取消固定 TUF 抽屉"
+    "message": "取消固定 TUF 面板"
   },
   "drawerPinTitle": {
-    "message": "固定抽屉"
+    "message": "固定面板"
   },
   "drawerUnpinTitle": {
-    "message": "取消固定抽屉"
+    "message": "取消固定面板"
   },
   "drawerNavigation": {
-    "message": "TUF 抽屉导航"
+    "message": "TUF 面板导航"
   },
   "drawerControlsExpand": {
-    "message": "展开抽屉控制"
+    "message": "展开面板控件"
   },
   "drawerControlsCollapse": {
-    "message": "收起抽屉控制"
+    "message": "收起面板控件"
   },
   "spoilerProtectionEnable": {
     "message": "启用剧透保护"
@@ -74,28 +74,28 @@
     "message": "下载不可用"
   },
   "failedLoadLevelData": {
-    "message": "加载关卡数据失败。"
+    "message": "关卡数据加载失败。"
   },
   "failedLoadPassData": {
-    "message": "加载通关数据失败。"
+    "message": "通关数据加载失败。"
   },
   "failedLoadLoginState": {
-    "message": "加载 TUF 登录状态失败。"
+    "message": "TUF 登录状态加载失败。"
   },
   "failedUpdateLike": {
-    "message": "更新点赞失败。"
+    "message": "点赞更新失败。"
   },
   "checkingTufLogin": {
-    "message": "正在检查 TUF 登录"
+    "message": "正在检查 TUF 登录状态"
   },
   "updatingLike": {
     "message": "正在更新点赞"
   },
   "couldNotCheckTufLogin": {
-    "message": "无法检查 TUF 登录"
+    "message": "无法检查 TUF 登录状态"
   },
   "refreshing": {
-    "message": "刷新中"
+    "message": "正在刷新"
   },
   "noResult": {
     "message": "无结果"
@@ -104,10 +104,10 @@
     "message": "正在查找 TUF 数据"
   },
   "noTufResult": {
-    "message": "没有 TUF 结果"
+    "message": "无 TUF 结果"
   },
   "pinnedRefreshDescription": {
-    "message": "抽屉已固定，视频解析完成后会立即更新。"
+    "message": "侧边栏已固定，视频解析完成后将自动更新。"
   },
   "noMatchedResultDescription": {
     "message": "此视频没有匹配的 TUF 关卡或通关记录。"
@@ -122,13 +122,13 @@
     "message": "在 TUF 中打开"
   },
   "openWorkshop": {
-    "message": "打开 Workshop"
+    "message": "打开创意工坊"
   },
   "workshopUnavailable": {
-    "message": "Workshop 不可用"
+    "message": "创意工坊不可用"
   },
   "loginToLikeLevel": {
-    "message": "登录 TUF 后才能点赞此关卡"
+    "message": "登录 TUF 以点赞此关卡"
   },
   "unlikeLevel": {
     "message": "取消点赞此关卡"
@@ -137,13 +137,13 @@
     "message": "点赞此关卡"
   },
   "likes": {
-    "message": "点赞"
+    "message": "点赞数"
   },
   "downloads": {
-    "message": "下载"
+    "message": "下载数"
   },
   "clears": {
-    "message": "通关"
+    "message": "通关数"
   },
   "noClearsYet": {
     "message": "暂无通关记录"
@@ -227,14 +227,14 @@
       }
     }
   },
-  "passedClear": {
-    "message": "已认证通关"
+  "levelClear": {
+    "message": "关卡通关"
   },
   "passDataUnavailable": {
     "message": "通关数据不可用"
   },
   "unknownCredits": {
-    "message": "未知制作信息"
+    "message": "未知创作者"
   },
   "tufPlayer": {
     "message": "TUF 玩家"
@@ -243,7 +243,7 @@
     "message": "无"
   },
   "worldsFirst": {
-    "message": "World's First"
+    "message": "世界首通"
   },
   "twelveK": {
     "message": "12K"
@@ -252,16 +252,16 @@
     "message": "16K"
   },
   "noHoldTap": {
-    "message": "No Hold Tap"
+    "message": "无需长按"
   },
   "hidden": {
-    "message": "隐藏"
+    "message": "已隐藏"
   },
   "deleted": {
     "message": "已删除"
   },
   "openPassInTuf": {
-    "message": "在 TUF 中打开通关"
+    "message": "在 TUF 中打开通关记录"
   },
   "openLevel": {
     "message": "打开关卡"
@@ -279,31 +279,31 @@
     "message": "此通关记录已被隐藏。"
   },
   "judgements": {
-    "message": "判定"
+    "message": "判定详情"
   },
   "clearDetails": {
     "message": "通关详情"
   },
   "tooEarly": {
-    "message": "过早"
+    "message": "Too Early"
   },
   "early": {
-    "message": "偏早"
+    "message": "Early"
   },
   "ePerfect": {
-    "message": "E-Perfect"
+    "message": "EPerfect"
   },
   "perfect": {
     "message": "Perfect"
   },
   "lPerfect": {
-    "message": "L-Perfect"
+    "message": "LPerfect"
   },
   "late": {
-    "message": "偏晚"
+    "message": "Late"
   },
   "tooLate": {
-    "message": "过晚"
+    "message": "Too Late"
   },
   "clickToReveal": {
     "message": "点击显示"

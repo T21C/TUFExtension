@@ -65,7 +65,7 @@ export function PassHero({ data }: { data: PassPageData }) {
 
         <div className="min-w-0 flex-1 pt-1">
           <p className="text-xs font-black uppercase tracking-[0.14em] text-violet-200/55">
-            {t("passedClear")}
+            {t("levelClear")}
           </p>
           <h1 className="mt-1 break-words text-3xl font-black leading-[0.98] text-white drop-shadow-[0_3px_8px_rgba(0,0,0,0.55)]">
             {pass.level.song}
