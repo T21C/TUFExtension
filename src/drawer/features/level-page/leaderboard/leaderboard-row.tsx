@@ -13,6 +13,7 @@ import {
   interactiveSurfaceClassName,
   softGlowBorderStyle,
 } from "~/drawer/shared/level-surface";
+import { JudgementStrip } from "~/drawer/shared/judgement-strip";
 import { t } from "~/platform/chrome/i18n";
 
 export function LeaderboardRow({
@@ -83,39 +84,7 @@ export function LeaderboardRow({
       </div>
 
       <div className="relative mt-3 grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2">
-        <div
-          className="grid min-h-9 grid-cols-7 items-center rounded border bg-black/35 px-1 py-1 text-md font-medium tabular-nums backdrop-blur-md"
-          style={softGlowBorderStyle}
-        >
-          <JudgementValue
-            className="text-red-500"
-            value={pass.judgements.earlyDouble}
-          />
-          <JudgementValue
-            className="text-orange-400"
-            value={pass.judgements.earlySingle}
-          />
-          <JudgementValue
-            className="text-yellow-300"
-            value={pass.judgements.ePerfect}
-          />
-          <JudgementValue
-            className="text-lime-300"
-            value={pass.judgements.perfect}
-          />
-          <JudgementValue
-            className="text-yellow-300"
-            value={pass.judgements.lPerfect}
-          />
-          <JudgementValue
-            className="text-orange-400"
-            value={pass.judgements.lateSingle}
-          />
-          <JudgementValue
-            className="text-red-500"
-            value={pass.judgements.lateDouble}
-          />
-        </div>
+        <JudgementStrip judgements={pass.judgements} />
         <a
           aria-label={t("passPageForPlayer", pass.playerName)}
           className={[
@@ -154,24 +123,5 @@ export function LeaderboardRow({
         <span>{pass.date ? formatDate(pass.date) : "-"}</span>
       </div>
     </div>
-  );
-}
-
-function JudgementValue({
-  className,
-  value,
-}: {
-  className: string;
-  value: number;
-}) {
-  return (
-    <span
-      className={[
-        "grid min-h-6 min-w-0 place-items-center leading-none",
-        className,
-      ].join(" ")}
-    >
-      {value}
-    </span>
   );
 }
