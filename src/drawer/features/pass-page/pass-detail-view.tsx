@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { PassPageData, PassPageLoadState } from "~/domain/tuf/types";
 import { PassActionStrip } from "./components/pass-action-strip";
 import {
@@ -48,6 +48,17 @@ function LoadedPassDetail({
   const [hideAllVersion, setHideAllVersion] = useState(0);
   const [revealAllVersion, setRevealAllVersion] = useState(0);
   const [areSpoilersRevealed, setAreSpoilersRevealed] = useState(false);
+  const previousProtectionDisabledRef = useRef(isSpoilerProtectionDisabled);
+
+  useLayoutEffect(() => {
+    const wasProtectionDisabled = previousProtectionDisabledRef.current;
+    previousProtectionDisabledRef.current = isSpoilerProtectionDisabled;
+
+    if (wasProtectionDisabled && !isSpoilerProtectionDisabled) {
+      setAreSpoilersRevealed(false);
+      setHideAllVersion((value) => value + 1);
+    }
+  }, [isSpoilerProtectionDisabled]);
 
   function toggleSpoilers() {
     if (areSpoilersRevealed) {
