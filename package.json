@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prepare:twemoji": "node scripts/copy-twemoji-flags.mjs",
+    "prepare:twemoji": "bun scripts/copy-twemoji-flags.ts",
     "dev": "bun run prepare:twemoji && wxt",
     "dev:firefox": "bun run prepare:twemoji && wxt -b firefox",
     "build": "bun run prepare:twemoji && wxt build",
