@@ -39,6 +39,12 @@ export default defineConfig({
       "https://tuforums.com/*",
       "https://*.tuforums.com/*",
     ],
+    web_accessible_resources: [
+      {
+        resources: ["fonts/*", "twemoji/flags/*.svg"],
+        matches: ["https://www.youtube.com/*", "https://www.bilibili.com/*"],
+      },
+    ],
     browser_specific_settings: {
       gecko: {
         id: "tufextension@tuforums.com",

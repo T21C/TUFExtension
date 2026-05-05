@@ -1,7 +1,7 @@
 import { FlagIcon, YoutubeIcon } from "~/drawer/shared/level-icons";
 import type { LeaderboardSortKey, LevelPass } from "~/domain/tuf/types";
+import { CountryFlag } from "~/drawer/shared/country-flag";
 import {
-  countryToEmoji,
   formatAccuracy,
   formatDate,
   formatScore,
@@ -49,9 +49,10 @@ export function LeaderboardRow({
               {pass.playerName}
             </span>
             {pass.country ? (
-              <span className="shrink-0 text-sm">
-                {countryToEmoji(pass.country)}
-              </span>
+              <CountryFlag
+                className="h-4 w-4 shrink-0"
+                country={pass.country}
+              />
             ) : null}
           </div>
           <div className="truncate text-xs font-medium text-white/55">

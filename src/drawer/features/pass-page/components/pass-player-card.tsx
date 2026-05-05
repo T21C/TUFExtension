@@ -1,9 +1,6 @@
 import type { PassDetail } from "~/domain/tuf/types";
-import {
-  countryToEmoji,
-  formatNumber,
-  formatScore,
-} from "~/drawer/shared/formatters";
+import { CountryFlag } from "~/drawer/shared/country-flag";
+import { formatNumber, formatScore } from "~/drawer/shared/formatters";
 import {
   glowDividerStyle,
   panelSurfaceClassName,
@@ -42,9 +39,10 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             {pass.player.name}
           </h2>
           {pass.player.country ? (
-            <span className="text-sm">
-              {countryToEmoji(pass.player.country)}
-            </span>
+            <CountryFlag
+              className="h-4 w-4 shrink-0"
+              country={pass.player.country}
+            />
           ) : null}
         </div>
         <p className="truncate text-xs font-bold text-white/45">

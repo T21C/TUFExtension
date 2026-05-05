@@ -140,3 +140,5 @@ Branch naming and commit message conventions are documented in [CONTRIBUTING.md]
 All code in this repository is licensed under GNU GPL. Please refer to [LICENSE](./LICENSE).
 
 This repository distributes [Pretendard](https://github.com/orioncactus/pretendard) by Kil Hyung-jin, licensed under the SIL Open Font License. Please refer to [public/fonts/LICENSE.txt](./public/fonts/LICENSE.txt).
+
+This repository includes optimized [Twemoji](https://github.com/jdecked/twemoji) SVG flag assets from [@twemoji/svg](https://www.npmjs.com/package/@twemoji/svg), licensed under the MIT License. Please refer to [public/twemoji/LICENSE.txt](./public/twemoji/LICENSE.txt).
