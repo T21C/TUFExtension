@@ -49,7 +49,7 @@ export function LevelPage({
   onTogglePinned,
   onToggleSpoilerProtection,
 }: LevelPageProps) {
-  const [areDrawerControlsOpen, setAreDrawerControlsOpen] = useState(false);
+  const [areDrawerControlsOpen, setAreDrawerControlsOpen] = useState(true);
   const activeItem =
     items.find((item) => item.itemKey === activeItemKey) ?? items[0];
 
