@@ -1,9 +1,6 @@
 import type { PassDetail } from "~/domain/tuf/types";
-import {
-  countryToEmoji,
-  formatNumber,
-  formatScore,
-} from "~/drawer/shared/formatters";
+import { CountryFlag } from "~/drawer/shared/country-flag";
+import { formatNumber, formatScore } from "~/drawer/shared/formatters";
 import {
   glowDividerStyle,
   panelSurfaceClassName,
@@ -19,50 +16,62 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
     (pass.player.id
       ? `https://tuforums.com/profile/${pass.player.id}`
       : undefined);
-  const PlayerHeader = playerProfileUrl ? "a" : "div";
+  const profileIdentityClassName = [
+    "flex min-w-0 shrink items-center gap-3 rounded-lg",
+    playerProfileUrl
+      ? "transition hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-300"
+      : "",
+  ].join(" ");
+  const profileIdentity = (
+    <>
+      <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-black/35">
+        {pass.player.avatarUrl ? (
+          <img
+            alt={pass.player.name}
+            className="h-full w-full object-cover"
+            src={pass.player.avatarUrl}
+          />
+        ) : null}
+      </div>
+      <div className="min-w-0 max-w-[12rem] shrink">
+        <div className="flex min-w-0 items-center gap-2">
+          <h2 className="truncate text-lg font-black text-white">
+            {pass.player.name}
+          </h2>
+          {pass.player.country ? (
+            <CountryFlag
+              className="h-4 w-4 shrink-0"
+              country={pass.player.country}
+            />
+          ) : null}
+        </div>
+        <p className="truncate text-xs font-bold text-white/45">
+          {pass.player.discordUsername
+            ? `@${pass.player.discordUsername}`
+            : t("tufPlayer")}
+        </p>
+      </div>
+    </>
+  );
 
   return (
     <section
       className={`${panelSurfaceClassName} p-3`}
       style={softGlowBorderStyle}
     >
-      <PlayerHeader
-        className={[
-          "flex items-center gap-3 rounded-lg",
-          playerProfileUrl
-            ? "transition hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-violet-300"
-            : "",
-        ].join(" ")}
-        href={playerProfileUrl}
-        rel={playerProfileUrl ? "noreferrer" : undefined}
-        target={playerProfileUrl ? "_blank" : undefined}
-      >
-        <div className="h-12 w-12 overflow-hidden rounded-full bg-black/35">
-          {pass.player.avatarUrl ? (
-            <img
-              alt={pass.player.name}
-              className="h-full w-full object-cover"
-              src={pass.player.avatarUrl}
-            />
-          ) : null}
-        </div>
-        <div className="min-w-0 max-w-[12rem] shrink">
-          <div className="flex min-w-0 items-center gap-2">
-            <h2 className="truncate text-lg font-black text-white">
-              {pass.player.name}
-            </h2>
-            {pass.player.country ? (
-              <span className="text-sm">
-                {countryToEmoji(pass.player.country)}
-              </span>
-            ) : null}
-          </div>
-          <p className="truncate text-xs font-bold text-white/45">
-            {pass.player.discordUsername
-              ? `@${pass.player.discordUsername}`
-              : t("tufPlayer")}
-          </p>
-        </div>
+      <div className="flex items-center gap-3 rounded-lg">
+        {playerProfileUrl ? (
+          <a
+            className={profileIdentityClassName}
+            href={playerProfileUrl}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {profileIdentity}
+          </a>
+        ) : (
+          <div className={profileIdentityClassName}>{profileIdentity}</div>
+        )}
         <PlayerScoreSummary pass={pass} />
         {typeof pass.player.rankedScoreRank === "number" ? (
           <span
@@ -75,7 +84,7 @@ export function PassPlayerCard({ pass }: { pass: PassDetail }) {
             #{pass.player.rankedScoreRank}
           </span>
         ) : null}
-      </PlayerHeader>
+      </div>
 
       <div className="my-3 h-px" style={glowDividerStyle} />
 

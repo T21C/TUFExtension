@@ -84,6 +84,7 @@ interface SpoilerTextProps {
   className?: string;
   style?: CSSProperties;
   title?: string;
+  variant?: "block" | "cell" | "inline";
 }
 
 export function SpoilerText({
@@ -92,6 +93,7 @@ export function SpoilerText({
   className,
   style,
   title,
+  variant = "inline",
 }: SpoilerTextProps) {
   const spoilerGroup = useContext(SpoilerContext);
   const spoilerControls = useContext(SpoilerControlsContext);
@@ -151,9 +153,7 @@ export function SpoilerText({
   return (
     <Component
       className={[
-        shouldTruncate
-          ? "cursor-pointer rounded px-1.5 py-0.5 transition duration-200"
-          : "inline-block cursor-pointer rounded px-1.5 py-0.5 transition duration-200",
+        getSpoilerSurfaceClassName({ shouldTruncate, variant }),
         isRevealed
           ? "blur-0"
           : "select-none border border-white/15 bg-white/30 text-white/75 shadow-[0_0_16px_rgba(255,255,255,0.12)] backdrop-blur-md",
@@ -176,7 +176,7 @@ export function SpoilerText({
     >
       <span
         className={[
-          shouldTruncate ? "block min-w-0 truncate" : "inline-block",
+          getSpoilerContentClassName({ shouldTruncate, variant }),
           isRevealed ? "" : "blur-sm",
         ].join(" ")}
         style={truncateStyle}
@@ -185,4 +185,42 @@ export function SpoilerText({
       </span>
     </Component>
   );
+}
+
+function getSpoilerSurfaceClassName({
+  shouldTruncate,
+  variant,
+}: {
+  shouldTruncate: boolean;
+  variant: "block" | "cell" | "inline";
+}): string {
+  if (variant === "block") {
+    return "block w-full cursor-pointer rounded transition duration-200";
+  }
+
+  if (variant === "cell") {
+    return "grid h-full w-full cursor-pointer place-items-center rounded transition duration-200";
+  }
+
+  return shouldTruncate
+    ? "cursor-pointer rounded px-1.5 py-0.5 transition duration-200"
+    : "inline-block cursor-pointer rounded px-1.5 py-0.5 transition duration-200";
+}
+
+function getSpoilerContentClassName({
+  shouldTruncate,
+  variant,
+}: {
+  shouldTruncate: boolean;
+  variant: "block" | "cell" | "inline";
+}): string {
+  if (variant === "block") {
+    return "block w-full min-w-0";
+  }
+
+  if (variant === "cell") {
+    return "grid h-full w-full place-items-center";
+  }
+
+  return shouldTruncate ? "block min-w-0 truncate" : "inline-block";
 }

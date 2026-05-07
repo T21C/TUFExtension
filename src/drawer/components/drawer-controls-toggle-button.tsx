@@ -1,3 +1,4 @@
+import { Settings } from "lucide-react";
 import { t } from "~/platform/chrome/i18n";
 
 interface DrawerControlsToggleButtonProps {
@@ -27,26 +28,7 @@ export function DrawerControlsToggleButton({
       title={label}
       type="button"
     >
-      <ControlsIcon isOpen={isOpen} />
+      <Settings aria-hidden="true" className="h-4 w-4" />
     </button>
-  );
-}
-
-function ControlsIcon({ isOpen }: { isOpen: boolean }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className="h-4 w-4"
-      fill="none"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2.4"
-      viewBox="0 0 24 24"
-    >
-      <circle cx="5" cy="12" r="1.8" fill="currentColor" stroke="none" />
-      <circle cx="12" cy="12" r="1.8" fill="currentColor" stroke="none" />
-      <circle cx="19" cy="12" r="1.8" fill="currentColor" stroke="none" />
-    </svg>
   );
 }

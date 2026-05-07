@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+import { ChevronDown } from "lucide-react";
 import type {
   LeaderboardSortKey,
   LevelPass,
@@ -49,7 +50,8 @@ export function LeaderboardPanel({
             {t("clearsCount", formatInteger(passes.length))}
           </p>
         </div>
-        <ChevronIcon
+        <ChevronDown
+          aria-hidden="true"
           className={[
             "h-4 w-4 shrink-0 text-white/70 transition-transform",
             isOpen ? "rotate-180" : "",
@@ -142,24 +144,5 @@ export function LeaderboardPanel({
         </div>
       ) : null}
     </section>
-  );
-}
-
-function ChevronIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="m6 9 6 6 6-6"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2.4"
-      />
-    </svg>
   );
 }

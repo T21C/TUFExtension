@@ -86,17 +86,6 @@ export function formatSpeed(value: number): string {
   return `${formatLocalizedNumber(value || 1, { maximumFractionDigits: 2 })}x`;
 }
 
-export function countryToEmoji(country: string): string {
-  const code = country.trim().toUpperCase();
-  if (!/^[A-Z]{2}$/.test(code)) {
-    return country;
-  }
-
-  return [...code]
-    .map((character) => String.fromCodePoint(127397 + character.charCodeAt(0)))
-    .join("");
-}
-
 function parseDate(value: string): Date | null {
   if (!value) {
     return null;
