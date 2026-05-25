@@ -69,7 +69,7 @@ jobs:
 
       - name: Normalize Firefox artifact name
         run: |
-          EXPECTED_FILE=".output/tufe-${{ steps.version.outputs.tag }}-firefox.zip"
+          EXPECTED_FILE=".output/tufe-${{ steps.version.outputs.tag }}-firefox.xpi"
           SOURCE_FILE="$(find .output -maxdepth 1 -type f -name 'tufe-*-firefox.zip' | head -n 1)"
 
           if [ -z "${SOURCE_FILE}" ]; then
@@ -85,8 +85,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: "TUFExtension ${{ steps.version.outputs.tag }}"
-          generate_release_notes: true
+          draft: true
+          generate_release_notes: false
           prerelease: ${{ steps.version.outputs.prerelease }}
           files: |
             .output/tufe-${{ steps.version.outputs.tag }}-chrome.zip
-            .output/tufe-${{ steps.version.outputs.tag }}-firefox.zip
+            .output/tufe-${{ steps.version.outputs.tag }}-firefox.xpi
