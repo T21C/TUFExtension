@@ -661,7 +661,7 @@ function mapPassLevelSummary(
   const difficulty =
     mapDifficultyFromCatalog(level, difficultyCatalog) ??
     mapDifficulty(asRecord(level.difficulty));
-  const baseScore = readNumber(level, ["baseScore"]) ?? difficulty?.baseScore;
+  const baseScore = getDisplayBaseScore(level, difficulty, mapTags(level.tags));
 
   return {
     artist: readString(level, ["artist"]),
