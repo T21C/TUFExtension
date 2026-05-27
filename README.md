@@ -15,7 +15,7 @@
 <p>
   Find TUF matches from YouTube and Bilibili videos,<br/>
   inspect level and pass details in an injected drawer,<br/>
-  and jump back to TUF when you need the full page.
+  and open Web ADOFAI directly from TUF level pages to view levels.
 </p>
 
 </div>
@@ -28,6 +28,7 @@ TUFExtension is an unofficial browser extension for viewing [The Universal Forum
 - Resolve TUF levels from YouTube / Bilibili video URLs
 - Resolve TUF passes / clear videos
 - Render an injected drawer UI isolated with Shadow DOM
+- View TUF levels in Web ADOFAI from TUF level pages
 - Use the current TUF login session for level likes
 - Build and package Chrome / Firefox releases
 
@@ -41,6 +42,7 @@ TUFExtension is an unofficial browser extension for viewing [The Universal Forum
 | Injected drawer          | Renders an in-page drawer instead of relying on Chrome's side panel API.       |
 | Level detail             | Shows difficulty, PP, tags, curation, stats, and leaderboard in a TUF-like UI. |
 | Pass detail              | Shows player, score, accuracy, speed, judgements, and spoiler reveal controls. |
+| Web ADOFAI viewer        | Adds a floating button on TUF level pages that opens the level in Web ADOFAI.  |
 | Likes                    | Reads and toggles level likes through the current TUF login session.           |
 | Pin mode                 | Keeps the drawer open across navigation and updates results live.              |
 | Chrome / Firefox package | Builds and packages browser-specific extension zips with WXT.                  |
@@ -63,6 +65,7 @@ TUFExtension is an unofficial browser extension for viewing [The Universal Forum
 │   │   └── video/            # YouTube / Bilibili video reference parsing
 │   ├── features/
 │   │   ├── drawer/           # Drawer state and data-loading hooks
+│   │   ├── level-embed-modal/ # Web ADOFAI viewer injection for TUF level pages
 │   │   └── tuf-button/       # Injected TUF button rendering
 │   ├── drawer/
 │   │   ├── components/       # Drawer-level controls
