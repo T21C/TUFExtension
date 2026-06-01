@@ -9,11 +9,6 @@ import {
   injectTufButton,
   removeTufButton,
 } from "~/features/tuf-button/inject-tuf-button";
-import {
-  clearLevelEmbedModal,
-  getTuforumsLevelId,
-  mountOrUpdateLevelEmbedButton,
-} from "~/features/level-embed-modal/level-embed-controller";
 import { isExtensionContextInvalidatedError } from "~/platform/chrome/extension-context";
 import {
   sendRuntimeMessage,
@@ -26,11 +21,7 @@ import type { ResolvedTufContext } from "~/domain/tuf/types";
 import type { VideoReference } from "~/domain/video/types";
 
 export default defineContentScript({
-  matches: [
-    "https://www.youtube.com/*",
-    "https://www.bilibili.com/*",
-    "https://tuforums.com/levels/*",
-  ],
+  matches: ["https://www.youtube.com/*", "https://www.bilibili.com/*"],
   main: () => {
     let lastCanonicalUrl: string | null = null;
     let activeVideo: VideoReference | null = null;
@@ -41,7 +32,7 @@ export default defineContentScript({
     watchUrlChanges(scheduleHandleCurrentUrl);
 
     function scheduleHandleCurrentUrl(): void {
-      void handleCurrentUrl().catch((error: unknown) => {
+      void resolveCurrentVideo().catch((error: unknown) => {
         if (isExtensionContextInvalidatedError(error)) {
           logWarn(
             "Extension context was invalidated; reload this tab after reloading the extension.",
@@ -51,23 +42,6 @@ export default defineContentScript({
 
         logWarn("Failed to resolve current video", error);
       });
-    }
-
-    async function handleCurrentUrl(): Promise<void> {
-      const levelId = getTuforumsLevelId(window.location);
-
-      if (levelId) {
-        lastCanonicalUrl = null;
-        activeVideo = null;
-        activeItems = [];
-        removeTufButton();
-        clearDrawer();
-        mountOrUpdateLevelEmbedButton(levelId);
-        return;
-      }
-
-      clearLevelEmbedModal();
-      await resolveCurrentVideo();
     }
 
     async function resolveCurrentVideo(): Promise<void> {

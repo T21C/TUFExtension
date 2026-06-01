@@ -42,11 +42,7 @@ export default defineConfig({
     web_accessible_resources: [
       {
         resources: ["fonts/*", "twemoji/flags/*.svg"],
-        matches: [
-          "https://www.youtube.com/*",
-          "https://www.bilibili.com/*",
-          "https://tuforums.com/*",
-        ],
+        matches: ["https://www.youtube.com/*", "https://www.bilibili.com/*"],
       },
     ],
     browser_specific_settings: {

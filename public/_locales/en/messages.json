@@ -121,6 +121,15 @@
   "openInTuf": {
     "message": "Open in TUF"
   },
+  "openInWebAdofai": {
+    "message": "Open in Web ADOFAI"
+  },
+  "webAdofaiLevelViewer": {
+    "message": "Web ADOFAI level viewer"
+  },
+  "closeWebAdofaiViewer": {
+    "message": "Close Web ADOFAI viewer"
+  },
   "openWorkshop": {
     "message": "Open Workshop"
   },

@@ -1,31 +1,21 @@
 import type { ReactNode } from "react";
-import {
-  DownloadIcon,
-  HeartIcon,
-  SteamIcon,
-  TufIcon,
-} from "~/drawer/shared/level-icons";
+import { DownloadIcon, SteamIcon, TufIcon } from "~/drawer/shared/level-icons";
 import type { LevelPageData } from "~/domain/tuf/types";
-import type { LevelLikeController } from "~/features/drawer/use-level-like";
 import { t } from "~/platform/chrome/i18n";
+import { WebAdofaiViewerAction } from "~/drawer/shared/web-adofai-viewer";
 import {
   interactiveSurfaceClassName,
   mutedSurfaceClassName,
   softGlowBorderStyle,
 } from "~/drawer/shared/level-surface";
 
-export function LevelActionStrip({
-  data,
-  likeController,
-}: {
-  data: LevelPageData;
-  likeController: LevelLikeController;
-}) {
+export function LevelActionStrip({ data }: { data: LevelPageData }) {
   return (
     <div className="grid grid-cols-4 gap-2">
       <ActionLink href={data.levelUrl} label={t("openInTuf")}>
         <TufIcon size={24} />
       </ActionLink>
+      <WebAdofaiViewerAction levelId={data.level.id} />
       {data.level.downloadLink ? (
         <ActionLink href={data.level.downloadLink} label={t("download")}>
           <DownloadIcon size={22} />
@@ -44,24 +34,6 @@ export function LevelActionStrip({
           <SteamIcon size={22} />
         </DisabledAction>
       )}
-      <button
-        aria-label={getLikeButtonLabel(likeController)}
-        className={[
-          "grid h-12 place-items-center",
-          likeController.liked
-            ? "rounded-md border bg-black/35 text-[#ff2222] shadow-[0_0_18px_rgba(255,34,34,0.18)] backdrop-blur-md transition"
-            : interactiveSurfaceClassName,
-          likeController.isLoading || likeController.isPending
-            ? "cursor-wait opacity-70"
-            : "cursor-pointer",
-        ].join(" ")}
-        disabled={likeController.isLoading || likeController.isPending}
-        onClick={likeController.onToggleLike}
-        title={getLikeButtonLabel(likeController)}
-        type="button"
-      >
-        <HeartIcon filled={likeController.liked} size={21} />
-      </button>
     </div>
   );
 }
@@ -114,24 +86,4 @@ function DisabledAction({
       {children}
     </button>
   );
-}
-
-function getLikeButtonLabel(likeController: LevelLikeController): string {
-  if (likeController.isLoading) {
-    return t("checkingTufLogin");
-  }
-
-  if (likeController.isPending) {
-    return t("updatingLike");
-  }
-
-  if (likeController.authStatus === "unauthenticated") {
-    return t("loginToLikeLevel");
-  }
-
-  if (likeController.authStatus === "error") {
-    return likeController.error ?? t("couldNotCheckTufLogin");
-  }
-
-  return likeController.liked ? t("unlikeLevel") : t("likeLevel");
 }

@@ -1,5 +1,6 @@
 import { createRoot, type Root } from "react-dom/client";
 import { DrawerRoot } from "./root";
+import { WEB_ADOFAI_MODAL_HOST_ID } from "~/drawer/shared/web-adofai-viewer";
 import { ensureShadowHost } from "~/platform/content-script/shadow-host";
 import {
   TUF_BUTTON_HOST_ID,
@@ -461,6 +462,10 @@ function handleKeyDown(event: KeyboardEvent): void {
     return;
   }
 
+  if (document.getElementById(WEB_ADOFAI_MODAL_HOST_ID)) {
+    return;
+  }
+
   if (isDrawerPinned) {
     return;
   }
@@ -489,6 +494,8 @@ function handlePointerDown(event: PointerEvent): void {
 function isTufButtonNode(value: EventTarget): boolean {
   return (
     value instanceof HTMLElement &&
-    (value.id === TUF_BUTTON_HOST_ID || value.id === TUF_BUTTON_ID)
+    (value.id === TUF_BUTTON_HOST_ID ||
+      value.id === TUF_BUTTON_ID ||
+      value.id === WEB_ADOFAI_MODAL_HOST_ID)
   );
 }

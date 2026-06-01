@@ -179,6 +179,72 @@ export function TufIcon(props: IconProps) {
   );
 }
 
+export function WebAdofaiIcon(props: IconProps) {
+  const { size = 24, ...rest } = props;
+
+  return (
+    <svg
+      aria-hidden="true"
+      fill="none"
+      height={size}
+      viewBox="0 0 64 64"
+      width={size}
+      {...rest}
+    >
+      <defs>
+        <linearGradient
+          gradientUnits="userSpaceOnUse"
+          id="web-adofai-red-tail"
+          x1="12"
+          x2="46"
+          y1="14"
+          y2="27"
+        >
+          <stop stopColor="#FFB447" />
+          <stop offset="0.48" stopColor="#FF343F" />
+          <stop offset="1" stopColor="#FF343F" stopOpacity="0" />
+        </linearGradient>
+        <linearGradient
+          gradientUnits="userSpaceOnUse"
+          id="web-adofai-blue-tail"
+          x1="52"
+          x2="18"
+          y1="50"
+          y2="37"
+        >
+          <stop stopColor="#6DF1FF" />
+          <stop offset="0.5" stopColor="#3677FF" />
+          <stop offset="1" stopColor="#3677FF" stopOpacity="0" />
+        </linearGradient>
+        <radialGradient id="web-adofai-red-planet">
+          <stop stopColor="#FFD66B" />
+          <stop offset="0.48" stopColor="#FF4B3D" />
+          <stop offset="1" stopColor="#C81535" />
+        </radialGradient>
+        <radialGradient id="web-adofai-blue-planet">
+          <stop stopColor="#85F5FF" />
+          <stop offset="0.52" stopColor="#438BFF" />
+          <stop offset="1" stopColor="#2631C8" />
+        </radialGradient>
+      </defs>
+      <path
+        d="M15 22C24 9 40 9 49 20"
+        stroke="url(#web-adofai-red-tail)"
+        strokeLinecap="round"
+        strokeWidth="9"
+      />
+      <path
+        d="M49 42C40 55 24 55 15 44"
+        stroke="url(#web-adofai-blue-tail)"
+        strokeLinecap="round"
+        strokeWidth="9"
+      />
+      <circle cx="16" cy="22" fill="url(#web-adofai-red-planet)" r="10" />
+      <circle cx="48" cy="42" fill="url(#web-adofai-blue-planet)" r="10" />
+    </svg>
+  );
+}
+
 export function VideoIcon(props: IconProps) {
   const { size = 22, ...rest } = props;
 
