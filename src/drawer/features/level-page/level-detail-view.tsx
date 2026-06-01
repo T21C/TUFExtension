@@ -59,7 +59,7 @@ function LoadedLevelDetail({ data }: { data: LevelPageData }) {
   return (
     <article className="space-y-2.5 pb-4 text-white">
       <LevelHero data={data} likeController={likeController} />
-      <LevelActionStrip data={data} likeController={likeController} />
+      <LevelActionStrip data={data} />
       <LevelStatsPanel data={data} likeController={likeController} />
       <LeaderboardPanel
         isOpen={isLeaderboardOpen}

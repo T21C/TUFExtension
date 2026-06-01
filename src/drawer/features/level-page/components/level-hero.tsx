@@ -127,16 +127,49 @@ export function LevelHero({
         <div className="mt-auto flex items-end justify-end gap-6">
           <div className="flex shrink-0 items-center gap-1.5 text-2xl font-black text-white">
             <span>{formatInteger(likeController.likes)}</span>
-            <HeartIcon
-              className={likeController.liked ? "text-[#ff2222]" : "text-white"}
-              filled={likeController.liked}
-              size={22}
-            />
+            <button
+              aria-label={getLikeButtonLabel(likeController)}
+              className={[
+                "grid h-8 w-8 place-items-center rounded-full transition focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none",
+                likeController.liked
+                  ? "text-[#ff2222] drop-shadow-[0_0_10px_rgba(255,34,34,0.45)]"
+                  : "text-white hover:text-white/85",
+                likeController.isLoading || likeController.isPending
+                  ? "cursor-wait opacity-70"
+                  : "cursor-pointer",
+              ].join(" ")}
+              disabled={likeController.isLoading || likeController.isPending}
+              onClick={likeController.onToggleLike}
+              title={getLikeButtonLabel(likeController)}
+              type="button"
+            >
+              <HeartIcon filled={likeController.liked} size={22} />
+            </button>
           </div>
         </div>
       </div>
     </section>
   );
+}
+
+function getLikeButtonLabel(likeController: LevelLikeController): string {
+  if (likeController.isLoading) {
+    return t("checkingTufLogin");
+  }
+
+  if (likeController.isPending) {
+    return t("updatingLike");
+  }
+
+  if (likeController.authStatus === "unauthenticated") {
+    return t("loginToLikeLevel");
+  }
+
+  if (likeController.authStatus === "error") {
+    return likeController.error ?? t("couldNotCheckTufLogin");
+  }
+
+  return likeController.liked ? t("unlikeLevel") : t("likeLevel");
 }
 
 function getOverlayRatingDifficulty(data: LevelPageData) {
