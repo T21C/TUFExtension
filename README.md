@@ -65,7 +65,6 @@ TUFExtension is an unofficial browser extension for viewing [The Universal Forum
 │   │   └── video/            # YouTube / Bilibili video reference parsing
 │   ├── features/
 │   │   ├── drawer/           # Drawer state and data-loading hooks
-│   │   ├── level-embed-modal/ # Web ADOFAI viewer injection for TUF level pages
 │   │   └── tuf-button/       # Injected TUF button rendering
 │   ├── drawer/
 │   │   ├── components/       # Drawer-level controls
