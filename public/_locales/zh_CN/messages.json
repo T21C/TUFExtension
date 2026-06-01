@@ -121,6 +121,15 @@
   "openInTuf": {
     "message": "在 TUF 中打开"
   },
+  "openInWebAdofai": {
+    "message": "在 Web ADOFAI 中打开"
+  },
+  "webAdofaiLevelViewer": {
+    "message": "Web ADOFAI 关卡查看器"
+  },
+  "closeWebAdofaiViewer": {
+    "message": "关闭 Web ADOFAI 查看器"
+  },
   "openWorkshop": {
     "message": "打开创意工坊"
   },

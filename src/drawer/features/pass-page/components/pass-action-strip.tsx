@@ -3,6 +3,7 @@ import { Eye, EyeOff, FileCheck } from "lucide-react";
 import type { PassPageData } from "~/domain/tuf/types";
 import { TufIcon } from "~/drawer/shared/level-icons";
 import { interactiveSurfaceClassName } from "~/drawer/shared/level-surface";
+import { WebAdofaiViewerAction } from "~/drawer/shared/web-adofai-viewer";
 import { t } from "~/platform/chrome/i18n";
 
 interface PassAction {
@@ -45,7 +46,7 @@ export function PassActionStrip({
     : spoilerLabel;
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid grid-cols-4 gap-2">
       <button
         aria-pressed={areSpoilersRevealed}
         aria-label={effectiveSpoilerLabel}
@@ -65,6 +66,7 @@ export function PassActionStrip({
           <Eye aria-hidden="true" className="h-6 w-6" />
         )}
       </button>
+      <WebAdofaiViewerAction className="h-11" levelId={data.pass.level.id} />
       {actions.map((action) => (
         <a
           className={`${interactiveSurfaceClassName} grid h-11 place-items-center`}

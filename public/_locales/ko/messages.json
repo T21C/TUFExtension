@@ -121,6 +121,15 @@
   "openInTuf": {
     "message": "TUF에서 열기"
   },
+  "openInWebAdofai": {
+    "message": "Web ADOFAI에서 열기"
+  },
+  "webAdofaiLevelViewer": {
+    "message": "Web ADOFAI 레벨 뷰어"
+  },
+  "closeWebAdofaiViewer": {
+    "message": "Web ADOFAI 뷰어 닫기"
+  },
   "openWorkshop": {
     "message": "창작마당 열기"
   },

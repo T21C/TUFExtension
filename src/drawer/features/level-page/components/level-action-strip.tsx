@@ -8,6 +8,7 @@ import {
 import type { LevelPageData } from "~/domain/tuf/types";
 import type { LevelLikeController } from "~/features/drawer/use-level-like";
 import { t } from "~/platform/chrome/i18n";
+import { WebAdofaiViewerAction } from "~/drawer/shared/web-adofai-viewer";
 import {
   interactiveSurfaceClassName,
   mutedSurfaceClassName,
@@ -22,10 +23,11 @@ export function LevelActionStrip({
   likeController: LevelLikeController;
 }) {
   return (
-    <div className="grid grid-cols-4 gap-2">
+    <div className="grid grid-cols-5 gap-2">
       <ActionLink href={data.levelUrl} label={t("openInTuf")}>
         <TufIcon size={24} />
       </ActionLink>
+      <WebAdofaiViewerAction levelId={data.level.id} />
       {data.level.downloadLink ? (
         <ActionLink href={data.level.downloadLink} label={t("download")}>
           <DownloadIcon size={22} />
