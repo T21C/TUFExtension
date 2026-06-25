@@ -1,4 +1,4 @@
-import { FlagIcon, YoutubeIcon } from "~/drawer/shared/level-icons";
+import { FlagIcon, VideoLinkIcon } from "~/drawer/shared/level-icons";
 import type { LeaderboardSortKey, LevelPass } from "~/domain/tuf/types";
 import { CountryFlag } from "~/drawer/shared/country-flag";
 import {
@@ -110,7 +110,7 @@ export function LeaderboardRow({
             style={softGlowBorderStyle}
             target="_blank"
           >
-            <YoutubeIcon size={18} />
+            <VideoLinkIcon size={18} url={pass.videoLink} />
           </a>
         ) : (
           <div className="h-8 w-8" />
