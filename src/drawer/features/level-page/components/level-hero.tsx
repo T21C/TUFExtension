@@ -30,7 +30,6 @@ export function LevelHero({
   const { level } = data;
   const title = level.song;
   const creatorLine = [level.creator, level.artist].filter(Boolean).join(" - ");
-  const ratingDifficulty = getOverlayRatingDifficulty(data);
 
   return (
     <section
@@ -60,21 +59,6 @@ export function LevelHero({
                   {data.difficulty.name ?? "?"}
                 </div>
               )}
-              {ratingDifficulty?.icon ? (
-                <img
-                  alt={
-                    ratingDifficulty.name ?? t("estimatedDifficultyFallback")
-                  }
-                  className="absolute h-8 w-8 rounded-full border border-white/35 bg-black/40 object-contain backdrop-blur-md drop-shadow-[0_3px_10px_rgba(0,0,0,0.8)]"
-                  decoding="async"
-                  src={ratingDifficulty.icon}
-                  style={{
-                    left: "-0.5rem",
-                    top: "-0.5rem",
-                  }}
-                  title={ratingDifficulty.name}
-                />
-              ) : null}
             </div>
             <div
               className="rounded border bg-black/35 px-2.5 py-1 text-sm font-black leading-none text-white backdrop-blur-md"
@@ -170,18 +154,6 @@ function getLikeButtonLabel(likeController: LevelLikeController): string {
   }
 
   return likeController.liked ? t("unlikeLevel") : t("likeLevel");
-}
-
-function getOverlayRatingDifficulty(data: LevelPageData) {
-  if (
-    data.ratingDifficulty?.icon &&
-    data.ratingDifficulty.type === "PGU" &&
-    data.difficulty.name?.includes("Q")
-  ) {
-    return data.ratingDifficulty;
-  }
-
-  return undefined;
 }
 
 function HeroCurationIcons({ data }: { data: LevelPageData }) {

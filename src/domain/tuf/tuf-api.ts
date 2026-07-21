@@ -551,7 +551,7 @@ function mapLevelDetail(
     id: readString(rawLevel, ["id", "levelId", "_id", "uuid"]) ?? fallbackId,
     levelLengthInMs: readNumber(rawLevel, ["levelLengthInMs", "durationMs"]),
     likes: readNumber(rawLevel, ["likes"]) ?? 0,
-    pp: getDisplayBaseScore(rawLevel, difficulty, tags),
+    pp: getDisplayBaseScore(rawLevel, difficulty),
     song,
     tags,
     tilecount: readNumber(rawLevel, ["tilecount", "tileCount"]),
@@ -661,7 +661,7 @@ function mapPassLevelSummary(
   const difficulty =
     mapDifficultyFromCatalog(level, difficultyCatalog) ??
     mapDifficulty(asRecord(level.difficulty));
-  const baseScore = getDisplayBaseScore(level, difficulty, mapTags(level.tags));
+  const baseScore = getDisplayBaseScore(level, difficulty);
 
   return {
     artist: readString(level, ["artist"]),
@@ -751,24 +751,11 @@ function mapRatingDifficulty(
 function getDisplayBaseScore(
   rawLevel: TufRecord,
   difficulty: LevelDifficulty | undefined,
-  tags: LevelTag[],
 ): number | undefined {
   const editedBaseScore = readNumber(rawLevel, ["baseScore"]);
   const defaultBaseScore = difficulty?.baseScore;
 
-  if (hasBaseScoreEditTag(tags) && typeof editedBaseScore === "number") {
-    return editedBaseScore;
-  }
-
-  return defaultBaseScore ?? editedBaseScore;
-}
-
-function hasBaseScoreEditTag(tags: LevelTag[]): boolean {
-  return tags.some((tag) => normalizeTagName(tag.name) === "basescoreedit");
-}
-
-function normalizeTagName(value: string): string {
-  return value.toLowerCase().replace(/[^a-z0-9]/g, "");
+  return editedBaseScore || defaultBaseScore;
 }
 
 function mapTags(value: unknown): LevelTag[] {

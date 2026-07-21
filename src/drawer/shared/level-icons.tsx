@@ -235,6 +235,23 @@ export function VideoIcon(props: IconProps) {
   return <CirclePlay aria-hidden="true" size={size} {...rest} />;
 }
 
+export function BilibiliIcon(props: IconProps) {
+  const { size = 22, ...rest } = props;
+
+  return (
+    <svg
+      aria-hidden="true"
+      fill="currentColor"
+      height={size}
+      viewBox="0 0 24 24"
+      width={size}
+      {...rest}
+    >
+      <path d="M18.223 3.086a1.25 1.25 0 0 1 0 1.768l-1.143 1.142h1.17A3.75 3.75 0 0 1 22 9.747v7.5a3.75 3.75 0 0 1-3.75 3.75H5.75A3.75 3.75 0 0 1 2 17.247v-7.5a3.75 3.75 0 0 1 3.75-3.75h1.166L5.775 4.855a1.25 1.25 0 1 1 1.767-1.768l2.652 2.652c.079.079.145.165.198.257h3.213c.053-.092.12-.18.199-.258l2.651-2.652a1.25 1.25 0 0 1 1.768 0zm.027 5.42H5.75a1.25 1.25 0 0 0-1.247 1.157l-.003.094v7.5c0 .659.51 1.199 1.157 1.246l.093.004h12.5a1.25 1.25 0 0 0 1.247-1.157l.003-.093v-7.5c0-.69-.56-1.25-1.25-1.25zm-10 2.5c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25zm7.5 0c.69 0 1.25.56 1.25 1.25v1.25a1.25 1.25 0 1 1-2.5 0v-1.25c0-.69.56-1.25 1.25-1.25z" />
+    </svg>
+  );
+}
+
 export function YoutubeIcon(props: IconProps) {
   const { size = 22, ...rest } = props;
 
@@ -252,4 +269,52 @@ export function YoutubeIcon(props: IconProps) {
       />
     </svg>
   );
+}
+
+type VideoProvider = "youtube" | "bilibili" | null;
+
+export function VideoLinkIcon({ url, ...props }: IconProps & { url?: string }) {
+  const provider = getVideoProvider(url);
+
+  if (provider === "youtube") {
+    return <YoutubeIcon {...props} />;
+  }
+
+  if (provider === "bilibili") {
+    return <BilibiliIcon {...props} />;
+  }
+
+  return <VideoIcon {...props} />;
+}
+
+function getVideoProvider(urlText: string | undefined): VideoProvider {
+  if (!urlText) {
+    return null;
+  }
+
+  try {
+    const hostname = new URL(urlText).hostname.toLowerCase();
+
+    if (
+      isHostOrSubdomain(hostname, "youtube.com") ||
+      isHostOrSubdomain(hostname, "youtu.be")
+    ) {
+      return "youtube";
+    }
+
+    if (
+      isHostOrSubdomain(hostname, "bilibili.com") ||
+      isHostOrSubdomain(hostname, "b23.tv")
+    ) {
+      return "bilibili";
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
+function isHostOrSubdomain(hostname: string, domain: string): boolean {
+  return hostname === domain || hostname.endsWith(`.${domain}`);
 }

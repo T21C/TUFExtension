@@ -24,7 +24,7 @@ import { SpoilerSection, SpoilerText } from "./spoiler-text";
 export function PassHero({ data }: { data: PassPageData }) {
   const { pass } = data;
   const difficulty = pass.level.difficulty;
-  const baseScore = pass.level.baseScore ?? difficulty?.baseScore ?? 0;
+  const baseScore = pass.level.baseScore || difficulty?.baseScore;
   const backgroundImage = data.thumbnailUrl
     ? `linear-gradient(90deg, rgba(0,0,0,0.92), rgba(14,5,28,0.82)), url(${data.thumbnailUrl})`
     : "linear-gradient(135deg, rgba(47,5,101,0.68), rgba(0,0,0,0.92))";
@@ -53,9 +53,11 @@ export function PassHero({ data }: { data: PassPageData }) {
               <TufIcon size={34} />
             </div>
           )}
-          <span className="rounded-md bg-black/55 px-2.5 py-1 text-sm font-black text-white shadow-[0_0_14px_rgba(168,85,247,0.2)]">
-            {formatBaseScore(baseScore)}PP
-          </span>
+          {baseScore ? (
+            <span className="rounded-md bg-black/55 px-2.5 py-1 text-sm font-black text-white shadow-[0_0_14px_rgba(168,85,247,0.2)]">
+              {formatBaseScore(baseScore)}PP
+            </span>
+          ) : null}
           {pass.level.id ? (
             <span className="text-xs font-black text-white/45">
               #{pass.level.id}
