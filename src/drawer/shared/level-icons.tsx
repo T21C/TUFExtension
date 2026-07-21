@@ -273,10 +273,7 @@ export function YoutubeIcon(props: IconProps) {
 
 type VideoProvider = "youtube" | "bilibili" | null;
 
-export function VideoLinkIcon({
-  url,
-  ...props
-}: IconProps & { url?: string }) {
+export function VideoLinkIcon({ url, ...props }: IconProps & { url?: string }) {
   const provider = getVideoProvider(url);
 
   if (provider === "youtube") {
